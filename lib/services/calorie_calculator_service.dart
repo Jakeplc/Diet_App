@@ -1,4 +1,3 @@
-import 'dart:math';
 import '../models/user_profile.dart';
 
 class CalorieCalculatorService {
@@ -60,21 +59,30 @@ class CalorieCalculatorService {
         return tdee - 500; // 0.5 kg per week loss
       case 'gain_weight':
         return tdee + 500; // 0.5 kg per week gain
+      case 'body_recomp':
+        return tdee - 200; // Small deficit for fat loss while building muscle
       case 'maintain':
       default:
         return tdee;
     }
   }
 
-  // Calculate macro targets (40/30/30 split as default)
-  static Map<String, double> calculateMacroTargets(double dailyCalories) {
-    // Protein: 30% of calories (4 cal/g)
+  // Calculate macro targets (40/30/30 split as default, 40/40/20 for recomp)
+  static Map<String, double> calculateMacroTargets(
+    double dailyCalories, {
+    String goal = 'maintain',
+  }) {
+    if (goal == 'body_recomp') {
+      // High protein for muscle retention/growth during recomp
+      final protein = (dailyCalories * 0.40) / 4; // 40% protein
+      final carbs = (dailyCalories * 0.40) / 4; // 40% carbs
+      final fats = (dailyCalories * 0.20) / 9; // 20% fats
+      return {'protein': protein, 'carbs': carbs, 'fats': fats};
+    }
+
+    // Standard 40/30/30 split
     final protein = (dailyCalories * 0.30) / 4;
-
-    // Carbs: 40% of calories (4 cal/g)
     final carbs = (dailyCalories * 0.40) / 4;
-
-    // Fats: 30% of calories (9 cal/g)
     final fats = (dailyCalories * 0.30) / 9;
 
     return {'protein': protein, 'carbs': carbs, 'fats': fats};

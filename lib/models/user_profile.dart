@@ -5,7 +5,7 @@ class UserProfile {
   double weight; // kg
   String gender; // male/female/other
   String activityLevel; // sedentary, light, moderate, active, very_active
-  String goal; // lose_weight, maintain, gain_weight
+  String goal; // lose_weight, maintain, gain_weight, body_recomp
   String dietType; // standard, vegetarian, vegan, keto, paleo
   String measurementSystem; // metric, imperial
   double dailyCalorieTarget;

@@ -7,6 +7,7 @@ import '../services/storage_service.dart';
 import '../services/premium_service.dart';
 import '../services/food_search_api_service.dart';
 import '../services/barcode_api_service.dart';
+import '../services/meal_plan_generator_service.dart';
 import 'paywall_screen.dart';
 import 'food_logging_screen.dart';
 
@@ -60,6 +61,11 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
       appBar: AppBar(
         title: const Text('Meal Planning'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.auto_awesome),
+            onPressed: _showGeneratePlanDialog,
+            tooltip: 'Generate Meal Plan',
+          ),
           IconButton(
             icon: const Icon(Icons.copy_all),
             onPressed: _copyWeekPlan,
@@ -365,6 +371,224 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
       );
     }
   }
+
+  Future<void> _showGeneratePlanDialog() async {
+    int days = 7;
+    bool includeRecipes = true;
+    bool prioritizeVariety = true;
+
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: Row(
+            children: [
+              Icon(Icons.auto_awesome, color: Colors.orange),
+              SizedBox(width: 10),
+              Text('Generate Meal Plan'),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Automatically create a personalized meal plan based on your goals and preferences.',
+                  style: TextStyle(color: Colors.grey[600]),
+                ),
+                SizedBox(height: 20),
+                Text(
+                  'Number of Days',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(
+                      child: SegmentedButton<int>(
+                        segments: [
+                          ButtonSegment(value: 3, label: Text('3')),
+                          ButtonSegment(value: 7, label: Text('7')),
+                          ButtonSegment(value: 14, label: Text('14')),
+                        ],
+                        selected: {days},
+                        onSelectionChanged: (newSelection) {
+                          setState(() => days = newSelection.first);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                SwitchListTile(
+                  title: Text('Include Recipes'),
+                  subtitle: Text('Use saved recipes in meal plans'),
+                  value: includeRecipes,
+                  activeThumbColor: Colors.orange,
+                  onChanged: (value) {
+                    setState(() => includeRecipes = value);
+                  },
+                  contentPadding: EdgeInsets.zero,
+                ),
+                SwitchListTile(
+                  title: Text('Prioritize Variety'),
+                  subtitle: Text('Minimize repeated foods'),
+                  value: prioritizeVariety,
+                  activeThumbColor: Colors.orange,
+                  onChanged: (value) {
+                    setState(() => prioritizeVariety = value);
+                  },
+                  contentPadding: EdgeInsets.zero,
+                ),
+                SizedBox(height: 15),
+                Container(
+                  padding: EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.orange.withOpacity(0.3)),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.info_outline, color: Colors.orange, size: 20),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          'This will replace existing meal plans for the selected period.',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.orange[900],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text('Cancel'),
+            ),
+            ElevatedButton.icon(
+              onPressed: () => Navigator.pop(context, true),
+              icon: Icon(Icons.auto_awesome),
+              label: Text('Generate'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange,
+                foregroundColor: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (result == true) {
+      _generateMealPlan(days, includeRecipes, prioritizeVariety);
+    }
+  }
+
+  Future<void> _generateMealPlan(
+    int days,
+    bool includeRecipes,
+    bool prioritizeVariety,
+  ) async {
+    // Show loading dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator(color: Colors.orange),
+            SizedBox(height: 20),
+            Text('Generating your meal plan...'),
+            SizedBox(height: 10),
+            Text(
+              'Analyzing your goals and preferences',
+              style: TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    try {
+      // Calculate start date (next Monday or today if Monday)
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+      final daysUntilMonday = (8 - now.weekday) % 7;
+      final startDate = daysUntilMonday == 0
+          ? today
+          : today.add(Duration(days: daysUntilMonday));
+
+      // Generate meal plans
+      final generatedPlans =
+          await MealPlanGeneratorService.generateSmartMealPlan(
+            days: days,
+            startDate: startDate,
+            includeRecipes: includeRecipes,
+            prioritizeVariety: prioritizeVariety,
+          );
+
+      // Save meal plans
+      await MealPlanGeneratorService.saveMealPlans(generatedPlans);
+
+      // Close loading dialog
+      if (mounted) Navigator.pop(context);
+
+      // Reload meal plans
+      await _loadMealPlans();
+
+      // Show success message
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.check_circle, color: Colors.white),
+                SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    'Generated ${generatedPlans.length} meals for $days days!',
+                  ),
+                ),
+              ],
+            ),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+    } catch (e) {
+      // Close loading dialog
+      if (mounted) Navigator.pop(context);
+
+      // Show error message
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.error, color: Colors.white),
+                SizedBox(width: 10),
+                Expanded(child: Text('Error: ${e.toString()}')),
+              ],
+            ),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            duration: Duration(seconds: 4),
+          ),
+        );
+      }
+    }
+  }
 }
 
 // Meal Plan Dialog
@@ -389,7 +613,6 @@ class _MealPlanDialogState extends State<MealPlanDialog> {
   late TextEditingController _nameController;
   late String _selectedMealType;
   List<FoodItem> _selectedFoods = [];
-  List<FoodItem> _availableFoods = [];
 
   @override
   void initState() {
@@ -399,7 +622,6 @@ class _MealPlanDialogState extends State<MealPlanDialog> {
     );
     _selectedMealType =
         widget.mealType ?? widget.existingPlan?.mealType ?? 'Breakfast';
-    _availableFoods = StorageService.getAllFoodItems();
 
     if (widget.existingPlan != null) {
       _selectedFoods = widget.existingPlan!.foodItemIds
@@ -443,7 +665,7 @@ class _MealPlanDialogState extends State<MealPlanDialog> {
               ),
               const SizedBox(height: 15),
               DropdownButtonFormField<String>(
-                value: _selectedMealType,
+                initialValue: _selectedMealType,
                 decoration: const InputDecoration(
                   labelText: 'Meal Type',
                   border: OutlineInputBorder(),

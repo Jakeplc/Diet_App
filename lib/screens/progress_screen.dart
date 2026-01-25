@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:uuid/uuid.dart';
 import '../models/weight_log.dart';
-import '../models/food_log.dart';
 import '../services/storage_service.dart';
 import '../services/premium_service.dart';
 import 'paywall_screen.dart';
@@ -88,11 +87,11 @@ class _ProgressScreenState extends State<ProgressScreen> {
           padding: const EdgeInsets.all(40),
           child: Column(
             children: [
-              Icon(Icons.show_chart, size: 60, color: Colors.grey.shade400),
+              Icon(Icons.show_chart, size: 60, color: Colors.grey.shade600),
               const SizedBox(height: 15),
               const Text(
                 'No weight data yet',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
+                style: TextStyle(fontSize: 16, color: Colors.black87),
               ),
               const SizedBox(height: 15),
               ElevatedButton(
@@ -218,7 +217,15 @@ class _ProgressScreenState extends State<ProgressScreen> {
         setState(() => _selectedDays = days);
       },
       selectedColor: Colors.green,
-      labelStyle: TextStyle(color: isSelected ? Colors.white : Colors.black),
+      backgroundColor: Colors.grey.shade800,
+      side: BorderSide(
+        color: isSelected ? Colors.green : Colors.grey.shade600,
+        width: 1.5,
+      ),
+      labelStyle: TextStyle(
+        color: isSelected ? Colors.white : Colors.grey.shade300,
+        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+      ),
     );
   }
 
@@ -228,8 +235,6 @@ class _ProgressScreenState extends State<ProgressScreen> {
     final currentWeight = _weightLogs.last.weight;
     final firstWeight = _weightLogs.first.weight;
     final totalChange = currentWeight - firstWeight;
-    final avgWeeklyChange =
-        totalChange / (_weightLogs.length / 7).clamp(1, double.infinity);
 
     return Row(
       children: [
@@ -240,7 +245,10 @@ class _ProgressScreenState extends State<ProgressScreen> {
               padding: const EdgeInsets.all(15),
               child: Column(
                 children: [
-                  const Text('Current', style: TextStyle(color: Colors.grey)),
+                  const Text(
+                    'Current',
+                    style: TextStyle(color: Colors.black87),
+                  ),
                   const SizedBox(height: 5),
                   Text(
                     '${currentWeight.toStringAsFixed(1)} kg',
@@ -266,7 +274,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 children: [
                   const Text(
                     'Total Change',
-                    style: TextStyle(color: Colors.grey),
+                    style: TextStyle(color: Colors.black87),
                   ),
                   const SizedBox(height: 5),
                   Text(
@@ -312,7 +320,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 ),
               ),
               const SizedBox(width: 15),
-              const Expanded(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -321,11 +329,15 @@ class _ProgressScreenState extends State<ProgressScreen> {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
+                        color: Colors.black87,
                       ),
                     ),
                     Text(
                       'Get detailed insights, body composition tracking, and more!',
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey.shade700,
+                      ),
                     ),
                   ],
                 ),
@@ -351,15 +363,31 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 SizedBox(width: 10),
                 Text(
                   'Advanced Analytics',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 15),
-            const Text('• Calorie deficit/surplus trends'),
-            const Text('• Macro balance insights'),
-            const Text('• Body composition estimates'),
-            const Text('• Predicted goal achievement date'),
+            Text(
+              '• Calorie deficit/surplus trends',
+              style: TextStyle(color: Colors.grey.shade800),
+            ),
+            Text(
+              '• Macro balance insights',
+              style: TextStyle(color: Colors.grey.shade800),
+            ),
+            Text(
+              '• Body composition estimates',
+              style: TextStyle(color: Colors.grey.shade800),
+            ),
+            Text(
+              '• Predicted goal achievement date',
+              style: TextStyle(color: Colors.grey.shade800),
+            ),
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () {
@@ -384,7 +412,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
           child: Text(
             'No weight logs yet',
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.grey),
+            style: TextStyle(color: Colors.black87),
           ),
         ),
       );
@@ -402,9 +430,13 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 style: const TextStyle(color: Colors.white, fontSize: 12),
               ),
             ),
-            title: Text('${log.weight.toStringAsFixed(1)} kg'),
+            title: Text(
+              '${log.weight.toStringAsFixed(1)} kg',
+              style: const TextStyle(color: Colors.black87),
+            ),
             subtitle: Text(
               '${log.timestamp.day}/${log.timestamp.month}/${log.timestamp.year}',
+              style: TextStyle(color: Colors.grey.shade700),
             ),
             trailing: IconButton(
               icon: const Icon(Icons.delete, color: Colors.red),

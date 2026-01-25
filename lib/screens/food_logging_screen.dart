@@ -10,6 +10,7 @@ import '../services/premium_service.dart';
 import '../services/barcode_api_service.dart';
 import '../services/food_search_api_service.dart';
 import 'paywall_screen.dart';
+import 'food_recognition_screen.dart';
 
 class FoodLoggingScreen extends StatefulWidget {
   const FoodLoggingScreen({super.key});
@@ -158,35 +159,51 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
           if (!_isSearching)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: _buildActionButton(
-                      'Scan Barcode',
-                      Icons.qr_code_scanner,
-                      Colors.blue,
-                      _scanBarcode,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 75,
+                      child: _buildActionButton(
+                        'AI Photo',
+                        Icons.auto_awesome,
+                        Colors.purple,
+                        _openFoodRecognition,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: _buildActionButton(
-                      'Take Photo',
-                      Icons.camera_alt,
-                      Colors.orange,
-                      _takePhoto,
+                    const SizedBox(width: 10),
+                    SizedBox(
+                      width: 75,
+                      child: _buildActionButton(
+                        'Barcode',
+                        Icons.qr_code_scanner,
+                        Colors.blue,
+                        _scanBarcode,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: _buildActionButton(
-                      'Custom',
-                      Icons.add_circle,
-                      Colors.green,
-                      _addCustomFood,
+                    const SizedBox(width: 10),
+                    SizedBox(
+                      width: 75,
+                      child: _buildActionButton(
+                        'Photo',
+                        Icons.camera_alt,
+                        Colors.orange,
+                        _takePhoto,
+                      ),
                     ),
-                  ),
-                ],
+                    const SizedBox(width: 10),
+                    SizedBox(
+                      width: 75,
+                      child: _buildActionButton(
+                        'Custom',
+                        Icons.add_circle,
+                        Colors.green,
+                        _addCustomFood,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
 
@@ -212,13 +229,16 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: isSelected ? Colors.green : Colors.white,
+              color: isSelected ? Colors.green : Colors.grey.shade800,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: isSelected ? Colors.green : Colors.grey.shade300,
+                color: isSelected ? Colors.green : Colors.grey.shade700,
               ),
             ),
-            child: Icon(icon, color: isSelected ? Colors.white : Colors.grey),
+            child: Icon(
+              icon,
+              color: isSelected ? Colors.white : Colors.grey.shade300,
+            ),
           ),
           const SizedBox(height: 5),
           Text(
@@ -226,7 +246,7 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
             style: TextStyle(
               fontSize: 12,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              color: isSelected ? Colors.green : Colors.grey,
+              color: isSelected ? Colors.green : Colors.grey.shade400,
             ),
           ),
         ],
@@ -404,6 +424,36 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
     }
   }
 
+  Future<void> _openFoodRecognition() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => FoodRecognitionScreen(
+          onFoodSelected: (recognizedFood, servingSize) {
+            // Calculate calories for the serving size
+            final caloriesForServing =
+                (recognizedFood.caloriesPer100g * servingSize / 100).toDouble();
+
+            // Convert RecognizedFood to FoodItem
+            final foodItem = FoodItem(
+              id: recognizedFood.id,
+              name: recognizedFood.name,
+              calories: caloriesForServing,
+              protein: recognizedFood.protein * (servingSize / 100),
+              carbs: recognizedFood.carbs * (servingSize / 100),
+              fats: recognizedFood.fats * (servingSize / 100),
+              servingSize: servingSize.toDouble(),
+              category: recognizedFood.foodType,
+              barcode: 'recognized_${DateTime.now().millisecondsSinceEpoch}',
+            );
+
+            // Add the food log
+            _addFoodLogDirect(foodItem);
+          },
+        ),
+      ),
+    );
+  }
+
   Future<void> _scanBarcode() async {
     final result = await Navigator.of(
       context,
@@ -568,6 +618,52 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
       );
 
       // Clear search and refresh to show updated Popular Foods
+      _searchController.clear();
+      setState(() {
+        _searchResults = [];
+        _isSearching = false;
+      });
+    }
+  }
+
+  Future<void> _addFoodLogDirect(FoodItem food) async {
+    // Save food item if new
+    if (!food.id.startsWith('usda_')) {
+      await StorageService.saveFoodItem(food);
+    }
+
+    // Use default serving size from food item
+    final log = FoodLog(
+      id: const Uuid().v4(),
+      foodItemId: food.id,
+      foodName: food.name,
+      servings: 1.0,
+      timestamp: DateTime.now(),
+      mealType: _selectedMealType,
+      calories: food.calories,
+      protein: food.protein,
+      carbs: food.carbs,
+      fats: food.fats,
+    );
+
+    await StorageService.saveFoodLog(log);
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('${food.name} logged from AI recognition! ✨'),
+          backgroundColor: Colors.green,
+          action: SnackBarAction(
+            label: 'Undo',
+            textColor: Colors.white,
+            onPressed: () {
+              StorageService.deleteFoodLog(log.id);
+            },
+          ),
+        ),
+      );
+
+      // Refresh
       _searchController.clear();
       setState(() {
         _searchResults = [];

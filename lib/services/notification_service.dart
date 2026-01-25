@@ -176,8 +176,7 @@ class TZDateTime {
     return TZDateTime._(dateTime);
   }
 
-  final DateTime _dateTime;
-  TZDateTime._(this._dateTime);
+  TZDateTime._(DateTime dateTime);
 }
 
 String getLocation(String name) => name;

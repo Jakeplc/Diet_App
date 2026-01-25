@@ -2,13 +2,25 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import '../models/food_item.dart';
+import '../data/barcode_database.dart';
 
 class BarcodeApiService {
   static const String _openFoodFactsUrl =
       'https://world.openfoodfacts.org/api/v0/product';
 
   /// Fetch product information from Open Food Facts by barcode
+  /// First checks local database for instant lookup, then falls back to API
   static Future<FoodItem?> lookupBarcode(String barcode) async {
+    // First, check local database for instant lookup
+    final localItem = BarcodeDatabase.lookup(barcode);
+    if (localItem != null) {
+      if (kDebugMode) {
+        print('Found product in local database: ${localItem.name}');
+      }
+      return localItem;
+    }
+
+    // If not in local database, try the API
     try {
       final url = Uri.parse('$_openFoodFactsUrl/$barcode.json');
       final response = await http.get(url).timeout(const Duration(seconds: 10));
@@ -74,15 +86,6 @@ class BarcodeApiService {
       // Determine category
       String category = _determineCategory(product);
 
-      // Calculate health score
-      String healthScore = _calculateHealthScore(
-        protein,
-        carbs,
-        fats,
-        fiber,
-        sugar,
-      );
-
       return FoodItem(
         id: '', // Will be generated when saved
         name: productName,
@@ -143,51 +146,6 @@ class BarcodeApiService {
       return 'produce';
     } else {
       return 'other';
-    }
-  }
-
-  static String _calculateHealthScore(
-    double protein,
-    double carbs,
-    double fats,
-    double fiber,
-    double sugar,
-  ) {
-    int score = 0;
-
-    // Protein is good (more = better)
-    if (protein > 15) {
-      score += 2;
-    } else if (protein > 8) {
-      score += 1;
-    }
-
-    // Fiber is good (more = better)
-    if (fiber > 5) {
-      score += 2;
-    } else if (fiber > 2) {
-      score += 1;
-    }
-
-    // High sugar is bad
-    if (sugar > 20) {
-      score -= 2;
-    } else if (sugar > 10) {
-      score -= 1;
-    }
-
-    // High fat could be bad (depending on type, but we simplify)
-    if (fats > 30) {
-      score -= 1;
-    }
-
-    // Determine health score category
-    if (score >= 2) {
-      return 'green'; // Healthy
-    } else if (score >= 0) {
-      return 'yellow'; // Moderate
-    } else {
-      return 'red'; // Less healthy
     }
   }
 }

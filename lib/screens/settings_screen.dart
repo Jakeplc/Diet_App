@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import '../models/user_profile.dart';
 import '../services/storage_service.dart';
@@ -8,9 +10,25 @@ import '../services/export_service.dart';
 import 'package:share_plus/share_plus.dart';
 import 'paywall_screen.dart';
 import 'recipe_builder_screen.dart';
+import 'shopping_list_screen.dart';
+import 'fasting_timer_screen.dart';
+import 'achievements_screen.dart';
+import 'micronutrients_screen.dart';
+import 'body_composition_screen.dart';
+import 'coaching_tips_screen.dart';
+import 'meal_timing_screen.dart';
+import 'wearable_screen.dart';
+import 'sleep_tracking_screen.dart';
+import 'step_counter_screen.dart';
+import 'community_screen.dart';
+import 'heart_rate_screen.dart';
+import 'analytics_screen.dart';
+import 'extended_achievements_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({super.key});
+  final Function(ThemeMode)? onThemeChange;
+
+  const SettingsScreen({super.key, this.onThemeChange});
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -27,12 +45,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _loadData() async {
-    final profile = StorageService.getUserProfile();
-    final premium = await PremiumService.isPremium();
-    setState(() {
-      _profile = profile;
-      _isPremium = premium;
-    });
+    try {
+      final profile = StorageService.getUserProfile();
+      final premium = await PremiumService.isPremium().timeout(
+        const Duration(seconds: 5),
+        onTimeout: () => false,
+      );
+
+      if (mounted) {
+        setState(() {
+          _profile = profile;
+          _isPremium = premium;
+        });
+      }
+    } catch (e) {
+      print('Error loading settings data: $e');
+      if (mounted) {
+        setState(() {
+          _profile = StorageService.getUserProfile();
+          _isPremium = false;
+        });
+      }
+    }
   }
 
   @override
@@ -171,17 +205,41 @@ class _SettingsScreenState extends State<SettingsScreen> {
               title: const Text('Theme'),
               subtitle: const Text('Light / Dark mode'),
               trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-              onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Theme settings coming soon!')),
-                );
-              },
+              onTap: _showThemeDialog,
             ),
           ]),
 
           // Premium Features
           if (_isPremium)
             _buildSection('Premium Features', [
+              ListTile(
+                leading: const Icon(Icons.timer, color: Colors.purple),
+                title: const Text('Intermittent Fasting'),
+                subtitle: const Text('Track your fasting schedules'),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const FastingTimerScreen(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.shopping_cart, color: Colors.purple),
+                title: const Text('Shopping List'),
+                subtitle: const Text('Generate lists from meal plans'),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const ShoppingListScreen(),
+                    ),
+                  );
+                },
+              ),
               ListTile(
                 leading: const Icon(Icons.cloud_upload, color: Colors.purple),
                 title: const Text('Cloud Sync'),
@@ -201,6 +259,247 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 onTap: _showExportDialog,
               ),
             ]),
+
+          // Gamification
+          _buildSection('Achievements', [
+            ListTile(
+              leading: const Icon(Icons.emoji_events, color: Colors.amber),
+              title: const Text('Your Achievements'),
+              subtitle: const Text('View your badges and progress'),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const AchievementsScreen()),
+                );
+              },
+            ),
+            if (_isPremium)
+              ListTile(
+                leading: const Icon(Icons.star, color: Colors.amber),
+                title: const Text('All Achievements (30+)'),
+                subtitle: const Text('View all badges and rarity tiers'),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) =>
+                          ExtendedAchievementsScreen(isPremium: _isPremium),
+                    ),
+                  );
+                },
+              ),
+            if (_isPremium)
+              ListTile(
+                leading: const Icon(Icons.lightbulb, color: Colors.blue),
+                title: const Text('Coaching Tips'),
+                subtitle: const Text('Personalized nutrition advice'),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const CoachingTipsScreen(),
+                    ),
+                  );
+                },
+              ),
+            if (_isPremium)
+              ListTile(
+                leading: const Icon(Icons.schedule, color: Colors.cyan),
+                title: const Text('Meal Timing'),
+                subtitle: const Text('Optimal meal schedule'),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => MealTimingScreen(
+                        userProfile: _profile!,
+                        isPremium: _isPremium,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            if (_isPremium)
+              ListTile(
+                leading: const Icon(Icons.watch, color: Colors.purple),
+                title: const Text('Wearable Devices'),
+                subtitle: const Text('Apple Health, Google Fit'),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const WearableScreen()),
+                  );
+                },
+              ),
+            if (_isPremium)
+              ListTile(
+                leading: const Icon(Icons.dark_mode, color: Colors.indigo),
+                title: const Text('Sleep Tracking'),
+                subtitle: const Text('Monitor sleep quality & duration'),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) =>
+                          SleepTrackingScreen(isPremium: _isPremium),
+                    ),
+                  );
+                },
+              ),
+            if (_isPremium)
+              ListTile(
+                leading: const Icon(
+                  Icons.directions_walk,
+                  color: Colors.orange,
+                ),
+                title: const Text('Step Counter'),
+                subtitle: const Text('Daily steps and activity'),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => StepCounterScreen(isPremium: _isPremium),
+                    ),
+                  );
+                },
+              ),
+            if (_isPremium)
+              ListTile(
+                leading: const Icon(Icons.people, color: Colors.teal),
+                title: const Text('Community'),
+                subtitle: const Text('Friends, challenges & leaderboards'),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => CommunityScreen(isPremium: _isPremium),
+                    ),
+                  );
+                },
+              ),
+            if (_isPremium)
+              ListTile(
+                leading: const Icon(Icons.favorite, color: Colors.red),
+                title: const Text('Heart Rate'),
+                subtitle: const Text('Monitor heart rate & zones'),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => HeartRateScreen(isPremium: _isPremium),
+                    ),
+                  );
+                },
+              ),
+            if (_isPremium)
+              ListTile(
+                leading: const Icon(Icons.assessment, color: Colors.purple),
+                title: const Text('Analytics & Reports'),
+                subtitle: const Text('Weekly & monthly insights'),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => AnalyticsScreen(isPremium: _isPremium),
+                    ),
+                  );
+                },
+              ),
+          ]),
+
+          // Advanced Tracking
+          _buildSection('Advanced Tracking', [
+            ListTile(
+              leading: Icon(Icons.science, color: Colors.blue.shade700),
+              title: const Text('Micronutrients'),
+              subtitle: const Text('Track vitamins & minerals'),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (!_isPremium)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.amber.shade100,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        'Premium',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.amber.shade900,
+                        ),
+                      ),
+                    ),
+                  const SizedBox(width: 8),
+                  const Icon(Icons.arrow_forward_ios, size: 16),
+                ],
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const MicronutrientsScreen(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.assessment, color: Colors.purple.shade700),
+              title: const Text('Body Composition'),
+              subtitle: const Text(
+                'Track body fat, muscle mass & measurements',
+              ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (!_isPremium)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.amber.shade100,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        'Premium',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.amber.shade900,
+                        ),
+                      ),
+                    ),
+                  const SizedBox(width: 8),
+                  const Icon(Icons.arrow_forward_ios, size: 16),
+                ],
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const BodyCompositionScreen(),
+                  ),
+                );
+              },
+            ),
+          ]),
 
           // About
           _buildSection('About', [
@@ -315,6 +614,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         return 'Lose Weight';
       case 'gain_weight':
         return 'Gain Weight';
+      case 'body_recomp':
+        return 'Body Recomposition';
       case 'maintain':
         return 'Maintain Weight';
       default:
@@ -617,6 +918,196 @@ class _SettingsScreenState extends State<SettingsScreen> {
         // Navigator.of(context).pushReplacement(...);
       }
     }
+  }
+
+  Future<void> _showExportDialog() async {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Export Data'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Choose what data to export:'),
+            const SizedBox(height: 16),
+            _buildExportOption(
+              'Food Logs',
+              'Export all food entries',
+              Icons.restaurant_menu,
+              () => _exportData('food'),
+            ),
+            _buildExportOption(
+              'Weight History',
+              'Export weight log entries',
+              Icons.monitor_weight,
+              () => _exportData('weight'),
+            ),
+            _buildExportOption(
+              'Meal Plans',
+              'Export meal planning data',
+              Icons.calendar_today,
+              () => _exportData('meals'),
+            ),
+            _buildExportOption(
+              'Recipes',
+              'Export saved recipes',
+              Icons.menu_book,
+              () => _exportData('recipes'),
+            ),
+            _buildExportOption(
+              'Complete Report',
+              'Export all data with summary',
+              Icons.summarize,
+              () => _exportData('all'),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildExportOption(
+    String title,
+    String subtitle,
+    IconData icon,
+    VoidCallback onTap,
+  ) {
+    return ListTile(
+      leading: Icon(icon, color: Colors.blue),
+      title: Text(title),
+      subtitle: Text(subtitle),
+      onTap: onTap,
+      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+    );
+  }
+
+  Future<void> _exportData(String type) async {
+    Navigator.pop(context); // Close dialog
+
+    // Show loading
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: Card(
+          child: Padding(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(height: 16),
+                Text('Exporting data...'),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    try {
+      late File exportFile;
+
+      switch (type) {
+        case 'food':
+          exportFile = await ExportService.exportFoodLogs();
+          break;
+        case 'weight':
+          exportFile = await ExportService.exportWeightLogs();
+          break;
+        case 'meals':
+          exportFile = await ExportService.exportMealPlans();
+          break;
+        case 'recipes':
+          exportFile = await ExportService.exportRecipes();
+          break;
+        case 'all':
+          exportFile = await ExportService.exportAllData();
+          break;
+      }
+
+      // Close loading dialog
+      if (mounted) Navigator.pop(context);
+
+      // Share the file
+      await Share.shareXFiles([
+        XFile(exportFile.path),
+      ], text: 'My Diet App Export - $type');
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Exported to ${exportFile.path}'),
+            action: SnackBarAction(
+              label: 'Share',
+              onPressed: () {
+                Share.shareXFiles([XFile(exportFile.path)]);
+              },
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      // Close loading dialog
+      if (mounted) Navigator.pop(context);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Export failed: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  void _showThemeDialog() {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Select Theme'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            RadioListTile<ThemeMode>(
+              title: const Text('Light Mode'),
+              value: ThemeMode.light,
+              groupValue: Theme.of(context).brightness == Brightness.light
+                  ? ThemeMode.light
+                  : ThemeMode.dark,
+              onChanged: (value) {
+                widget.onThemeChange?.call(ThemeMode.light);
+                Navigator.pop(dialogContext);
+              },
+            ),
+            RadioListTile<ThemeMode>(
+              title: const Text('Dark Mode'),
+              value: ThemeMode.dark,
+              groupValue: Theme.of(context).brightness == Brightness.light
+                  ? ThemeMode.light
+                  : ThemeMode.dark,
+              onChanged: (value) {
+                widget.onThemeChange?.call(ThemeMode.dark);
+                Navigator.pop(dialogContext);
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -1154,128 +1645,6 @@ class _ProfileNameDialogState extends State<ProfileNameDialog> {
       ],
     );
   }
-
-  Future<void> _showExportDialog() async {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Export Data'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('Choose what data to export:'),
-            const SizedBox(height: 16),
-            _buildExportOption(
-              'Food Logs',
-              'Export all your food entries',
-              Icons.restaurant,
-              () => _exportData('food_logs'),
-            ),
-            _buildExportOption(
-              'Weight Logs',
-              'Export your weight history',
-              Icons.monitor_weight,
-              () => _exportData('weight_logs'),
-            ),
-            _buildExportOption(
-              'Meal Plans',
-              'Export your meal plans',
-              Icons.calendar_today,
-              () => _exportData('meal_plans'),
-            ),
-            _buildExportOption(
-              'Recipes',
-              'Export your recipes',
-              Icons.book,
-              () => _exportData('recipes'),
-            ),
-            _buildExportOption(
-              'Complete Export',
-              'Export all data and statistics',
-              Icons.cloud_download,
-              () => _exportData('complete'),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildExportOption(
-    String title,
-    String subtitle,
-    IconData icon,
-    VoidCallback onTap,
-  ) {
-    return ListTile(
-      leading: Icon(icon, color: Colors.orange),
-      title: Text(title),
-      subtitle: Text(subtitle),
-      trailing: const Icon(Icons.download),
-      onTap: () {
-        Navigator.pop(context);
-        onTap();
-      },
-    );
-  }
-
-  Future<void> _exportData(String type) async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Center(child: CircularProgressIndicator()),
-    );
-
-    try {
-      late final file;
-
-      switch (type) {
-        case 'food_logs':
-          file = await ExportService.exportFoodLogs();
-          break;
-        case 'weight_logs':
-          file = await ExportService.exportWeightLogs();
-          break;
-        case 'meal_plans':
-          file = await ExportService.exportMealPlans();
-          break;
-        case 'recipes':
-          file = await ExportService.exportRecipes();
-          break;
-        case 'complete':
-          file = await ExportService.exportAllData();
-          break;
-        default:
-          throw Exception('Unknown export type: \$type');
-      }
-
-      Navigator.pop(context); // Close loading dialog
-
-      // Share the file
-      await Share.shareXFiles([XFile(file.path)], text: 'Diet App Data Export');
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Data exported successfully!'),
-          backgroundColor: Colors.green,
-        ),
-      );
-    } catch (e) {
-      Navigator.pop(context); // Close loading dialog
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Export failed: \$e'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
-  }
 }
 
 // Weight Edit Dialog
@@ -1312,8 +1681,6 @@ class _WeightEditDialogState extends State<WeightEditDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final double minWeight = widget.isImperial ? 66 : 30; // 66 lbs = ~30 kg
-    final double maxWeight = widget.isImperial ? 440 : 200; // 440 lbs = ~200 kg
     final String minLabel = widget.isImperial ? '66 lbs' : '30 kg';
     final String maxLabel = widget.isImperial ? '440 lbs' : '200 kg';
 
@@ -1544,6 +1911,15 @@ class _GoalSelectionDialogState extends State<GoalSelectionDialog> {
             Colors.green,
             'Caloric surplus for muscle gain',
           ),
+          const SizedBox(height: 12),
+          _buildGoalOption(
+            'body_recomp',
+            'Body Recomposition',
+            Icons.fitness_center,
+            Colors.purple,
+            'Lose fat while building muscle',
+            isPremium: true,
+          ),
         ],
       ),
       actions: [
@@ -1566,8 +1942,9 @@ class _GoalSelectionDialogState extends State<GoalSelectionDialog> {
     String title,
     IconData icon,
     Color color,
-    String description,
-  ) {
+    String description, {
+    bool isPremium = false,
+  }) {
     final isSelected = _selectedGoal == value;
     return InkWell(
       onTap: () {
@@ -1595,13 +1972,38 @@ class _GoalSelectionDialogState extends State<GoalSelectionDialog> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: isSelected ? color : null,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        title,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: isSelected ? color : null,
+                        ),
+                      ),
+                      if (isPremium) ...[
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.amber,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: const Text(
+                            'PREMIUM',
+                            style: TextStyle(
+                              fontSize: 9,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                   Text(
                     description,

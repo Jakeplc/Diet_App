@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../models/user_profile.dart';
 import '../models/food_log.dart';
@@ -15,7 +14,9 @@ import 'meal_planning_screen.dart';
 import '../widgets/ad_banner_widget.dart';
 
 class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({super.key});
+  final Function(ThemeMode)? onThemeChange;
+
+  const DashboardScreen({super.key, this.onThemeChange});
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -55,7 +56,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       const FoodLoggingScreen(),
       const MealPlanningScreen(),
       const ProgressScreen(),
-      const SettingsScreen(),
+      SettingsScreen(onThemeChange: widget.onThemeChange),
     ];
 
     return Scaffold(

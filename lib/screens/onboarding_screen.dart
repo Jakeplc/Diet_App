@@ -3,10 +3,13 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../models/user_profile.dart';
 import '../services/storage_service.dart';
 import '../services/calorie_calculator_service.dart';
+import '../theme/app_theme.dart';
 import 'dashboard_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({super.key});
+  final Function(ThemeMode)? onThemeChange;
+
+  const OnboardingScreen({super.key, this.onThemeChange});
 
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
@@ -137,7 +140,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
         children: [
-          Icon(icon, color: Colors.green),
+          Icon(icon, color: const Color.fromARGB(255, 121, 193, 226)),
           const SizedBox(width: 15),
           Expanded(child: Text(text, style: const TextStyle(fontSize: 16))),
         ],
@@ -235,7 +238,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           const Text('Activity Level', style: TextStyle(fontSize: 16)),
           const SizedBox(height: 10),
           DropdownButtonFormField<String>(
-            value: _activityLevel,
+            initialValue: _activityLevel,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               prefixIcon: Icon(Icons.directions_run),
@@ -303,6 +306,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             Icons.trending_up,
             Colors.green,
           ),
+          const SizedBox(height: 15),
+          _buildGoalCard(
+            'body_recomp',
+            'Body Recomposition',
+            'Lose fat while building muscle',
+            Icons.fitness_center,
+            Colors.purple,
+            isPremium: true,
+          ),
         ],
       ),
     );
@@ -313,8 +325,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     String title,
     String subtitle,
     IconData icon,
-    Color color,
-  ) {
+    Color color, {
+    bool isPremium = false,
+  }) {
     final isSelected = _goal == value;
     return GestureDetector(
       onTap: () => setState(() => _goal = value),
@@ -343,14 +356,42 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          title,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      if (isPremium) ...[
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.amber,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Text(
+                            'PREMIUM',
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
-                  Text(subtitle, style: const TextStyle(color: Colors.grey)),
+                  const SizedBox(height: 5),
+                  Text(subtitle, style: TextStyle(color: Colors.grey.shade600)),
                 ],
               ),
             ),
@@ -467,10 +508,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
     await StorageService.saveUserProfile(profile);
 
+    // Set theme based on gender
+    if (widget.onThemeChange != null) {
+      widget.onThemeChange!(AppTheme.getThemeModeForGender(_gender));
+    }
+
     // Navigate to dashboard
     if (mounted) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const DashboardScreen()),
+        MaterialPageRoute(
+          builder: (_) => DashboardScreen(onThemeChange: widget.onThemeChange),
+        ),
       );
     }
   }

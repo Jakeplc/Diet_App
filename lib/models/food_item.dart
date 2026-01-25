@@ -1,3 +1,5 @@
+import 'micronutrient_data.dart';
+
 class FoodItem {
   String id;
   String name;
@@ -13,6 +15,7 @@ class FoodItem {
   String category; // fruit, vegetable, protein, grain, dairy, snack
   bool isCustom; // User-created food
   String? imageUrl;
+  MicronutrientData? micronutrients; // Optional micronutrient data
 
   FoodItem({
     required this.id,
@@ -29,6 +32,7 @@ class FoodItem {
     this.category = 'other',
     this.isCustom = false,
     this.imageUrl,
+    this.micronutrients,
   });
 
   // Health score (green/yellow/red based on nutritional value)
@@ -60,6 +64,7 @@ class FoodItem {
     String? category,
     bool? isCustom,
     String? imageUrl,
+    MicronutrientData? micronutrients,
   }) {
     return FoodItem(
       id: id ?? this.id,
@@ -76,6 +81,7 @@ class FoodItem {
       category: category ?? this.category,
       isCustom: isCustom ?? this.isCustom,
       imageUrl: imageUrl ?? this.imageUrl,
+      micronutrients: micronutrients ?? this.micronutrients,
     );
   }
 }
