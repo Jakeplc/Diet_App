@@ -32,6 +32,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.darkBackground,
       body: SafeArea(
         child: Column(
           children: [
@@ -58,7 +59,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     controller: _pageController,
                     count: 5,
                     effect: WormEffect(
-                      activeDotColor: Theme.of(context).primaryColor,
+                      activeDotColor: AppTheme.darkPrimary,
+                      dotColor: AppTheme.darkOutline,
                       dotHeight: 10,
                       dotWidth: 10,
                     ),
@@ -75,6 +77,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               curve: Curves.easeInOut,
                             );
                           },
+                          style: TextButton.styleFrom(
+                            foregroundColor: AppTheme.darkPrimary,
+                          ),
                           child: const Text('Back'),
                         )
                       else
@@ -89,6 +94,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 );
                               },
                         style: ElevatedButton.styleFrom(
+                          backgroundColor: AppTheme.darkPrimary,
+                          foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 40,
                             vertical: 15,
@@ -108,41 +115,73 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   Widget _buildWelcomePage() {
-    return Padding(
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [AppTheme.darkBackground, AppTheme.darkComplementary],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
       padding: const EdgeInsets.all(20),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.restaurant_menu, size: 100, color: Colors.green),
+          const Icon(
+            Icons.restaurant_menu,
+            size: 100,
+            color: AppTheme.darkPrimary,
+          ),
           const SizedBox(height: 30),
           const Text(
             'Welcome to Diet Tracker',
-            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+              color: AppTheme.darkText,
+            ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 20),
           const Text(
             'Your personal nutrition companion for achieving your health goals',
-            style: TextStyle(fontSize: 16, color: Colors.grey),
+            style: TextStyle(fontSize: 16, color: AppTheme.darkTextMuted),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 40),
-          _buildFeatureItem(Icons.restaurant, 'Track your meals effortlessly'),
-          _buildFeatureItem(Icons.insights, 'Get personalized insights'),
-          _buildFeatureItem(Icons.trending_up, 'Reach your goals faster'),
+          _buildFeatureItem(
+            Icons.restaurant,
+            'Track your meals effortlessly',
+            AppTheme.darkPrimary,
+          ),
+          _buildFeatureItem(
+            Icons.star,
+            'Get personalized insights',
+            AppTheme.darkSecondary,
+          ),
+          _buildFeatureItem(
+            Icons.trending_up,
+            'Reach your goals faster',
+            AppTheme.darkPrimary,
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildFeatureItem(IconData icon, String text) {
+  Widget _buildFeatureItem(IconData icon, String text, Color color) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
         children: [
-          Icon(icon, color: const Color.fromARGB(255, 121, 193, 226)),
+          Icon(icon, color: color),
           const SizedBox(width: 15),
-          Expanded(child: Text(text, style: const TextStyle(fontSize: 16))),
+          Expanded(
+            child: Text(
+              text,
+              style: const TextStyle(fontSize: 16, color: AppTheme.darkText),
+            ),
+          ),
         ],
       ),
     );
@@ -156,15 +195,23 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         children: [
           const Text(
             'Tell us about yourself',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: AppTheme.darkText,
+            ),
           ),
           const SizedBox(height: 30),
           TextField(
             decoration: const InputDecoration(
               labelText: 'Name',
               border: OutlineInputBorder(),
-              prefixIcon: Icon(Icons.person),
+              prefixIcon: Icon(Icons.person, color: AppTheme.darkPrimary),
+              filled: true,
+              fillColor: AppTheme.darkCard,
+              labelStyle: TextStyle(color: AppTheme.darkTextMuted),
             ),
+            style: const TextStyle(color: AppTheme.darkText),
             onChanged: (value) => _name = value,
           ),
           const SizedBox(height: 20),
@@ -172,13 +219,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             decoration: const InputDecoration(
               labelText: 'Age',
               border: OutlineInputBorder(),
-              prefixIcon: Icon(Icons.cake),
+              prefixIcon: Icon(Icons.cake, color: AppTheme.darkPrimary),
+              filled: true,
+              fillColor: AppTheme.darkCard,
+              labelStyle: TextStyle(color: AppTheme.darkTextMuted),
             ),
             keyboardType: TextInputType.number,
+            style: const TextStyle(color: AppTheme.darkText),
             onChanged: (value) => _age = int.tryParse(value) ?? 25,
           ),
           const SizedBox(height: 20),
-          const Text('Gender', style: TextStyle(fontSize: 16)),
+          const Text(
+            'Gender',
+            style: TextStyle(fontSize: 16, color: AppTheme.darkText),
+          ),
           const SizedBox(height: 10),
           SegmentedButton<String>(
             segments: const [
@@ -190,6 +244,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             onSelectionChanged: (Set<String> selected) {
               setState(() => _gender = selected.first);
             },
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.resolveWith(
+                (states) => states.contains(MaterialState.selected)
+                    ? AppTheme.darkPrimary
+                    : AppTheme.darkCard,
+              ),
+              foregroundColor: MaterialStateProperty.resolveWith(
+                (states) => states.contains(MaterialState.selected)
+                    ? Colors.white
+                    : AppTheme.darkText,
+              ),
+              side: MaterialStateProperty.all(
+                const BorderSide(color: AppTheme.darkOutline),
+              ),
+            ),
           ),
         ],
       ),
@@ -204,45 +273,84 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         children: [
           const Text(
             'Physical Stats',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: AppTheme.darkText,
+            ),
           ),
           const SizedBox(height: 30),
-          const Text('Height (cm)', style: TextStyle(fontSize: 16)),
-          Slider(
-            value: _height,
-            min: 130,
-            max: 220,
-            divisions: 90,
-            label: '${_height.toInt()} cm',
-            onChanged: (value) => setState(() => _height = value),
+          const Text(
+            'Height (cm)',
+            style: TextStyle(fontSize: 16, color: AppTheme.darkText),
+          ),
+          SliderTheme(
+            data: SliderTheme.of(context).copyWith(
+              activeTrackColor: AppTheme.darkPrimary,
+              inactiveTrackColor: AppTheme.darkOutline,
+              thumbColor: AppTheme.darkPrimary,
+            ),
+            child: Slider(
+              value: _height,
+              min: 130,
+              max: 220,
+              divisions: 90,
+              label: '${_height.toInt()} cm',
+              onChanged: (value) => setState(() => _height = value),
+            ),
           ),
           Text(
             '${_height.toInt()} cm',
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: AppTheme.darkText,
+            ),
           ),
           const SizedBox(height: 30),
-          const Text('Weight (kg)', style: TextStyle(fontSize: 16)),
-          Slider(
-            value: _weight,
-            min: 40,
-            max: 150,
-            divisions: 110,
-            label: '${_weight.toInt()} kg',
-            onChanged: (value) => setState(() => _weight = value),
+          const Text(
+            'Weight (kg)',
+            style: TextStyle(fontSize: 16, color: AppTheme.darkText),
+          ),
+          SliderTheme(
+            data: SliderTheme.of(context).copyWith(
+              activeTrackColor: AppTheme.darkPrimary,
+              inactiveTrackColor: AppTheme.darkOutline,
+              thumbColor: AppTheme.darkPrimary,
+            ),
+            child: Slider(
+              value: _weight,
+              min: 40,
+              max: 150,
+              divisions: 110,
+              label: '${_weight.toInt()} kg',
+              onChanged: (value) => setState(() => _weight = value),
+            ),
           ),
           Text(
             '${_weight.toInt()} kg',
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: AppTheme.darkText,
+            ),
           ),
           const SizedBox(height: 30),
-          const Text('Activity Level', style: TextStyle(fontSize: 16)),
+          const Text(
+            'Activity Level',
+            style: TextStyle(fontSize: 16, color: AppTheme.darkText),
+          ),
           const SizedBox(height: 10),
           DropdownButtonFormField<String>(
             initialValue: _activityLevel,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
-              prefixIcon: Icon(Icons.directions_run),
+              prefixIcon: Icon(Icons.directions_run, color: AppTheme.darkText),
+              filled: true,
+              fillColor: AppTheme.darkCard,
             ),
+            dropdownColor: AppTheme.darkCard,
+            style: const TextStyle(color: AppTheme.darkText),
             items: const [
               DropdownMenuItem(
                 value: 'sedentary',
@@ -280,7 +388,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         children: [
           const Text(
             'What\'s your goal?',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: AppTheme.darkText,
+            ),
           ),
           const SizedBox(height: 30),
           _buildGoalCard(
@@ -288,7 +400,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             'Lose Weight',
             'Burn fat and get lean',
             Icons.trending_down,
-            Colors.orange,
+            AppTheme.darkPrimary,
           ),
           const SizedBox(height: 15),
           _buildGoalCard(
@@ -296,7 +408,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             'Maintain Weight',
             'Stay healthy and balanced',
             Icons.favorite,
-            Colors.blue,
+            const Color(0xFF3B82F6),
           ),
           const SizedBox(height: 15),
           _buildGoalCard(
@@ -304,7 +416,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             'Gain Weight',
             'Build muscle and strength',
             Icons.trending_up,
-            Colors.green,
+            AppTheme.darkSecondary,
           ),
           const SizedBox(height: 15),
           _buildGoalCard(
@@ -312,7 +424,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             'Body Recomposition',
             'Lose fat while building muscle',
             Icons.fitness_center,
-            Colors.purple,
+            const Color(0xFF8B5CF6),
             isPremium: true,
           ),
         ],
@@ -335,11 +447,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           border: Border.all(
-            color: isSelected ? color : Colors.grey.shade300,
+            color: isSelected ? AppTheme.darkPrimary : AppTheme.darkOutline,
             width: isSelected ? 2 : 1,
           ),
           borderRadius: BorderRadius.circular(12),
-          color: isSelected ? color.withOpacity(0.1) : null,
+          color: AppTheme.darkCard,
         ),
         child: Row(
           children: [
@@ -364,6 +476,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
+                            color: AppTheme.darkText,
                           ),
                         ),
                       ),
@@ -375,7 +488,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.amber,
+                            color: AppTheme.darkSecondary,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: const Text(
@@ -391,11 +504,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ],
                   ),
                   const SizedBox(height: 5),
-                  Text(subtitle, style: TextStyle(color: Colors.grey.shade600)),
+                  Text(
+                    subtitle,
+                    style: const TextStyle(color: AppTheme.darkTextMuted),
+                  ),
                 ],
               ),
             ),
-            if (isSelected) Icon(Icons.check_circle, color: color),
+            if (isSelected)
+              const Icon(Icons.check_circle, color: AppTheme.darkPrimary),
           ],
         ),
       ),
@@ -410,10 +527,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         children: [
           const Text(
             'Diet Preferences',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: AppTheme.darkText,
+            ),
           ),
           const SizedBox(height: 30),
-          const Text('Diet Type', style: TextStyle(fontSize: 16)),
+          const Text(
+            'Diet Type',
+            style: TextStyle(fontSize: 16, color: AppTheme.darkText),
+          ),
           const SizedBox(height: 10),
           Wrap(
             spacing: 10,
@@ -431,17 +555,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           Container(
             padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
-              color: Colors.blue.shade50,
+              color: AppTheme.darkSecondary.withOpacity(0.2),
               borderRadius: BorderRadius.circular(12),
             ),
             child: const Row(
               children: [
-                Icon(Icons.info_outline, color: Colors.blue),
+                Icon(Icons.info_outline, color: AppTheme.darkSecondary),
                 SizedBox(width: 10),
                 Expanded(
                   child: Text(
                     'You can change these settings anytime in your profile',
-                    style: TextStyle(color: Colors.blue),
+                    style: TextStyle(color: AppTheme.darkText),
                   ),
                 ),
               ],
@@ -458,7 +582,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       label: Text(label),
       selected: isSelected,
       onSelected: (selected) => setState(() => _dietType = value),
-      selectedColor: Colors.green.shade100,
+      selectedColor: AppTheme.darkPrimary,
+      backgroundColor: AppTheme.darkCard,
+      side: const BorderSide(color: AppTheme.darkOutline),
+      labelStyle: TextStyle(
+        color: isSelected ? Colors.white : AppTheme.darkText,
+      ),
     );
   }
 

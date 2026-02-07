@@ -8,6 +8,7 @@ import '../services/premium_service.dart';
 import '../services/food_search_api_service.dart';
 import '../services/barcode_api_service.dart';
 import '../services/meal_plan_generator_service.dart';
+import '../theme/app_theme.dart';
 import 'paywall_screen.dart';
 import 'food_logging_screen.dart';
 
@@ -58,8 +59,12 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.darkBackground,
       appBar: AppBar(
         title: const Text('Meal Planning'),
+        backgroundColor: AppTheme.darkBackground,
+        foregroundColor: AppTheme.darkText,
+        elevation: 0,
         actions: [
           IconButton(
             icon: const Icon(Icons.auto_awesome),
@@ -78,7 +83,7 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
           // Day Selector
           Container(
             height: 60,
-            color: const Color(0xFF1E1E1E),
+            color: AppTheme.darkCard,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: _daysOfWeek.length,
@@ -91,17 +96,23 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
                     margin: const EdgeInsets.all(8),
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     decoration: BoxDecoration(
-                      color: isSelected ? Colors.orange : Colors.transparent,
+                      color: isSelected
+                          ? AppTheme.darkPrimary
+                          : Colors.transparent,
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: isSelected ? Colors.orange : Colors.grey,
+                        color: isSelected
+                            ? AppTheme.darkPrimary
+                            : AppTheme.darkOutline,
                       ),
                     ),
                     child: Center(
                       child: Text(
                         day.substring(0, 3),
                         style: TextStyle(
-                          color: isSelected ? Colors.white : Colors.grey,
+                          color: isSelected
+                              ? Colors.white
+                              : AppTheme.darkTextMuted,
                           fontWeight: isSelected
                               ? FontWeight.bold
                               : FontWeight.normal,

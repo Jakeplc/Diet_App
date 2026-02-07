@@ -108,26 +108,18 @@ class _PaywallScreenState extends State<PaywallScreen> {
                 _buildPricingCard(
                   'monthly',
                   'Monthly',
-                  '\$4.99',
+                  '\$1.99',
                   'per month',
-                  '',
+                  'Cancel anytime',
                 ),
                 const SizedBox(height: 15),
                 _buildPricingCard(
                   'yearly',
                   'Yearly',
-                  '\$39.99',
+                  '\$59.99',
                   'per year',
-                  'Save 33%',
-                  isPopular: true,
-                ),
-                const SizedBox(height: 15),
-                _buildPricingCard(
-                  'lifetime',
-                  'Lifetime',
-                  '\$99.99',
-                  'one-time',
                   'Best Value',
+                  isPopular: true,
                 ),
 
                 const SizedBox(height: 30),
@@ -297,9 +289,10 @@ class _PaywallScreenState extends State<PaywallScreen> {
 
       if (success && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('🎉 Welcome to Premium!'),
+          SnackBar(
+            content: const Text('🎉 Welcome to Premium! No Ads Forever'),
             backgroundColor: Colors.green,
+            duration: const Duration(seconds: 3),
           ),
         );
         Navigator.pop(context, true);

@@ -132,6 +132,14 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                           color: Colors.black87,
                         ),
                       ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Generated: ${report.generatedDate.toString().split('.')[0]}',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
                       const SizedBox(height: 12),
                       _SummaryCard(
                         icon: Icons.fire_truck,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'services/storage_service.dart';
 import 'services/notification_service.dart';
+import 'services/premium_service.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/paywall_screen.dart';
@@ -10,10 +11,32 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize local storage (Hive)
-  await StorageService.init();
+  try {
+    await StorageService.init();
+  } catch (e) {
+    debugPrint('Storage initialization failed: $e');
+  }
 
-  // Initialize notifications
-  await NotificationService.init();
+  // Initialize notifications (guarded per platform)
+  try {
+    await NotificationService.init();
+  } catch (e) {
+    debugPrint('Notification initialization skipped: $e');
+  }
+
+  // Initialize premium service (Apple IAP)
+  try {
+    await PremiumService.initialize();
+  } catch (e) {
+    debugPrint('Premium service initialization failed: $e');
+  }
+
+  // Set custom error widget
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    return MaterialApp(
+      home: Scaffold(body: Center(child: Text('Error: ${details.exception}'))),
+    );
+  };
 
   runApp(const DietApp());
 }
@@ -26,26 +49,41 @@ class DietApp extends StatefulWidget {
 }
 
 class _DietAppState extends State<DietApp> {
-  ThemeMode _themeMode = ThemeMode.dark;
+  EmberThemeMode _emberThemeMode = EmberThemeMode.light;
 
   @override
   void initState() {
     super.initState();
-    _loadThemeFromUserProfile();
+    _loadThemeFromStorage();
   }
 
-  void _loadThemeFromUserProfile() {
+  void _loadThemeFromStorage() {
+    // Load saved theme preference or default to light
     final profile = StorageService.getUserProfile();
     if (profile != null) {
+      // Default to feminine if female, light otherwise
       setState(() {
-        _themeMode = AppTheme.getThemeModeForGender(profile.gender);
+        _emberThemeMode = profile.gender.toLowerCase() == 'female'
+            ? EmberThemeMode.feminine
+            : EmberThemeMode.light;
       });
     }
   }
 
-  void _setTheme(ThemeMode mode) {
+  void _setTheme(EmberThemeMode mode) {
     setState(() {
-      _themeMode = mode;
+      _emberThemeMode = mode;
+    });
+    // Could save preference to storage here
+  }
+
+  // Legacy support for ThemeMode
+  void _setThemeLegacy(ThemeMode mode) {
+    // Convert ThemeMode to EmberThemeMode
+    setState(() {
+      _emberThemeMode = mode == ThemeMode.light
+          ? EmberThemeMode.light
+          : EmberThemeMode.dark;
     });
   }
 
@@ -54,13 +92,16 @@ class _DietAppState extends State<DietApp> {
     return MaterialApp(
       title: 'Diet Tracker',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: _themeMode,
-      home: SplashScreen(onThemeChange: _setTheme),
+      theme: AppTheme.getTheme(_emberThemeMode),
+      darkTheme: AppTheme.getTheme(_emberThemeMode),
+      themeMode:
+          ThemeMode.light, // Always use light mode since theme is baked in
+      home: SplashScreen(onThemeChange: _setThemeLegacy),
       routes: {
-        '/onboarding': (context) => OnboardingScreen(onThemeChange: _setTheme),
-        '/dashboard': (context) => DashboardScreen(onThemeChange: _setTheme),
+        '/onboarding': (context) =>
+            OnboardingScreen(onThemeChange: _setThemeLegacy),
+        '/dashboard': (context) =>
+            DashboardScreen(onThemeChange: _setThemeLegacy),
         '/paywall': (context) => const PaywallScreen(),
       },
     );
@@ -77,36 +118,118 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  bool _isNavigating = false;
+
   @override
   void initState() {
     super.initState();
-    _initializeApp();
+    // Defer navigation until after first frame to avoid route controller issues
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializeApp();
+    });
+
+    // Safety timeout: if still on splash after 10 seconds, force navigate to onboarding
+    Future.delayed(const Duration(seconds: 10), () {
+      if (mounted && !_isNavigating) {
+        debugPrint('Splash timeout: forcing navigation to onboarding');
+        _isNavigating = true;
+        try {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (_) =>
+                  OnboardingScreen(onThemeChange: widget.onThemeChange),
+            ),
+          );
+        } catch (e) {
+          debugPrint('Timeout fallback failed: $e');
+        }
+      }
+    });
   }
 
   Future<void> _initializeApp() async {
-    // Check if user has completed onboarding
-    final profile = StorageService.getUserProfile();
+    if (_isNavigating) return;
+    _isNavigating = true;
 
-    // Set theme based on user gender before navigation
-    if (profile != null && widget.onThemeChange != null) {
-      widget.onThemeChange!(AppTheme.getThemeModeForGender(profile.gender));
-    }
+    try {
+      // Check if user has completed onboarding
+      final profile = StorageService.getUserProfile();
+      debugPrint(
+        'Profile check: ${profile != null ? "exists" : "null (first run)"}',
+      );
 
-    // Simulate splash delay
-    await Future.delayed(const Duration(seconds: 2));
+      // Set theme based on user gender before navigation
+      if (profile != null && widget.onThemeChange != null) {
+        widget.onThemeChange!(AppTheme.getThemeModeForGender(profile.gender));
+      }
 
-    if (mounted) {
+      // Simulate splash delay
+      await Future.delayed(const Duration(seconds: 2));
+
+      if (!mounted) {
+        debugPrint('Widget unmounted, skipping navigation');
+        return;
+      }
+
       if (profile == null) {
         // First time user - show onboarding
-        Navigator.of(context).pushReplacementNamed('/onboarding');
+        debugPrint('Navigating to onboarding (no profile)');
+        try {
+          if (mounted) {
+            await Navigator.of(context).pushReplacementNamed('/onboarding');
+          }
+        } catch (navError) {
+          debugPrint(
+            'Named route navigation failed: $navError, trying direct route',
+          );
+          if (mounted) {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (_) =>
+                    OnboardingScreen(onThemeChange: widget.onThemeChange),
+              ),
+            );
+          }
+        }
       } else {
         // Existing user - go to dashboard
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (_) =>
-                DashboardScreen(onThemeChange: widget.onThemeChange),
-          ),
-        );
+        debugPrint('Navigating to dashboard (profile exists)');
+        try {
+          if (mounted) {
+            await Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (_) =>
+                    DashboardScreen(onThemeChange: widget.onThemeChange),
+              ),
+            );
+          }
+        } catch (navError) {
+          debugPrint('Dashboard navigation failed: $navError');
+          // Fallback to onboarding
+          if (mounted) {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (_) =>
+                    OnboardingScreen(onThemeChange: widget.onThemeChange),
+              ),
+            );
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint('Splash initialization error: $e');
+      if (mounted) {
+        // Fallback to onboarding on any error
+        try {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (_) =>
+                  OnboardingScreen(onThemeChange: widget.onThemeChange),
+            ),
+          );
+        } catch (fallbackError) {
+          debugPrint('Even fallback failed: $fallbackError');
+        }
       }
     }
   }

@@ -9,6 +9,7 @@ import '../services/storage_service.dart';
 import '../services/premium_service.dart';
 import '../services/barcode_api_service.dart';
 import '../services/food_search_api_service.dart';
+import '../theme/app_theme.dart';
 import 'paywall_screen.dart';
 import 'food_recognition_screen.dart';
 
@@ -96,14 +97,38 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final profile = StorageService.getUserProfile();
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Log Food'), elevation: 0),
+      backgroundColor: AppTheme.darkBackground,
+      appBar: AppBar(
+        title: const Text('Log Food'),
+        backgroundColor: AppTheme.darkBackground,
+        foregroundColor: AppTheme.darkText,
+        elevation: 0,
+        actions: [
+          if (profile != null && profile.name.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(right: 16),
+              child: Center(
+                child: Text(
+                  profile.name,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                    color: AppTheme.darkText,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
       body: Column(
         children: [
           // Meal Type Selector
           Container(
             padding: const EdgeInsets.all(15),
-            color: const Color(0xFF1E1E1E),
+            color: AppTheme.darkCard,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -124,14 +149,20 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
             padding: const EdgeInsets.all(15),
             child: TextField(
               controller: _searchController,
-              style: const TextStyle(color: Colors.white),
+              style: const TextStyle(color: AppTheme.darkText),
               decoration: InputDecoration(
                 hintText: 'Search for food...',
-                hintStyle: TextStyle(color: Colors.grey.shade400),
-                prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                hintStyle: const TextStyle(color: AppTheme.darkTextMuted),
+                prefixIcon: const Icon(
+                  Icons.search,
+                  color: AppTheme.darkTextMuted,
+                ),
                 suffixIcon: _searchController.text.isNotEmpty
                     ? IconButton(
-                        icon: const Icon(Icons.clear, color: Colors.grey),
+                        icon: const Icon(
+                          Icons.clear,
+                          color: AppTheme.darkTextMuted,
+                        ),
                         onPressed: () {
                           _searchController.clear();
                         },
@@ -139,18 +170,21 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
                     : null,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
-                  borderSide: BorderSide(color: Colors.grey.shade700),
+                  borderSide: const BorderSide(color: AppTheme.darkOutline),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
-                  borderSide: BorderSide(color: Colors.grey.shade700),
+                  borderSide: const BorderSide(color: AppTheme.darkOutline),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
-                  borderSide: const BorderSide(color: Colors.orange, width: 2),
+                  borderSide: const BorderSide(
+                    color: AppTheme.darkPrimary,
+                    width: 2,
+                  ),
                 ),
                 filled: true,
-                fillColor: const Color(0xFF1E1E1E),
+                fillColor: AppTheme.darkCard,
               ),
             ),
           ),
@@ -229,15 +263,15 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: isSelected ? Colors.green : Colors.grey.shade800,
+              color: isSelected ? AppTheme.darkPrimary : AppTheme.darkCard,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: isSelected ? Colors.green : Colors.grey.shade700,
+                color: isSelected ? AppTheme.darkPrimary : AppTheme.darkOutline,
               ),
             ),
             child: Icon(
               icon,
-              color: isSelected ? Colors.white : Colors.grey.shade300,
+              color: isSelected ? Colors.white : AppTheme.darkTextMuted,
             ),
           ),
           const SizedBox(height: 5),
@@ -246,7 +280,7 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
             style: TextStyle(
               fontSize: 12,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              color: isSelected ? Colors.green : Colors.grey.shade400,
+              color: isSelected ? AppTheme.darkPrimary : AppTheme.darkTextMuted,
             ),
           ),
         ],
@@ -263,10 +297,14 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
     return ElevatedButton(
       onPressed: onTap,
       style: ElevatedButton.styleFrom(
-        backgroundColor: color.withOpacity(0.1),
+        backgroundColor: color.withOpacity(0.15),
         foregroundColor: color,
         elevation: 0,
         padding: const EdgeInsets.symmetric(vertical: 15),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(color: color.withOpacity(0.3)),
+        ),
       ),
       child: Column(
         children: [
@@ -288,11 +326,11 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(),
+            CircularProgressIndicator(color: AppTheme.darkPrimary),
             SizedBox(height: 20),
             Text(
               'Searching...',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
+              style: TextStyle(fontSize: 16, color: AppTheme.darkTextMuted),
             ),
           ],
         ),
@@ -304,15 +342,18 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.search_off, size: 80, color: Colors.grey.shade400),
+            Icon(Icons.search_off, size: 80, color: AppTheme.darkOutline),
             const SizedBox(height: 20),
             const Text(
               'No results found',
-              style: TextStyle(fontSize: 18, color: Colors.grey),
+              style: TextStyle(fontSize: 18, color: AppTheme.darkTextMuted),
             ),
             const SizedBox(height: 10),
             TextButton(
               onPressed: _addCustomFood,
+              style: TextButton.styleFrom(
+                foregroundColor: AppTheme.darkPrimary,
+              ),
               child: const Text('Add as custom food'),
             ),
           ],
@@ -330,9 +371,12 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
         return Container(
           margin: const EdgeInsets.only(bottom: 10),
           decoration: BoxDecoration(
-            color: const Color(0xFF1E1E1E),
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.grey.shade800, width: 1),
+            color: AppTheme.darkCard,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: AppTheme.darkOutline.withOpacity(0.5),
+              width: 1,
+            ),
           ),
           child: ListTile(
             leading: CircleAvatar(
@@ -351,7 +395,7 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
                   child: Text(
                     food.name,
                     style: const TextStyle(
-                      color: Colors.white,
+                      color: AppTheme.darkText,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -367,9 +411,12 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
             ),
             subtitle: Text(
               '${food.calories.toInt()} cal • P: ${food.protein.toInt()}g • C: ${food.carbs.toInt()}g • F: ${food.fats.toInt()}g',
-              style: const TextStyle(fontSize: 12, color: Colors.grey),
+              style: const TextStyle(
+                fontSize: 12,
+                color: AppTheme.darkTextMuted,
+              ),
             ),
-            trailing: const Icon(Icons.add_circle, color: Colors.green),
+            trailing: const Icon(Icons.add_circle, color: AppTheme.darkPrimary),
             onTap: () => _addFoodLog(food),
           ),
         );

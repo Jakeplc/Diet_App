@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:hugeicons/hugeicons.dart';
 import '../models/user_profile.dart';
 import '../models/food_log.dart';
 import '../models/water_log.dart';
@@ -66,21 +67,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
         onTap: (index) => setState(() => _selectedIndex = index),
         type: BottomNavigationBarType.fixed,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
-            icon: Icon(Icons.restaurant_menu),
+            icon: Icon(HugeIcons.strokeRoundedHome03),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(HugeIcons.strokeRoundedRestaurant01),
             label: 'Log Food',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
+            icon: Icon(HugeIcons.strokeRoundedCalendar03),
             label: 'Meal Plan',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.trending_up),
+            icon: Icon(HugeIcons.strokeRoundedAnalytics02),
             label: 'Progress',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
+            icon: Icon(HugeIcons.strokeRoundedSettings02),
             label: 'Settings',
           ),
         ],
@@ -130,7 +134,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
             padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                colors: [AppTheme.backgroundDark, AppTheme.cardDark],
+                colors: [
+                  AppTheme.bannerGradientStart,
+                  AppTheme.bannerGradientEnd,
+                ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -138,31 +145,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Hello,',
-                          style: TextStyle(color: Colors.white70, fontSize: 16),
-                        ),
-                        Text(
-                          _profile!.name,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    if (_profile!.currentStreak > 0)
+                if (_profile!.currentStreak > 0)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: AppTheme.primaryOrange.withOpacity(0.2),
+                          color: AppTheme.bannerIcon.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
                             color: AppTheme.primaryOrange.withOpacity(0.3),
@@ -187,8 +177,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ],
                         ),
                       ),
-                  ],
-                ),
+                    ],
+                  ),
                 const SizedBox(height: 20),
                 Container(
                   padding: const EdgeInsets.all(15),
@@ -227,15 +217,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Circular Charts Row
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildCalorieCircle(
-                      caloriesConsumed,
-                      _profile!.dailyCalorieTarget,
-                    ),
-                    _buildWaterCircle(waterConsumed, _profile!.waterTarget),
-                  ],
+                Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF141B27),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: const EdgeInsets.all(20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: _buildCalorieCircle(
+                          caloriesConsumed,
+                          _profile!.dailyCalorieTarget,
+                        ),
+                      ),
+                      Expanded(
+                        child: _buildWaterCircle(
+                          waterConsumed,
+                          _profile!.waterTarget,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 30),
 
@@ -259,18 +263,31 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
+                        color: AppTheme.textPrimaryDark,
                       ),
                     ),
                     TextButton(
                       onPressed: () {
                         setState(() => _selectedIndex = 1);
                       },
-                      child: const Text('Add Meal'),
+                      child: const Text(
+                        'Add Meal',
+                        style: TextStyle(
+                          color: AppTheme.primaryOrange,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 10),
                 _buildMealsList(),
+
+                const SizedBox(height: 20),
+                _buildCaloriesLeftFooter(
+                  caloriesConsumed,
+                  _profile!.dailyCalorieTarget,
+                ),
 
                 // Ad Banner (if not premium)
                 if (!_isPremium) ...[
@@ -296,24 +313,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
       center: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.whatshot, color: AppTheme.primaryOrange, size: 30),
+          const Icon(
+            HugeIcons.strokeRoundedFire,
+            color: AppTheme.caloriesRing,
+            size: 32,
+          ),
           const SizedBox(height: 5),
           Text(
             '${consumed.toInt()}',
             style: const TextStyle(
-              fontSize: 20,
+              fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: Color(0xFFFFFFFF),
             ),
           ),
           Text(
             '/ ${target.toInt()}',
-            style: const TextStyle(fontSize: 12, color: Colors.grey),
+            style: const TextStyle(
+              fontSize: 13,
+              color: Color(0xFFCBD5E1),
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ],
       ),
-      progressColor: AppTheme.primaryOrange,
-      backgroundColor: const Color(0xFF2A2A2A),
+      progressColor: AppTheme.caloriesRing,
+      backgroundColor: AppTheme.ringTrack,
       circularStrokeCap: CircularStrokeCap.round,
       footer: Padding(
         padding: const EdgeInsets.only(top: 10),
@@ -323,16 +348,51 @@ class _DashboardScreenState extends State<DashboardScreen> {
               'Calories',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: Color(0xFFFFFFFF),
+                fontSize: 13,
               ),
             ),
             Text(
+              '${remaining.toStringAsFixed(0)} left',
+              style: const TextStyle(
+                fontSize: 12,
+                color: AppTheme.caloriesRing,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCaloriesLeftFooter(double consumed, double target) {
+    final remaining = (target - consumed).toInt();
+    return Center(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: AppTheme.cardDark,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: AppTheme.primaryOrange.withOpacity(0.3),
+            width: 1,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(
+              HugeIcons.strokeRoundedFire,
+              color: AppTheme.primaryOrange,
+              size: 20,
+            ),
+            const SizedBox(width: 8),
+            Text(
               remaining > 0 ? '$remaining left' : 'Over by ${-remaining}',
               style: TextStyle(
-                fontSize: 12,
-                color: remaining > 0
-                    ? AppTheme.successGreen
-                    : AppTheme.proteinRed,
+                fontWeight: FontWeight.bold,
+                color: remaining > 0 ? AppTheme.successGreen : AppTheme.fatsRed,
               ),
             ),
           ],
@@ -352,24 +412,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
       center: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.water_drop, color: AppTheme.waterBlue, size: 30),
+          const Icon(
+            HugeIcons.strokeRoundedDroplet,
+            color: AppTheme.waterRing,
+            size: 32,
+          ),
           const SizedBox(height: 5),
           Text(
             '$glasses',
             style: const TextStyle(
-              fontSize: 20,
+              fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: Color(0xFFFFFFFF),
             ),
           ),
           const Text(
             'glasses',
-            style: TextStyle(fontSize: 12, color: Colors.grey),
+            style: TextStyle(
+              fontSize: 13,
+              color: Color(0xFFCBD5E1),
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ],
       ),
-      progressColor: AppTheme.waterBlue,
-      backgroundColor: const Color(0xFF2A2A2A),
+      progressColor: AppTheme.waterRing,
+      backgroundColor: AppTheme.ringTrack,
       circularStrokeCap: CircularStrokeCap.round,
       footer: Padding(
         padding: const EdgeInsets.only(top: 10),
@@ -379,12 +447,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
               'Water',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: Color(0xFFFFFFFF),
+                fontSize: 13,
               ),
             ),
             Text(
               '${(percentage * 100).toInt()}%',
-              style: const TextStyle(fontSize: 12, color: AppTheme.waterBlue),
+              style: const TextStyle(
+                fontSize: 12,
+                color: AppTheme.waterRing,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ],
         ),
@@ -401,6 +474,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     double fatsTarget,
   ) {
     return Card(
+      color: AppTheme.cardDark,
       elevation: 2,
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -412,7 +486,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: AppTheme.textPrimaryDark,
               ),
             ),
             const SizedBox(height: 20),
@@ -420,12 +494,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
               'Protein',
               protein,
               proteinTarget,
-              AppTheme.proteinRed,
+              AppTheme.proteinBlue,
             ),
             const SizedBox(height: 15),
-            _buildMacroBar('Carbs', carbs, carbsTarget, AppTheme.carbsBlue),
+            _buildMacroBar('Carbs', carbs, carbsTarget, AppTheme.carbsAmber),
             const SizedBox(height: 15),
-            _buildMacroBar('Fats', fats, fatsTarget, AppTheme.fatsYellow),
+            _buildMacroBar('Fats', fats, fatsTarget, AppTheme.fatsRed),
           ],
         ),
       ),
@@ -445,10 +519,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(name, style: const TextStyle(fontWeight: FontWeight.w500)),
+            Text(
+              name,
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+                color: AppTheme.textPrimaryDark,
+              ),
+            ),
             Text(
               '${consumed.toInt()}g / ${target.toInt()}g',
-              style: const TextStyle(color: Colors.grey),
+              style: const TextStyle(color: AppTheme.textMutedDark),
             ),
           ],
         ),
@@ -457,7 +537,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           borderRadius: BorderRadius.circular(10),
           child: LinearProgressIndicator(
             value: percentage,
-            backgroundColor: const Color(0xFF2A2A2A),
+            backgroundColor: AppTheme.outlineDark,
             valueColor: AlwaysStoppedAnimation(color),
             minHeight: 10,
           ),

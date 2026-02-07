@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/foundation.dart' show kIsWeb, kDebugMode;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
@@ -22,13 +24,23 @@ class NotificationService {
       requestBadgePermission: true,
       requestSoundPermission: true,
     );
+    // macOS requires explicit initialization settings; reuse iOS config
+    const macSettings = DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+    );
 
     const initSettings = InitializationSettings(
       android: androidSettings,
       iOS: iosSettings,
+      macOS: macSettings,
     );
 
-    await _notifications.initialize(initSettings);
+    // On platforms without notification support (e.g., desktop without perms)
+    if (Platform.isMacOS || Platform.isAndroid || Platform.isIOS) {
+      await _notifications.initialize(initSettings);
+    }
   }
 
   // Schedule daily reminders

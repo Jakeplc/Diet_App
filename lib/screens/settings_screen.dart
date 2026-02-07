@@ -9,6 +9,7 @@ import '../services/notification_service.dart';
 import '../services/export_service.dart';
 import 'package:share_plus/share_plus.dart';
 import 'paywall_screen.dart';
+import '../theme/app_theme.dart';
 import 'recipe_builder_screen.dart';
 import 'shopping_list_screen.dart';
 import 'fasting_timer_screen.dart';
@@ -37,6 +38,7 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   UserProfile? _profile;
   bool _isPremium = false;
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -56,6 +58,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         setState(() {
           _profile = profile;
           _isPremium = premium;
+          _isLoading = false;
         });
       }
     } catch (e) {
@@ -64,6 +67,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         setState(() {
           _profile = StorageService.getUserProfile();
           _isPremium = false;
+          _isLoading = false;
         });
       }
     }
@@ -71,14 +75,37 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(
+        backgroundColor: AppTheme.darkBackground,
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     if (_profile == null) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      // Profile is null - user data was cleared or not yet loaded
+      // Redirect to onboarding
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.of(
+          context,
+        ).pushNamedAndRemoveUntil('/onboarding', (route) => false);
+      });
+      return const Scaffold(
+        backgroundColor: AppTheme.darkBackground,
+        body: Center(child: CircularProgressIndicator()),
+      );
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      backgroundColor: AppTheme.darkBackground,
+      appBar: AppBar(
+        title: const Text('Settings'),
+        backgroundColor: AppTheme.darkBackground,
+        foregroundColor: AppTheme.darkText,
+        elevation: 0,
+      ),
       body: ListView(
-        padding: const EdgeInsets.all(0),
+        padding: const EdgeInsets.only(bottom: 24),
         children: [
           // Premium Status Banner
           if (!_isPremium) _buildPremiumBanner(),
@@ -551,16 +578,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
         margin: const EdgeInsets.all(15),
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.purple.shade400, Colors.purple.shade700],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(15),
+          color: AppTheme.darkCard,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppTheme.darkPrimary.withOpacity(0.3)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.25),
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
         ),
         child: const Row(
           children: [
-            Icon(Icons.star, color: Colors.white, size: 40),
+            Icon(Icons.star, color: AppTheme.darkSecondary, size: 40),
             SizedBox(width: 15),
             Expanded(
               child: Column(
@@ -569,19 +600,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Text(
                     'Upgrade to Premium',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: AppTheme.darkText,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
                     'Unlock all features & remove ads',
-                    style: TextStyle(color: Colors.white70),
+                    style: TextStyle(color: AppTheme.darkTextMuted),
                   ),
                 ],
               ),
             ),
-            Icon(Icons.arrow_forward_ios, color: Colors.white),
+            Icon(Icons.arrow_forward_ios, color: AppTheme.darkText),
           ],
         ),
       ),
@@ -599,12 +630,37 @@ class _SettingsScreenState extends State<SettingsScreen> {
             style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
-              color: Colors.grey,
+              color: AppTheme.darkTextMuted,
             ),
           ),
         ),
-        ...children,
+        ...children.map(_wrapTile),
       ],
+    );
+  }
+
+  Widget _wrapTile(Widget child) {
+    if (child is ListTile) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+        child: Material(
+          color: AppTheme.darkCard,
+          elevation: 3,
+          borderRadius: BorderRadius.circular(16),
+          child: ListTileTheme(
+            data: const ListTileThemeData(
+              textColor: AppTheme.darkText,
+              iconColor: AppTheme.darkPrimary,
+            ),
+            child: child,
+          ),
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      child: child,
     );
   }
 
@@ -911,11 +967,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (confirm == true) {
       await StorageService.clearAllData();
       if (mounted) {
+        widget.onThemeChange?.call(ThemeMode.dark);
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text('All data cleared')));
-        // Navigate back to onboarding
-        // Navigator.of(context).pushReplacement(...);
+        // Navigate back to onboarding after clearing all data
+        Navigator.of(
+          context,
+        ).pushNamedAndRemoveUntil('/onboarding', (route) => false);
       }
     }
   }
