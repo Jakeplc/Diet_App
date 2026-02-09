@@ -58,12 +58,16 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final scaffold = theme.scaffoldBackgroundColor;
+
     return Scaffold(
-      backgroundColor: AppTheme.darkBackground,
+      backgroundColor: scaffold,
       appBar: AppBar(
         title: const Text('Meal Planning'),
-        backgroundColor: AppTheme.darkBackground,
-        foregroundColor: AppTheme.darkText,
+        backgroundColor: scaffold,
+        foregroundColor: scheme.onSurface,
         elevation: 0,
         actions: [
           IconButton(
@@ -83,7 +87,7 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
           // Day Selector
           Container(
             height: 60,
-            color: AppTheme.darkCard,
+            color: scheme.surface,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: _daysOfWeek.length,
@@ -97,13 +101,13 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? AppTheme.darkPrimary
+                          ? scheme.primary
                           : Colors.transparent,
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
                         color: isSelected
-                            ? AppTheme.darkPrimary
-                            : AppTheme.darkOutline,
+                            ? scheme.primary
+                            : scheme.outline,
                       ),
                     ),
                     child: Center(
@@ -111,8 +115,8 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
                         day.substring(0, 3),
                         style: TextStyle(
                           color: isSelected
-                              ? Colors.white
-                              : AppTheme.darkTextMuted,
+                              ? scheme.onPrimary
+                              : scheme.onSurface.withOpacity(0.6),
                           fontWeight: isSelected
                               ? FontWeight.bold
                               : FontWeight.normal,
@@ -136,7 +140,7 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addMealPlan,
-        backgroundColor: Colors.orange,
+        backgroundColor: scheme.primary,
         child: const Icon(Icons.add),
       ),
     );
@@ -146,15 +150,23 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
     final dayPlans = _getMealPlansForDay(_selectedDay);
 
     if (dayPlans.isEmpty) {
+      final scheme = Theme.of(context).colorScheme;
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.restaurant_menu, size: 80, color: Colors.grey.shade400),
+            Icon(
+              Icons.restaurant_menu,
+              size: 80,
+              color: scheme.onSurface.withOpacity(0.35),
+            ),
             const SizedBox(height: 20),
-            const Text(
+            Text(
               'No meals planned for this day',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
+              style: TextStyle(
+                fontSize: 16,
+                color: scheme.onSurface.withOpacity(0.6),
+              ),
             ),
             const SizedBox(height: 20),
             ElevatedButton.icon(
@@ -162,7 +174,7 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
               icon: const Icon(Icons.add),
               label: const Text('Add Meal Plan'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
+                backgroundColor: scheme.primary,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 30,
                   vertical: 15,
@@ -192,10 +204,11 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
   }
 
   Widget _buildMealTypeSection(String mealType, List<MealPlan> plans) {
+    final scheme = Theme.of(context).colorScheme;
     return Card(
       margin: const EdgeInsets.only(bottom: 15),
       child: ExpansionTile(
-        leading: Icon(_getMealIcon(mealType), color: Colors.orange),
+        leading: Icon(_getMealIcon(mealType), color: scheme.primary),
         title: Text(
           mealType,
           style: const TextStyle(fontWeight: FontWeight.bold),
@@ -208,13 +221,18 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
               padding: const EdgeInsets.all(20),
               child: Text(
                 'No $mealType planned',
-                style: const TextStyle(color: Colors.grey),
+                style: TextStyle(
+                  color: scheme.onSurface.withOpacity(0.6),
+                ),
               ),
             )
           else
             ...plans.map((plan) => _buildMealPlanTile(plan)),
           ListTile(
-            leading: const Icon(Icons.add_circle_outline, color: Colors.green),
+            leading: Icon(
+              Icons.add_circle_outline,
+              color: scheme.primary,
+            ),
             title: const Text('Add meal'),
             onTap: () => _addMealPlan(mealType: mealType),
           ),
@@ -224,6 +242,7 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
   }
 
   Widget _buildMealPlanTile(MealPlan plan) {
+    final scheme = Theme.of(context).colorScheme;
     final foods = plan.foodItemIds
         .map((id) => StorageService.getFoodItemById(id))
         .whereType<FoodItem>()
@@ -240,11 +259,11 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
 
     return ListTile(
       leading: CircleAvatar(
-        backgroundColor: Colors.orange.shade100,
+        backgroundColor: scheme.primary.withOpacity(0.15),
         child: Text(
           foods.length.toString(),
-          style: const TextStyle(
-            color: Colors.orange,
+          style: TextStyle(
+            color: scheme.primary,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -259,11 +278,11 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
-            icon: const Icon(Icons.edit, color: Colors.blue),
+            icon: Icon(Icons.edit, color: scheme.primary),
             onPressed: () => _editMealPlan(plan),
           ),
           IconButton(
-            icon: const Icon(Icons.delete, color: Colors.red),
+            icon: Icon(Icons.delete, color: scheme.error),
             onPressed: () => _deleteMealPlan(plan),
           ),
         ],
@@ -330,7 +349,9 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
             child: const Text('Delete'),
           ),
         ],
@@ -377,7 +398,7 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Week plan copied!'),
-          backgroundColor: Colors.green,
+          backgroundColor: AppTheme.successGreen,
         ),
       );
     }
@@ -394,7 +415,7 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
         builder: (context, setState) => AlertDialog(
           title: Row(
             children: [
-              Icon(Icons.auto_awesome, color: Colors.orange),
+              Icon(Icons.auto_awesome, color: Theme.of(context).colorScheme.primary),
               SizedBox(width: 10),
               Text('Generate Meal Plan'),
             ],
@@ -406,7 +427,9 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
               children: [
                 Text(
                   'Automatically create a personalized meal plan based on your goals and preferences.',
-                  style: TextStyle(color: Colors.grey[600]),
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                  ),
                 ),
                 SizedBox(height: 20),
                 Text(
@@ -436,7 +459,7 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
                   title: Text('Include Recipes'),
                   subtitle: Text('Use saved recipes in meal plans'),
                   value: includeRecipes,
-                  activeThumbColor: Colors.orange,
+                  activeThumbColor: Theme.of(context).colorScheme.primary,
                   onChanged: (value) {
                     setState(() => includeRecipes = value);
                   },
@@ -446,7 +469,7 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
                   title: Text('Prioritize Variety'),
                   subtitle: Text('Minimize repeated foods'),
                   value: prioritizeVariety,
-                  activeThumbColor: Colors.orange,
+                  activeThumbColor: Theme.of(context).colorScheme.primary,
                   onChanged: (value) {
                     setState(() => prioritizeVariety = value);
                   },
@@ -456,20 +479,26 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
                 Container(
                   padding: EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.orange.withOpacity(0.1),
+                    color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.orange.withOpacity(0.3)),
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                    ),
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.info_outline, color: Colors.orange, size: 20),
+                      Icon(
+                        Icons.info_outline,
+                        color: Theme.of(context).colorScheme.primary,
+                        size: 20,
+                      ),
                       SizedBox(width: 10),
                       Expanded(
                         child: Text(
                           'This will replace existing meal plans for the selected period.',
                           style: TextStyle(
                             fontSize: 12,
-                            color: Colors.orange[900],
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                       ),
@@ -489,7 +518,7 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
               icon: Icon(Icons.auto_awesome),
               label: Text('Generate'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
+                backgroundColor: Theme.of(context).colorScheme.primary,
                 foregroundColor: Colors.white,
               ),
             ),
@@ -516,13 +545,18 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CircularProgressIndicator(color: Colors.orange),
+            CircularProgressIndicator(
+              color: Theme.of(context).colorScheme.primary,
+            ),
             SizedBox(height: 20),
             Text('Generating your meal plan...'),
             SizedBox(height: 10),
             Text(
               'Analyzing your goals and preferences',
-              style: TextStyle(fontSize: 12, color: Colors.grey),
+              style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+              ),
             ),
           ],
         ),
@@ -537,6 +571,7 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
       final startDate = daysUntilMonday == 0
           ? today
           : today.add(Duration(days: daysUntilMonday));
+      final endDate = startDate.add(Duration(days: days - 1));
 
       // Generate meal plans
       final generatedPlans =
@@ -546,6 +581,12 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
             includeRecipes: includeRecipes,
             prioritizeVariety: prioritizeVariety,
           );
+
+      // Clear existing plans in the target range before saving
+      await MealPlanGeneratorService.clearMealPlansForDateRange(
+        startDate,
+        endDate,
+      );
 
       // Save meal plans
       await MealPlanGeneratorService.saveMealPlans(generatedPlans);
@@ -571,7 +612,7 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
                 ),
               ],
             ),
-            backgroundColor: Colors.green,
+            backgroundColor: AppTheme.successGreen,
             behavior: SnackBarBehavior.floating,
             duration: Duration(seconds: 3),
           ),
@@ -592,7 +633,7 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
                 Expanded(child: Text('Error: ${e.toString()}')),
               ],
             ),
-            backgroundColor: Colors.red,
+            backgroundColor: Theme.of(context).colorScheme.error,
             behavior: SnackBarBehavior.floating,
             duration: Duration(seconds: 4),
           ),
@@ -650,6 +691,7 @@ class _MealPlanDialogState extends State<MealPlanDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     final totalCalories = _selectedFoods.fold<double>(
       0,
       (sum, food) => sum + food.calories,
@@ -696,9 +738,11 @@ class _MealPlanDialogState extends State<MealPlanDialog> {
               ),
               const SizedBox(height: 10),
               if (_selectedFoods.isEmpty)
-                const Text(
+                Text(
                   'No foods selected',
-                  style: TextStyle(color: Colors.grey),
+                  style: TextStyle(
+                    color: scheme.onSurface.withOpacity(0.6),
+                  ),
                 )
               else
                 ..._selectedFoods.map(
@@ -707,7 +751,10 @@ class _MealPlanDialogState extends State<MealPlanDialog> {
                     title: Text(food.name),
                     subtitle: Text('${food.calories.toInt()} cal'),
                     trailing: IconButton(
-                      icon: const Icon(Icons.remove_circle, color: Colors.red),
+                      icon: Icon(
+                        Icons.remove_circle,
+                        color: scheme.error,
+                      ),
                       onPressed: () {
                         setState(() => _selectedFoods.remove(food));
                       },
@@ -719,13 +766,15 @@ class _MealPlanDialogState extends State<MealPlanDialog> {
                 onPressed: _addFood,
                 icon: const Icon(Icons.add),
                 label: const Text('Add Food'),
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: scheme.primary,
+                ),
               ),
               const SizedBox(height: 15),
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Colors.orange.shade50,
+                  color: scheme.primary.withOpacity(0.08),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -983,10 +1032,10 @@ class _FoodSelectionDialogState extends State<_FoodSelectionDialog> {
                             children: [
                               Expanded(child: Text(food.name)),
                               if (isFromApi)
-                                const Icon(
+                                Icon(
                                   Icons.cloud,
                                   size: 16,
-                                  color: Colors.blue,
+                                  color: Theme.of(context).colorScheme.primary,
                                 ),
                             ],
                           ),

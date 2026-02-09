@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:uuid/uuid.dart';
 import '../models/user_profile.dart';
 import '../models/food_log.dart';
 import '../models/water_log.dart';
@@ -30,6 +31,64 @@ class _DashboardScreenState extends State<DashboardScreen> {
   List<WaterLog> _todayWater = [];
   bool _isPremium = false;
 
+  static const double _waterQuickAddFallbackMl = 250.0;
+
+  String _formatWaterAmount(double ml) {
+    if (_profile?.measurementSystem == 'imperial') {
+      final oz = ml / 29.5735;
+      return '${oz.toStringAsFixed(0)} oz';
+    }
+    return '${ml.toStringAsFixed(0)} ml';
+  }
+
+  double _getWaterQuickAddAmount() {
+    final value = StorageService.getSetting(
+      StorageService.waterQuickAddAmountKey,
+      defaultValue: _waterQuickAddFallbackMl,
+    );
+    if (value is num && value > 0) return value.toDouble();
+    return _waterQuickAddFallbackMl;
+  }
+
+  Future<void> _addWaterLog(double amountMl) async {
+    if (_profile == null) return;
+
+    final log = WaterLog(
+      id: const Uuid().v4(),
+      amount: amountMl,
+      timestamp: DateTime.now(),
+    );
+
+    await StorageService.saveWaterLog(log);
+    await _loadData();
+
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('${_formatWaterAmount(amountMl)} added'),
+        duration: const Duration(seconds: 2),
+        action: SnackBarAction(
+          label: 'Undo',
+          textColor: Colors.white,
+          onPressed: () async {
+            await StorageService.deleteWaterLog(log.id);
+            if (mounted) {
+              await _loadData();
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  double _getMacroTarget(String key, double fallback) {
+    final value = StorageService.getSetting(key, defaultValue: fallback);
+    if (value is num) return value.toDouble();
+    return fallback;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -54,7 +113,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     final screens = [
       _buildHomeScreen(),
-      const FoodLoggingScreen(),
+      FoodLoggingScreen(onLogSaved: _loadData),
       const MealPlanningScreen(),
       const ProgressScreen(),
       SettingsScreen(onThemeChange: widget.onThemeChange),
@@ -64,7 +123,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
       body: screens[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
-        onTap: (index) => setState(() => _selectedIndex = index),
+        onTap: (index) {
+          setState(() => _selectedIndex = index);
+          if (index == 0) {
+            _loadData();
+          }
+        },
         type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(
@@ -115,11 +179,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
       waterConsumed += log.amount;
     }
 
+    final proteinTarget = _getMacroTarget(
+      StorageService.macroProteinTargetKey,
+      _profile!.proteinTarget,
+    );
+    final carbsTarget = _getMacroTarget(
+      StorageService.macroCarbsTargetKey,
+      _profile!.carbsTarget,
+    );
+    final fatsTarget = _getMacroTarget(
+      StorageService.macroFatsTargetKey,
+      _profile!.fatsTarget,
+    );
+
     final insight = CalorieCalculatorService.generateDailyInsight(
       caloriesConsumed: caloriesConsumed,
       caloriesTarget: _profile!.dailyCalorieTarget,
       proteinConsumed: proteinConsumed,
-      proteinTarget: _profile!.proteinTarget,
+      proteinTarget: proteinTarget,
       waterConsumed: waterConsumed,
       waterTarget: _profile!.waterTarget,
     );
@@ -183,10 +260,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Container(
                   padding: const EdgeInsets.all(15),
                   decoration: BoxDecoration(
-                    color: AppTheme.cardDark,
+                    color: Theme.of(context).colorScheme.surface,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: AppTheme.primaryOrange.withOpacity(0.3),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.primary.withOpacity(0.3),
                       width: 1,
                     ),
                   ),
@@ -200,7 +279,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       Expanded(
                         child: Text(
                           insight,
-                          style: const TextStyle(color: Colors.white),
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
                         ),
                       ),
                     ],
@@ -219,8 +300,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 // Circular Charts Row
                 Container(
                   decoration: BoxDecoration(
-                    color: const Color(0xFF141B27),
+                    color: Theme.of(context).colorScheme.surface,
                     borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.outline.withOpacity(0.6),
+                    ),
                   ),
                   padding: const EdgeInsets.all(20),
                   child: Row(
@@ -248,9 +334,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   proteinConsumed,
                   carbsConsumed,
                   fatsConsumed,
-                  _profile!.proteinTarget,
-                  _profile!.carbsTarget,
-                  _profile!.fatsTarget,
+                  proteinTarget,
+                  carbsTarget,
+                  fatsTarget,
                 ),
                 const SizedBox(height: 20),
 
@@ -258,12 +344,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       'Today\'s Meals',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: AppTheme.textPrimaryDark,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     TextButton(
@@ -282,12 +368,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 const SizedBox(height: 10),
                 _buildMealsList(),
-
-                const SizedBox(height: 20),
-                _buildCaloriesLeftFooter(
-                  caloriesConsumed,
-                  _profile!.dailyCalorieTarget,
-                ),
 
                 // Ad Banner (if not premium)
                 if (!_isPremium) ...[
@@ -321,34 +401,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
           const SizedBox(height: 5),
           Text(
             '${consumed.toInt()}',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: Color(0xFFFFFFFF),
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           Text(
             '/ ${target.toInt()}',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 13,
-              color: Color(0xFFCBD5E1),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
               fontWeight: FontWeight.w500,
             ),
           ),
         ],
       ),
       progressColor: AppTheme.caloriesRing,
-      backgroundColor: AppTheme.ringTrack,
+      backgroundColor: Theme.of(context).colorScheme.outline.withOpacity(0.4),
       circularStrokeCap: CircularStrokeCap.round,
       footer: Padding(
         padding: const EdgeInsets.only(top: 10),
         child: Column(
           children: [
-            const Text(
+            Text(
               'Calories',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Color(0xFFFFFFFF),
+                color: Theme.of(context).colorScheme.onSurface,
                 fontSize: 13,
               ),
             ),
@@ -366,41 +446,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildCaloriesLeftFooter(double consumed, double target) {
-    final remaining = (target - consumed).toInt();
-    return Center(
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          color: AppTheme.cardDark,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: AppTheme.primaryOrange.withOpacity(0.3),
-            width: 1,
-          ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(
-              HugeIcons.strokeRoundedFire,
-              color: AppTheme.primaryOrange,
-              size: 20,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              remaining > 0 ? '$remaining left' : 'Over by ${-remaining}',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: remaining > 0 ? AppTheme.successGreen : AppTheme.fatsRed,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildWaterCircle(double consumed, double target) {
     final percentage = (consumed / target).clamp(0.0, 1.0);
     final glasses = (consumed / 250).toInt(); // 250ml = 1 glass
@@ -409,45 +454,49 @@ class _DashboardScreenState extends State<DashboardScreen> {
       radius: 80,
       lineWidth: 12,
       percent: percentage,
-      center: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(
-            HugeIcons.strokeRoundedDroplet,
-            color: AppTheme.waterRing,
-            size: 32,
-          ),
-          const SizedBox(height: 5),
-          Text(
-            '$glasses',
-            style: const TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFFFFFFFF),
+      center: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => _addWaterLog(_getWaterQuickAddAmount()),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              HugeIcons.strokeRoundedDroplet,
+              color: Color.fromARGB(255, 60, 146, 237),
+              size: 32,
             ),
-          ),
-          const Text(
-            'glasses',
-            style: TextStyle(
-              fontSize: 13,
-              color: Color(0xFFCBD5E1),
-              fontWeight: FontWeight.w500,
+            const SizedBox(height: 5),
+            Text(
+              '$glasses',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
             ),
-          ),
-        ],
+            Text(
+              'glasses',
+              style: TextStyle(
+                fontSize: 13,
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
       ),
       progressColor: AppTheme.waterRing,
-      backgroundColor: AppTheme.ringTrack,
+      backgroundColor: Theme.of(context).colorScheme.outline.withOpacity(0.4),
       circularStrokeCap: CircularStrokeCap.round,
       footer: Padding(
         padding: const EdgeInsets.only(top: 10),
         child: Column(
           children: [
-            const Text(
+            Text(
               'Water',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Color(0xFFFFFFFF),
+                color: Theme.of(context).colorScheme.onSurface,
                 fontSize: 13,
               ),
             ),
@@ -474,75 +523,104 @@ class _DashboardScreenState extends State<DashboardScreen> {
     double fatsTarget,
   ) {
     return Card(
-      color: AppTheme.cardDark,
+      color: Theme.of(context).cardColor,
       elevation: 2,
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Macronutrients',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: AppTheme.textPrimaryDark,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 20),
-            _buildMacroBar(
-              'Protein',
-              protein,
-              proteinTarget,
-              AppTheme.proteinBlue,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: _buildMacroCircle(
+                    'Protein',
+                    protein,
+                    proteinTarget,
+                    AppTheme.proteinBlue,
+                  ),
+                ),
+                Expanded(
+                  child: _buildMacroCircle(
+                    'Carbs',
+                    carbs,
+                    carbsTarget,
+                    AppTheme.carbsAmber,
+                  ),
+                ),
+                Expanded(
+                  child: _buildMacroCircle(
+                    'Fats',
+                    fats,
+                    fatsTarget,
+                    AppTheme.fatsRed,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 15),
-            _buildMacroBar('Carbs', carbs, carbsTarget, AppTheme.carbsAmber),
-            const SizedBox(height: 15),
-            _buildMacroBar('Fats', fats, fatsTarget, AppTheme.fatsRed),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildMacroBar(
+  Widget _buildMacroCircle(
     String name,
     double consumed,
     double target,
     Color color,
   ) {
     final percentage = (consumed / target).clamp(0.0, 1.0);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              name,
-              style: const TextStyle(
-                fontWeight: FontWeight.w500,
-                color: AppTheme.textPrimaryDark,
-              ),
+
+    return CircularPercentIndicator(
+      radius: 58,
+      lineWidth: 10,
+      percent: percentage,
+      center: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            '${consumed.toInt()}g',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
-            Text(
-              '${consumed.toInt()}g / ${target.toInt()}g',
-              style: const TextStyle(color: AppTheme.textMutedDark),
+          ),
+          Text(
+            '/ ${target.toInt()}g',
+            style: TextStyle(
+              fontSize: 11,
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+              fontWeight: FontWeight.w500,
             ),
-          ],
-        ),
-        const SizedBox(height: 5),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: LinearProgressIndicator(
-            value: percentage,
-            backgroundColor: AppTheme.outlineDark,
-            valueColor: AlwaysStoppedAnimation(color),
-            minHeight: 10,
+          ),
+        ],
+      ),
+      progressColor: color,
+      backgroundColor: AppTheme.ringTrack,
+      circularStrokeCap: CircularStrokeCap.round,
+      footer: Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: Text(
+          name,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.onSurface,
+            fontSize: 12,
           ),
         ),
-      ],
+      ),
     );
   }
 

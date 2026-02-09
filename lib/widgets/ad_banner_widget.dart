@@ -43,7 +43,10 @@ class _AdBannerWidgetState extends State<AdBannerWidget> {
           children: [
             const Text(
               'Advertisement',
-              style: TextStyle(color: Colors.grey, fontSize: 12),
+              style: TextStyle(
+                color: Color.fromARGB(239, 230, 158, 126),
+                fontSize: 12,
+              ),
             ),
             const SizedBox(height: 5),
             TextButton(

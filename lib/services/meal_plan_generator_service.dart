@@ -180,17 +180,16 @@ class MealPlanGeneratorService {
       mealType,
       usedFoodIds,
     );
+    final anyMealTypeFoods = _getFoodsForMealType(availableFoods, mealType, {});
 
     if (suitableFoods.isEmpty) {
-      // If no suitable foods, use any available food
-      final fallbackFoods = availableFoods
-          .where((f) => !usedFoodIds.contains(f.id))
-          .toList();
-      if (fallbackFoods.isNotEmpty) {
-        final food = fallbackFoods[random.nextInt(fallbackFoods.length)];
-        selectedIds.add(food.id);
-        usedFoodIds.add(food.id);
-      }
+      // If variety filtering exhausted choices, fall back to meal-type foods.
+      final fallbackFoods = anyMealTypeFoods.isNotEmpty
+          ? anyMealTypeFoods
+          : availableFoods;
+      final food = fallbackFoods[random.nextInt(fallbackFoods.length)];
+      selectedIds.add(food.id);
+      usedFoodIds.add(food.id);
       return selectedIds;
     }
 
@@ -200,7 +199,12 @@ class MealPlanGeneratorService {
       final remainingCalories = targetCalories - currentCalories;
 
       // Find food that fits remaining calories
-      final candidateFoods = suitableFoods
+      final candidateFoods = suitableFoods.isNotEmpty
+          ? suitableFoods
+          : (anyMealTypeFoods.isNotEmpty ? anyMealTypeFoods : availableFoods)
+                .where((food) => !usedFoodIds.contains(food.id))
+                .toList();
+      final filteredCandidates = candidateFoods
           .where(
             (food) =>
                 food.calories <= remainingCalories + tolerance &&
@@ -208,11 +212,11 @@ class MealPlanGeneratorService {
           )
           .toList();
 
-      if (candidateFoods.isEmpty) break;
+      if (filteredCandidates.isEmpty) break;
 
       // Select random food from candidates
       final selectedFood =
-          candidateFoods[random.nextInt(candidateFoods.length)];
+          filteredCandidates[random.nextInt(filteredCandidates.length)];
       selectedIds.add(selectedFood.id);
       usedFoodIds.add(selectedFood.id);
       currentCalories += selectedFood.calories;
@@ -318,15 +322,7 @@ class MealPlanGeneratorService {
     DateTime startDate,
     DateTime endDate,
   ) async {
-    final allPlans = StorageService.getAllMealPlans();
-
-    for (final plan in allPlans) {
-      if (plan.date.isAfter(startDate.subtract(const Duration(days: 1))) &&
-          plan.date.isBefore(endDate.add(const Duration(days: 1)))) {
-        // Delete plans in range (would need to implement delete in StorageService)
-        // For now, we'll just overwrite them
-      }
-    }
+    await StorageService.deleteMealPlansInDateRange(startDate, endDate);
   }
 
   /// Generate smart meal plan based on user goals and preferences

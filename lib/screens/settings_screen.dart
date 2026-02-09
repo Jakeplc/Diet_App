@@ -1,6 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 import '../models/user_profile.dart';
 import '../services/storage_service.dart';
 import '../services/calorie_calculator_service.dart';
@@ -75,10 +75,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final scaffold = Theme.of(context).scaffoldBackgroundColor;
+
     if (_isLoading) {
-      return const Scaffold(
-        backgroundColor: AppTheme.darkBackground,
-        body: Center(child: CircularProgressIndicator()),
+      return Scaffold(
+        backgroundColor: scaffold,
+        body: const Center(child: CircularProgressIndicator()),
       );
     }
 
@@ -90,18 +93,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
           context,
         ).pushNamedAndRemoveUntil('/onboarding', (route) => false);
       });
-      return const Scaffold(
-        backgroundColor: AppTheme.darkBackground,
-        body: Center(child: CircularProgressIndicator()),
+      return Scaffold(
+        backgroundColor: scaffold,
+        body: const Center(child: CircularProgressIndicator()),
       );
     }
 
     return Scaffold(
-      backgroundColor: AppTheme.darkBackground,
+      backgroundColor: scaffold,
       appBar: AppBar(
         title: const Text('Settings'),
-        backgroundColor: AppTheme.darkBackground,
-        foregroundColor: AppTheme.darkText,
+        backgroundColor: scaffold,
+        foregroundColor: scheme.onSurface,
         elevation: 0,
       ),
       body: ListView(
@@ -157,13 +160,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ListTile(
               leading: const Icon(Icons.restaurant, color: Colors.red),
               title: Text(
-                '${_profile!.proteinTarget.toInt()}g / '
-                '${_profile!.carbsTarget.toInt()}g / '
-                '${_profile!.fatsTarget.toInt()}g',
+                '${_getMacroTarget(StorageService.macroProteinTargetKey, _profile!.proteinTarget).toInt()}g / '
+                '${_getMacroTarget(StorageService.macroCarbsTargetKey, _profile!.carbsTarget).toInt()}g / '
+                '${_getMacroTarget(StorageService.macroFatsTargetKey, _profile!.fatsTarget).toInt()}g',
               ),
               subtitle: const Text('Protein / Carbs / Fats'),
-              trailing: _isPremium ? const Icon(Icons.edit) : null,
-              onTap: _isPremium ? _editMacros : null,
+              trailing: const Icon(Icons.edit),
+              onTap: _editMacros,
             ),
             ListTile(
               leading: const Icon(Icons.water_drop, color: Colors.blue),
@@ -171,6 +174,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
               subtitle: const Text('Daily Water'),
               trailing: const Icon(Icons.edit),
               onTap: _editWaterTarget,
+            ),
+            ListTile(
+              leading: const Icon(Icons.add_circle_outline, color: Colors.blue),
+              title: Text(
+                _formatWater(
+                  _getWaterQuickAddAmount(_profile!.waterTarget),
+                ),
+              ),
+              subtitle: const Text('Water add amount'),
+              trailing: const Icon(Icons.edit),
+              onTap: _editWaterQuickAddAmount,
             ),
           ]),
 
@@ -568,6 +582,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildPremiumBanner() {
+    final scheme = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: () {
         Navigator.of(
@@ -578,21 +593,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
         margin: const EdgeInsets.all(15),
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: AppTheme.darkCard,
+          color: scheme.surface,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppTheme.darkPrimary.withOpacity(0.3)),
+          border: Border.all(color: scheme.primary.withOpacity(0.3)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.25),
-              blurRadius: 8,
-              offset: const Offset(0, 3),
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
-        child: const Row(
+        child: Row(
           children: [
-            Icon(Icons.star, color: AppTheme.darkSecondary, size: 40),
-            SizedBox(width: 15),
+            Icon(Icons.star, color: scheme.secondary, size: 40),
+            const SizedBox(width: 15),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -600,19 +615,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Text(
                     'Upgrade to Premium',
                     style: TextStyle(
-                      color: AppTheme.darkText,
+                      color: scheme.onSurface,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
                     'Unlock all features & remove ads',
-                    style: TextStyle(color: AppTheme.darkTextMuted),
+                    style: TextStyle(color: scheme.onSurface.withOpacity(0.6)),
                   ),
                 ],
               ),
             ),
-            Icon(Icons.arrow_forward_ios, color: AppTheme.darkText),
+            Icon(Icons.arrow_forward_ios, color: scheme.onSurface),
           ],
         ),
       ),
@@ -620,6 +635,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildSection(String title, List<Widget> children) {
+    final scheme = Theme.of(context).colorScheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -627,10 +643,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
           child: Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
-              color: AppTheme.darkTextMuted,
+              color: scheme.onSurface.withOpacity(0.6),
             ),
           ),
         ),
@@ -640,17 +656,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _wrapTile(Widget child) {
+    final scheme = Theme.of(context).colorScheme;
     if (child is ListTile) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         child: Material(
-          color: AppTheme.darkCard,
-          elevation: 3,
+          color: scheme.surface,
+          elevation: 1,
           borderRadius: BorderRadius.circular(16),
           child: ListTileTheme(
-            data: const ListTileThemeData(
-              textColor: AppTheme.darkText,
-              iconColor: AppTheme.darkPrimary,
+            data: ListTileThemeData(
+              textColor: scheme.onSurface,
+              iconColor: scheme.primary,
             ),
             child: child,
           ),
@@ -838,22 +855,41 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _editMacros() async {
+    final currentProtein = _getMacroTarget(
+      StorageService.macroProteinTargetKey,
+      _profile!.proteinTarget,
+    );
+    final currentCarbs = _getMacroTarget(
+      StorageService.macroCarbsTargetKey,
+      _profile!.carbsTarget,
+    );
+    final currentFats = _getMacroTarget(
+      StorageService.macroFatsTargetKey,
+      _profile!.fatsTarget,
+    );
+
     final result = await showDialog<Map<String, double>>(
       context: context,
       builder: (context) => MacroEditDialog(
-        currentProtein: _profile!.proteinTarget,
-        currentCarbs: _profile!.carbsTarget,
-        currentFats: _profile!.fatsTarget,
+        currentProtein: currentProtein,
+        currentCarbs: currentCarbs,
+        currentFats: currentFats,
       ),
     );
 
     if (result != null) {
-      _profile!.proteinTarget = result['protein']!;
-      _profile!.carbsTarget = result['carbs']!;
-      _profile!.fatsTarget = result['fats']!;
-      _profile!.updatedAt = DateTime.now();
-
-      await StorageService.saveUserProfile(_profile!);
+      await StorageService.saveSetting(
+        StorageService.macroProteinTargetKey,
+        result['protein']!,
+      );
+      await StorageService.saveSetting(
+        StorageService.macroCarbsTargetKey,
+        result['carbs']!,
+      );
+      await StorageService.saveSetting(
+        StorageService.macroFatsTargetKey,
+        result['fats']!,
+      );
 
       if (mounted) {
         setState(() {});
@@ -862,6 +898,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ).showSnackBar(const SnackBar(content: Text('Macro targets updated!')));
       }
     }
+  }
+
+  double _getMacroTarget(String key, double fallback) {
+    final value = StorageService.getSetting(key, defaultValue: fallback);
+    if (value is num) return value.toDouble();
+    return fallback;
   }
 
   Future<void> _editWaterTarget() async {
@@ -884,6 +926,77 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text('Water target updated!')));
+      }
+    }
+  }
+
+  double _getWaterQuickAddAmount(double fallbackTarget) {
+    final value = StorageService.getSetting(
+      StorageService.waterQuickAddAmountKey,
+      defaultValue: 250.0,
+    );
+    if (value is num && value > 0) return value.toDouble();
+    return (fallbackTarget > 0) ? 250.0 : 250.0;
+  }
+
+  Future<void> _editWaterQuickAddAmount() async {
+    final current = _getWaterQuickAddAmount(_profile!.waterTarget);
+    final controller = TextEditingController(
+      text: _profile!.measurementSystem == 'imperial'
+          ? (current / 29.5735).toStringAsFixed(0)
+          : current.toStringAsFixed(0),
+    );
+    final unitLabel =
+        _profile!.measurementSystem == 'imperial' ? 'oz' : 'ml';
+
+    final result = await showDialog<double>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Water Add Amount'),
+        content: TextField(
+          controller: controller,
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+            labelText: 'Amount ($unitLabel)',
+            border: const OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final raw = double.tryParse(controller.text.trim());
+              if (raw == null || raw <= 0) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Enter a valid amount')),
+                );
+                return;
+              }
+              final ml = _profile!.measurementSystem == 'imperial'
+                  ? raw * 29.5735
+                  : raw;
+              Navigator.pop(context, ml);
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+
+    if (result != null) {
+      await StorageService.saveSetting(
+        StorageService.waterQuickAddAmountKey,
+        result,
+      );
+
+      if (mounted) {
+        setState(() {});
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Water add amount updated!')),
+        );
       }
     }
   }
@@ -1071,7 +1184,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
 
     try {
-      late File exportFile;
+      late final exportFile; // File on IO platforms
 
       switch (type) {
         case 'food':
@@ -1094,7 +1207,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
       // Close loading dialog
       if (mounted) Navigator.pop(context);
 
-      // Share the file
+      if (kIsWeb) {
+        // Web export triggers a browser download (no filesystem path, no share sheet)
+        final fileName = exportFile.toString();
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Downloaded $fileName')),
+          );
+        }
+        return;
+      }
+
+      // IO platforms: Share the file from its local path
       await Share.shareXFiles([
         XFile(exportFile.path),
       ], text: 'My Diet App Export - $type');

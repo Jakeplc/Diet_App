@@ -295,6 +295,37 @@
 
 ---
 
+## 🔎 MyFitnessPal Comparison (iOS)
+
+### MFP Free vs Premium
+
+- MFP Free: Ads; premium upsell
+- MFP Premium: Ad-free
+
+### Monetization Parity
+
+- Your app: Ads for free users, paywall, simulated IAP, premium gating
+- Comparable: Monetization structure aligns, but real store IAP needed
+
+### Feature-by-Feature Comparison (MFP iOS)
+
+| Area | MFP Free (iOS) | MFP Premium (iOS) |
+| --- | --- | --- |
+| Food database | Massive cloud DB + barcode | Same, with premium features |
+| Food logging | Core logging + search | Faster workflows + more analytics |
+| Meal planning | Limited planning | Enhanced planning |
+| Macros | Basic macro targets | Custom macro goals by gram |
+| Micronutrients | Limited | Deeper micronutrient breakdowns |
+| Progress analytics | Basic weight chart | Advanced analytics + trends |
+| Water tracking | Water logs + reminders | Same + more controls |
+| Community | Large social/community | Same |
+| Integrations | Apple Health + devices | Same + enhanced views |
+| Cloud sync | Yes | Yes |
+| Ads | Yes | No |
+| IAP | Real App Store | Real App Store |
+
+---
+
 ## 🔮 Future Features (Post-MVP)
 
 ### ⬜ Phase 2 Features

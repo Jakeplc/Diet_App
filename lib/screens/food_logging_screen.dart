@@ -14,7 +14,9 @@ import 'paywall_screen.dart';
 import 'food_recognition_screen.dart';
 
 class FoodLoggingScreen extends StatefulWidget {
-  const FoodLoggingScreen({super.key});
+  final VoidCallback? onLogSaved;
+
+  const FoodLoggingScreen({super.key, this.onLogSaved});
 
   @override
   State<FoodLoggingScreen> createState() => _FoodLoggingScreenState();
@@ -98,13 +100,18 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
   @override
   Widget build(BuildContext context) {
     final profile = StorageService.getUserProfile();
+    final scheme = Theme.of(context).colorScheme;
+    final scaffold = Theme.of(context).scaffoldBackgroundColor;
+    final surface = scheme.surface;
+    final outline = scheme.outline;
+    final muted = scheme.onSurface.withOpacity(0.6);
 
     return Scaffold(
-      backgroundColor: AppTheme.darkBackground,
+      backgroundColor: scaffold,
       appBar: AppBar(
         title: const Text('Log Food'),
-        backgroundColor: AppTheme.darkBackground,
-        foregroundColor: AppTheme.darkText,
+        backgroundColor: scaffold,
+        foregroundColor: scheme.onSurface,
         elevation: 0,
         actions: [
           if (profile != null && profile.name.isNotEmpty)
@@ -113,10 +120,10 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
               child: Center(
                 child: Text(
                   profile.name,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 16,
-                    color: AppTheme.darkText,
+                    color: scheme.onSurface,
                   ),
                 ),
               ),
@@ -128,7 +135,7 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
           // Meal Type Selector
           Container(
             padding: const EdgeInsets.all(15),
-            color: AppTheme.darkCard,
+            color: surface,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -149,20 +156,14 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
             padding: const EdgeInsets.all(15),
             child: TextField(
               controller: _searchController,
-              style: const TextStyle(color: AppTheme.darkText),
+              style: TextStyle(color: scheme.onSurface),
               decoration: InputDecoration(
                 hintText: 'Search for food...',
-                hintStyle: const TextStyle(color: AppTheme.darkTextMuted),
-                prefixIcon: const Icon(
-                  Icons.search,
-                  color: AppTheme.darkTextMuted,
-                ),
+                hintStyle: TextStyle(color: muted),
+                prefixIcon: Icon(Icons.search, color: muted),
                 suffixIcon: _searchController.text.isNotEmpty
                     ? IconButton(
-                        icon: const Icon(
-                          Icons.clear,
-                          color: AppTheme.darkTextMuted,
-                        ),
+                        icon: Icon(Icons.clear, color: muted),
                         onPressed: () {
                           _searchController.clear();
                         },
@@ -170,21 +171,18 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
                     : null,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
-                  borderSide: const BorderSide(color: AppTheme.darkOutline),
+                  borderSide: BorderSide(color: outline),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
-                  borderSide: const BorderSide(color: AppTheme.darkOutline),
+                  borderSide: BorderSide(color: outline),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
-                  borderSide: const BorderSide(
-                    color: AppTheme.darkPrimary,
-                    width: 2,
-                  ),
+                  borderSide: BorderSide(color: scheme.primary, width: 2),
                 ),
                 filled: true,
-                fillColor: AppTheme.darkCard,
+                fillColor: surface,
               ),
             ),
           ),
@@ -255,6 +253,10 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
   }
 
   Widget _buildMealTypeChip(String value, String label, IconData icon) {
+    final scheme = Theme.of(context).colorScheme;
+    final surface = scheme.surface;
+    final outline = scheme.outline;
+    final muted = scheme.onSurface.withOpacity(0.6);
     final isSelected = _selectedMealType == value;
     return GestureDetector(
       onTap: () => setState(() => _selectedMealType = value),
@@ -263,16 +265,11 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: isSelected ? AppTheme.darkPrimary : AppTheme.darkCard,
+              color: isSelected ? scheme.primary : surface,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: isSelected ? AppTheme.darkPrimary : AppTheme.darkOutline,
-              ),
+              border: Border.all(color: isSelected ? scheme.primary : outline),
             ),
-            child: Icon(
-              icon,
-              color: isSelected ? Colors.white : AppTheme.darkTextMuted,
-            ),
+            child: Icon(icon, color: isSelected ? Colors.white : muted),
           ),
           const SizedBox(height: 5),
           Text(
@@ -280,7 +277,7 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
             style: TextStyle(
               fontSize: 12,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              color: isSelected ? AppTheme.darkPrimary : AppTheme.darkTextMuted,
+              color: isSelected ? scheme.primary : muted,
             ),
           ),
         ],
@@ -321,17 +318,18 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
   }
 
   Widget _buildSearchResults() {
+    final scheme = Theme.of(context).colorScheme;
+    final outline = scheme.outline;
+    final muted = scheme.onSurface.withOpacity(0.6);
+
     if (_isSearching && _searchResults.isEmpty) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(color: AppTheme.darkPrimary),
-            SizedBox(height: 20),
-            Text(
-              'Searching...',
-              style: TextStyle(fontSize: 16, color: AppTheme.darkTextMuted),
-            ),
+            CircularProgressIndicator(color: scheme.primary),
+            const SizedBox(height: 20),
+            Text('Searching...', style: TextStyle(fontSize: 16, color: muted)),
           ],
         ),
       );
@@ -342,18 +340,16 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.search_off, size: 80, color: AppTheme.darkOutline),
+            Icon(Icons.search_off, size: 80, color: outline),
             const SizedBox(height: 20),
-            const Text(
+            Text(
               'No results found',
-              style: TextStyle(fontSize: 18, color: AppTheme.darkTextMuted),
+              style: TextStyle(fontSize: 18, color: muted),
             ),
             const SizedBox(height: 10),
             TextButton(
               onPressed: _addCustomFood,
-              style: TextButton.styleFrom(
-                foregroundColor: AppTheme.darkPrimary,
-              ),
+              style: TextButton.styleFrom(foregroundColor: scheme.primary),
               child: const Text('Add as custom food'),
             ),
           ],
@@ -371,10 +367,10 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
         return Container(
           margin: const EdgeInsets.only(bottom: 10),
           decoration: BoxDecoration(
-            color: AppTheme.darkCard,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: AppTheme.darkOutline.withOpacity(0.5),
+              color: Theme.of(context).colorScheme.outline.withOpacity(0.6),
               width: 1,
             ),
           ),
@@ -394,8 +390,8 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
                 Expanded(
                   child: Text(
                     food.name,
-                    style: const TextStyle(
-                      color: AppTheme.darkText,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -411,12 +407,12 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
             ),
             subtitle: Text(
               '${food.calories.toInt()} cal • P: ${food.protein.toInt()}g • C: ${food.carbs.toInt()}g • F: ${food.fats.toInt()}g',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
-                color: AppTheme.darkTextMuted,
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
               ),
             ),
-            trailing: const Icon(Icons.add_circle, color: AppTheme.darkPrimary),
+            trailing: Icon(Icons.add_circle, color: scheme.primary),
             onTap: () => _addFoodLog(food),
           ),
         );
@@ -428,9 +424,13 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
     return ListView(
       padding: const EdgeInsets.all(15),
       children: [
-        const Text(
+        Text(
           'Popular Foods',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
         ),
         const SizedBox(height: 10),
         ...StorageService.getAllFoodItems().take(10).map((food) {
@@ -616,7 +616,10 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      builder: (context) => CustomFoodEntrySheet(mealType: _selectedMealType),
+      builder: (context) => CustomFoodEntrySheet(
+        mealType: _selectedMealType,
+        onLogSaved: widget.onLogSaved,
+      ),
     );
   }
 
@@ -649,11 +652,17 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
 
     await StorageService.saveFoodLog(log);
 
+    widget.onLogSaved?.call();
+
     if (mounted) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('${food.name} logged successfully!'),
           backgroundColor: Colors.green,
+          duration: const Duration(seconds: 1),
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.fromLTRB(16, 0, 16, 80),
           action: SnackBarAction(
             label: 'Undo',
             textColor: Colors.white,
@@ -695,11 +704,17 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
 
     await StorageService.saveFoodLog(log);
 
+    widget.onLogSaved?.call();
+
     if (mounted) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('${food.name} logged from AI recognition! ✨'),
           backgroundColor: Colors.green,
+          duration: const Duration(seconds: 1),
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.fromLTRB(16, 0, 16, 80),
           action: SnackBarAction(
             label: 'Undo',
             textColor: Colors.white,
@@ -874,8 +889,13 @@ class _ServingSizeDialogState extends State<ServingSizeDialog> {
 // Custom Food Entry Sheet
 class CustomFoodEntrySheet extends StatefulWidget {
   final String mealType;
+  final VoidCallback? onLogSaved;
 
-  const CustomFoodEntrySheet({super.key, required this.mealType});
+  const CustomFoodEntrySheet({
+    super.key,
+    required this.mealType,
+    this.onLogSaved,
+  });
 
   @override
   State<CustomFoodEntrySheet> createState() => _CustomFoodEntrySheetState();
@@ -1018,6 +1038,8 @@ class _CustomFoodEntrySheetState extends State<CustomFoodEntrySheet> {
     );
 
     await StorageService.saveFoodLog(log);
+
+    widget.onLogSaved?.call();
 
     if (mounted) {
       Navigator.pop(context);

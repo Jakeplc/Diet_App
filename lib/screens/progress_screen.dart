@@ -19,6 +19,11 @@ class _ProgressScreenState extends State<ProgressScreen> {
   bool _isPremium = false;
   int _selectedDays = 7; // 7, 30, 90 days
 
+  ColorScheme get _scheme => Theme.of(context).colorScheme;
+  Color get _surface => _scheme.surface;
+  Color get _outline => _scheme.outline;
+  Color get _muted => _scheme.onSurface.withOpacity(0.6);
+
   @override
   void initState() {
     super.initState();
@@ -36,19 +41,21 @@ class _ProgressScreenState extends State<ProgressScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final scaffold = Theme.of(context).scaffoldBackgroundColor;
+
     return Scaffold(
-      backgroundColor: AppTheme.darkBackground,
+      backgroundColor: scaffold,
       appBar: AppBar(
         title: const Text('Progress'),
-        backgroundColor: AppTheme.darkBackground,
-        foregroundColor: AppTheme.darkText,
+        backgroundColor: scaffold,
+        foregroundColor: _scheme.onSurface,
         elevation: 0,
         actions: [
           IconButton(icon: const Icon(Icons.add), onPressed: _addWeightLog),
         ],
       ),
       body: RefreshIndicator(
-        color: AppTheme.darkPrimary,
+        color: _scheme.primary,
         onRefresh: _loadData,
         child: ListView(
           padding: const EdgeInsets.all(20),
@@ -89,23 +96,23 @@ class _ProgressScreenState extends State<ProgressScreen> {
   Widget _buildWeightChart() {
     if (_weightLogs.isEmpty) {
       return Card(
-        color: AppTheme.darkCard,
-        elevation: 3,
+        color: _surface,
+        elevation: 1,
         child: Padding(
           padding: const EdgeInsets.all(40),
           child: Column(
             children: [
-              Icon(Icons.show_chart, size: 60, color: AppTheme.darkOutline),
+              Icon(Icons.show_chart, size: 60, color: _outline),
               const SizedBox(height: 15),
-              const Text(
+              Text(
                 'No weight data yet',
-                style: TextStyle(fontSize: 16, color: AppTheme.darkText),
+                style: TextStyle(fontSize: 16, color: _scheme.onSurface),
               ),
               const SizedBox(height: 15),
               ElevatedButton(
                 onPressed: _addWeightLog,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.darkPrimary,
+                  backgroundColor: _scheme.primary,
                   foregroundColor: Colors.white,
                 ),
                 child: const Text('Log Your Weight'),
@@ -144,19 +151,19 @@ class _ProgressScreenState extends State<ProgressScreen> {
         .reduce((a, b) => a > b ? a : b);
 
     return Card(
-      color: AppTheme.darkCard,
-      elevation: 3,
+      color: _surface,
+      elevation: 1,
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Weight Trend',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: AppTheme.darkText,
+                color: _scheme.onSurface,
               ),
             ),
             const SizedBox(height: 20),
@@ -170,7 +177,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                     horizontalInterval: 5,
                     getDrawingHorizontalLine: (value) {
                       return FlLine(
-                        color: AppTheme.darkOutline.withOpacity(0.3),
+                        color: _outline.withOpacity(0.5),
                         strokeWidth: 1,
                       );
                     },
@@ -183,10 +190,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                         getTitlesWidget: (value, meta) {
                           return Text(
                             '${value.toInt()}',
-                            style: const TextStyle(
-                              fontSize: 10,
-                              color: AppTheme.darkTextMuted,
-                            ),
+                            style: TextStyle(fontSize: 10, color: _muted),
                           );
                         },
                       ),
@@ -208,12 +212,12 @@ class _ProgressScreenState extends State<ProgressScreen> {
                     LineChartBarData(
                       spots: spots,
                       isCurved: true,
-                      color: AppTheme.darkPrimary,
+                      color: _scheme.primary,
                       barWidth: 3,
                       dotData: FlDotData(show: true),
                       belowBarData: BarAreaData(
                         show: true,
-                        color: AppTheme.darkPrimary.withOpacity(0.1),
+                        color: _scheme.primary.withOpacity(0.1),
                       ),
                     ),
                   ],
@@ -247,14 +251,14 @@ class _ProgressScreenState extends State<ProgressScreen> {
       onSelected: (selected) {
         setState(() => _selectedDays = days);
       },
-      selectedColor: AppTheme.darkPrimary,
-      backgroundColor: AppTheme.darkCard,
+      selectedColor: _scheme.primary,
+      backgroundColor: _surface,
       side: BorderSide(
-        color: isSelected ? AppTheme.darkPrimary : AppTheme.darkOutline,
+        color: isSelected ? _scheme.primary : _outline,
         width: 1.5,
       ),
       labelStyle: TextStyle(
-        color: isSelected ? Colors.white : AppTheme.darkTextMuted,
+        color: isSelected ? Colors.white : _muted,
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
       ),
     );
@@ -271,23 +275,20 @@ class _ProgressScreenState extends State<ProgressScreen> {
       children: [
         Expanded(
           child: Card(
-            color: AppTheme.darkCard,
-            elevation: 3,
+            color: _surface,
+            elevation: 1,
             child: Padding(
               padding: const EdgeInsets.all(15),
               child: Column(
                 children: [
-                  const Text(
-                    'Current',
-                    style: TextStyle(color: AppTheme.darkText),
-                  ),
+                  Text('Current', style: TextStyle(color: _scheme.onSurface)),
                   const SizedBox(height: 5),
                   Text(
                     '${currentWeight.toStringAsFixed(1)} kg',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: AppTheme.darkText,
+                      color: _scheme.onSurface,
                     ),
                   ),
                 ],
@@ -298,15 +299,15 @@ class _ProgressScreenState extends State<ProgressScreen> {
         const SizedBox(width: 10),
         Expanded(
           child: Card(
-            color: AppTheme.darkCard,
-            elevation: 3,
+            color: _surface,
+            elevation: 1,
             child: Padding(
               padding: const EdgeInsets.all(15),
               child: Column(
                 children: [
-                  const Text(
+                  Text(
                     'Total Change',
-                    style: TextStyle(color: AppTheme.darkText),
+                    style: TextStyle(color: _scheme.onSurface),
                   ),
                   const SizedBox(height: 5),
                   Text(
@@ -315,7 +316,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: totalChange < 0
-                          ? AppTheme.darkSecondary
+                          ? _scheme.secondary
                           : AppTheme.fatsRed,
                     ),
                   ),
@@ -440,14 +441,14 @@ class _ProgressScreenState extends State<ProgressScreen> {
 
   Widget _buildWeightHistory() {
     if (_weightLogs.isEmpty) {
-      return const Card(
-        color: AppTheme.darkCard,
+      return Card(
+        color: _surface,
         child: Padding(
           padding: EdgeInsets.all(30),
           child: Text(
             'No weight logs yet',
             textAlign: TextAlign.center,
-            style: TextStyle(color: AppTheme.darkText),
+            style: TextStyle(color: _scheme.onSurface),
           ),
         ),
       );
@@ -456,12 +457,12 @@ class _ProgressScreenState extends State<ProgressScreen> {
     return Column(
       children: _weightLogs.reversed.map((log) {
         return Card(
-          color: AppTheme.darkCard,
-          elevation: 2,
+          color: _surface,
+          elevation: 1,
           margin: const EdgeInsets.only(bottom: 10),
           child: ListTile(
             leading: CircleAvatar(
-              backgroundColor: AppTheme.darkPrimary,
+              backgroundColor: _scheme.primary,
               child: Text(
                 '${log.weight.toInt()}',
                 style: const TextStyle(color: Colors.white, fontSize: 12),
@@ -469,11 +470,11 @@ class _ProgressScreenState extends State<ProgressScreen> {
             ),
             title: Text(
               '${log.weight.toStringAsFixed(1)} kg',
-              style: const TextStyle(color: AppTheme.darkText),
+              style: TextStyle(color: _scheme.onSurface),
             ),
             subtitle: Text(
               '${log.timestamp.day}/${log.timestamp.month}/${log.timestamp.year}',
-              style: const TextStyle(color: AppTheme.darkTextMuted),
+              style: TextStyle(color: _muted),
             ),
             trailing: IconButton(
               icon: const Icon(Icons.delete, color: AppTheme.fatsRed),

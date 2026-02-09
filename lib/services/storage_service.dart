@@ -19,6 +19,12 @@ class StorageService {
   static const String settingsBox = 'settings';
   static const String recipesBox = 'recipes';
 
+  // Settings keys
+  static const String macroProteinTargetKey = 'macro_protein_target';
+  static const String macroCarbsTargetKey = 'macro_carbs_target';
+  static const String macroFatsTargetKey = 'macro_fats_target';
+  static const String waterQuickAddAmountKey = 'water_quick_add_ml';
+
   // Initialize Hive and register adapters
   static Future<void> init() async {
     await Hive.initFlutter();
@@ -449,6 +455,11 @@ class StorageService {
         .toList();
   }
 
+  static Future<void> deleteWaterLog(String id) async {
+    final box = Hive.box(waterLogsBox);
+    await box.delete(id);
+  }
+
   // Settings
   static Future<void> saveSetting(String key, dynamic value) async {
     final box = Hive.box(settingsBox);
@@ -493,6 +504,19 @@ class StorageService {
   static Future<void> deleteMealPlan(String id) async {
     final box = Hive.box(mealPlansBox);
     await box.delete(id);
+  }
+
+  static Future<void> deleteMealPlansInDateRange(
+    DateTime startDate,
+    DateTime endDate,
+  ) async {
+    final plans = getAllMealPlans();
+    for (final plan in plans) {
+      if (plan.date.isBefore(startDate) || plan.date.isAfter(endDate)) {
+        continue;
+      }
+      await deleteMealPlan(plan.id);
+    }
   }
 
   // Recipe methods

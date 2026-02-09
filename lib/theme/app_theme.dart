@@ -13,15 +13,16 @@ class AppTheme {
   static const Color lightTextMuted = Color(0xFF64748B);
   static const Color lightOutline = Color(0xFFE2E8F0);
 
-  // === DARK MODE EMBER (DEFAULT) ===
-  static const Color darkPrimary = Color(0xFFFF5E00);
-  static const Color darkSecondary = Color(0xFFFFC107);
-  static const Color darkComplementary = Color(0xFF0A2540);
-  static const Color darkBackground = Color(0xFF0C111A);
-  static const Color darkCard = Color(0xFF1A202C);
-  static const Color darkText = Color(0xFFF8FAFC);
-  static const Color darkTextMuted = Color(0xFF94A3B8);
-  static const Color darkOutline = Color(0xFF2A3441);
+  // === DARK MODE (SOFT / APPLE-ISH) ===
+  // Ember identity stays, but everything else is softened & more premium.
+  static const Color darkPrimary = Color(0xFFFF6A1A); // softer orange
+  static const Color darkSecondary = Color(0xFFFBBF24); // warm amber
+  static const Color darkComplementary = Color(0xFF0B2A4A); // deep navy accent
+  static const Color darkBackground = Color(0xFF0E1116); // not pure black
+  static const Color darkCard = Color(0xFF151A21); // lifted surface
+  static const Color darkText = Color(0xFFEAF0F6); // soft white
+  static const Color darkTextMuted = Color(0xFF9AA7B5); // calm gray-blue
+  static const Color darkOutline = Color(0xFF273140); // subtle dividers
 
   // === FEMININE EMBER ===
   static const Color femininePrimary = Color(0xFFFF6B6B);
@@ -33,14 +34,14 @@ class AppTheme {
   static const Color feminineTextMuted = Color(0xFF6B7280);
   static const Color feminineOutline = Color(0xFFFBCACA);
 
-  // Backwards compatibility aliases (default to dark mode)
-  static const Color primaryOrange = lightPrimary;
-  static const Color accentOrange = lightSecondary;
-  static const Color backgroundDark = lightBackground;
-  static const Color cardDark = lightCard;
-  static const Color textPrimaryDark = lightText;
-  static const Color textMutedDark = lightTextMuted;
-  static const Color outlineDark = lightOutline;
+  // Backwards compatibility aliases (default to dark mode) ✅ FIXED
+  static const Color primaryOrange = darkPrimary;
+  static const Color accentOrange = darkSecondary;
+  static const Color backgroundDark = darkBackground;
+  static const Color cardDark = darkCard;
+  static const Color textPrimaryDark = darkText;
+  static const Color textMutedDark = darkTextMuted;
+  static const Color outlineDark = darkOutline;
 
   // Legacy aliases
   static const Color backgroundLight = lightBackground;
@@ -51,18 +52,20 @@ class AppTheme {
   static const Color textMutedLight = lightTextMuted;
   static const Color outlineLight = lightOutline;
 
-  // Macro Colors (adapt to current theme)
-  static const Color proteinBlue = Color(0xFFFF5E00);
-  static const Color carbsAmber = Color(0xFFFFC107);
-  static const Color fatsRed = Color(0xFFFF8533);
-  static const Color successGreen = Color(0xFFFFC107);
+  // Macro Colors (simple set — adjust later if you want)
+  static const Color proteinBlue = Color(0xFF3B82F6);
+  static const Color carbsAmber = Color(0xFFF59E0B);
+  static const Color fatsRed = Color(0xFFEF4444);
+  static const Color successGreen = Color(0xFF22C55E);
 
   // Ring Colors
-  static const Color caloriesRing = Color(0xFFFF5E00);
-  static const Color waterRing = Color(0xFF0A2540);
-  static const Color ringTrack = Color(0xFFE2E8F0);
+  static const Color caloriesRing = darkPrimary;
+  static const Color waterRing = darkComplementary;
+  static const Color ringTrack = Color(
+    0xFFE2E8F0,
+  ); // can be overridden per theme if needed
 
-  // Card & Border
+  // Card & Border (kept for compatibility; consider removing later)
   static const Color cardSurface = lightCard;
   static const Color cardBorder = Color(0xFFE2E8F0);
 
@@ -83,8 +86,8 @@ class AppTheme {
     }
   }
 
-  // Backwards compatibility
-  static ThemeData get darkTheme => _buildLightTheme();
+  // Backwards compatibility ✅ FIXED
+  static ThemeData get darkTheme => _buildDarkTheme();
   static ThemeData get lightTheme => _buildLightTheme();
 
   // === LIGHT MODE THEME ===
@@ -95,7 +98,7 @@ class AppTheme {
       primaryColor: lightPrimary,
       scaffoldBackgroundColor: lightBackground,
       cardColor: lightCard,
-      colorScheme: ColorScheme.light(
+      colorScheme: const ColorScheme.light(
         primary: lightPrimary,
         secondary: lightSecondary,
         surface: lightCard,
@@ -103,8 +106,12 @@ class AppTheme {
         onPrimary: Colors.white,
         onSecondary: Colors.black,
         onSurface: lightText,
+        outline: lightOutline,
       ),
+
+      // Keep your light look as-is
       iconTheme: const IconThemeData(color: lightPrimary, size: 24),
+
       appBarTheme: const AppBarTheme(
         backgroundColor: lightBackground,
         elevation: 0,
@@ -116,12 +123,27 @@ class AppTheme {
           fontWeight: FontWeight.bold,
         ),
       ),
+
+      // Helpful defaults for “settings/profile” screens
+      listTileTheme: const ListTileThemeData(
+        iconColor: lightTextMuted,
+        textColor: lightText,
+        tileColor:
+            Colors.transparent, // iOS grouped style (wrap section in Card)
+      ),
+      dividerTheme: const DividerThemeData(
+        color: lightOutline,
+        thickness: 1,
+        space: 1,
+      ),
+
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: lightPrimary,
         foregroundColor: Colors.white,
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
+
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: lightPrimary,
@@ -133,6 +155,7 @@ class AppTheme {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         ),
       ),
+
       textTheme: const TextTheme(
         displayLarge: TextStyle(color: lightText, fontWeight: FontWeight.bold),
         displayMedium: TextStyle(color: lightText, fontWeight: FontWeight.bold),
@@ -146,6 +169,7 @@ class AppTheme {
         bodyMedium: TextStyle(color: lightTextMuted),
         bodySmall: TextStyle(color: lightTextMuted),
       ),
+
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: lightCard,
@@ -164,15 +188,18 @@ class AppTheme {
         labelStyle: const TextStyle(color: lightTextMuted),
         hintStyle: const TextStyle(color: lightTextMuted),
       ),
+
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: lightBackground,
         selectedItemColor: lightPrimary,
         unselectedItemColor: lightTextMuted,
         elevation: 8,
       ),
+
       cardTheme: CardThemeData(
         color: lightCard,
         elevation: 2,
+        surfaceTintColor: Colors.transparent, // ✅ keep cards crisp
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
           side: const BorderSide(color: lightOutline, width: 1),
@@ -182,7 +209,7 @@ class AppTheme {
     );
   }
 
-  // === DARK MODE THEME (DEFAULT) ===
+  // === DARK MODE THEME (SOFT / APPLE-ISH) ===
   static ThemeData _buildDarkTheme() {
     return ThemeData(
       useMaterial3: true,
@@ -190,7 +217,8 @@ class AppTheme {
       primaryColor: darkPrimary,
       scaffoldBackgroundColor: darkBackground,
       cardColor: darkCard,
-      colorScheme: ColorScheme.dark(
+
+      colorScheme: const ColorScheme.dark(
         primary: darkPrimary,
         secondary: darkSecondary,
         surface: darkCard,
@@ -198,36 +226,56 @@ class AppTheme {
         onPrimary: Colors.white,
         onSecondary: Colors.black,
         onSurface: darkText,
+        outline: darkOutline,
       ),
-      iconTheme: const IconThemeData(color: darkPrimary, size: 24),
+
+      // ✅ key change: don’t paint every icon orange
+      iconTheme: const IconThemeData(color: darkTextMuted, size: 24),
+
       appBarTheme: const AppBarTheme(
         backgroundColor: darkBackground,
         elevation: 0,
         centerTitle: false,
-        iconTheme: IconThemeData(color: darkPrimary),
+        iconTheme: IconThemeData(color: darkTextMuted),
         titleTextStyle: TextStyle(
           color: darkText,
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),
       ),
+
+      // ✅ makes settings/profile sections look premium
+      listTileTheme: const ListTileThemeData(
+        iconColor: darkTextMuted,
+        textColor: darkText,
+        tileColor:
+            Colors.transparent, // iOS grouped style (wrap section in Card)
+      ),
+      dividerTheme: const DividerThemeData(
+        color: darkOutline,
+        thickness: 1,
+        space: 1,
+      ),
+
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: darkPrimary,
         foregroundColor: Colors.white,
-        elevation: 4,
+        elevation: 3,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
+
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: darkPrimary,
           foregroundColor: Colors.white,
-          elevation: 2,
+          elevation: 1,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         ),
       ),
+
       textTheme: const TextTheme(
         displayLarge: TextStyle(color: darkText, fontWeight: FontWeight.bold),
         displayMedium: TextStyle(color: darkText, fontWeight: FontWeight.bold),
@@ -238,6 +286,7 @@ class AppTheme {
         bodyMedium: TextStyle(color: darkTextMuted),
         bodySmall: TextStyle(color: darkTextMuted),
       ),
+
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: darkCard,
@@ -256,17 +305,20 @@ class AppTheme {
         labelStyle: const TextStyle(color: darkTextMuted),
         hintStyle: const TextStyle(color: darkTextMuted),
       ),
+
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: darkCard,
         selectedItemColor: darkPrimary,
         unselectedItemColor: darkTextMuted,
         elevation: 8,
       ),
+
       cardTheme: CardThemeData(
         color: darkCard,
-        elevation: 2,
+        elevation: 0, // ✅ iOS-ish
+        surfaceTintColor: Colors.transparent, // ✅ keep cards crisp
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           side: const BorderSide(color: darkOutline, width: 1),
         ),
       ),
@@ -281,7 +333,7 @@ class AppTheme {
       primaryColor: femininePrimary,
       scaffoldBackgroundColor: feminineBackground,
       cardColor: feminineCard,
-      colorScheme: ColorScheme.light(
+      colorScheme: const ColorScheme.light(
         primary: femininePrimary,
         secondary: feminineSecondary,
         surface: feminineCard,
@@ -289,8 +341,11 @@ class AppTheme {
         onPrimary: Colors.white,
         onSecondary: Colors.white,
         onSurface: feminineText,
+        outline: feminineOutline,
       ),
+
       iconTheme: const IconThemeData(color: femininePrimary, size: 24),
+
       appBarTheme: const AppBarTheme(
         backgroundColor: feminineBackground,
         elevation: 0,
@@ -302,12 +357,25 @@ class AppTheme {
           fontWeight: FontWeight.bold,
         ),
       ),
+
+      listTileTheme: const ListTileThemeData(
+        iconColor: feminineTextMuted,
+        textColor: feminineText,
+        tileColor: Colors.transparent,
+      ),
+      dividerTheme: const DividerThemeData(
+        color: feminineOutline,
+        thickness: 1,
+        space: 1,
+      ),
+
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: femininePrimary,
         foregroundColor: Colors.white,
         elevation: 3,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
+
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: femininePrimary,
@@ -319,6 +387,7 @@ class AppTheme {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         ),
       ),
+
       textTheme: const TextTheme(
         displayLarge: TextStyle(
           color: feminineText,
@@ -341,6 +410,7 @@ class AppTheme {
         bodyMedium: TextStyle(color: feminineTextMuted),
         bodySmall: TextStyle(color: feminineTextMuted),
       ),
+
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: feminineCard,
@@ -359,15 +429,18 @@ class AppTheme {
         labelStyle: const TextStyle(color: feminineTextMuted),
         hintStyle: const TextStyle(color: feminineTextMuted),
       ),
+
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: feminineBackground,
         selectedItemColor: femininePrimary,
         unselectedItemColor: feminineTextMuted,
         elevation: 8,
       ),
+
       cardTheme: CardThemeData(
         color: feminineCard,
         elevation: 1,
+        surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
           side: const BorderSide(color: feminineOutline, width: 1),
