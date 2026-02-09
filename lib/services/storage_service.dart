@@ -6,6 +6,7 @@ import '../models/food_log.dart';
 import '../models/weight_log.dart';
 import '../models/meal_plan.dart';
 import '../models/water_log.dart';
+import '../models/glp_log.dart';
 import '../models/recipe.dart';
 
 class StorageService {
@@ -16,6 +17,7 @@ class StorageService {
   static const String weightLogsBox = 'weight_logs';
   static const String mealPlansBox = 'meal_plans';
   static const String waterLogsBox = 'water_logs';
+  static const String glpLogsBox = 'glp_logs';
   static const String settingsBox = 'settings';
   static const String recipesBox = 'recipes';
 
@@ -45,6 +47,7 @@ class StorageService {
     await Hive.openBox(weightLogsBox);
     await Hive.openBox(mealPlansBox);
     await Hive.openBox(waterLogsBox);
+    await Hive.openBox(glpLogsBox);
     await Hive.openBox(settingsBox);
     await Hive.openBox(recipesBox);
 
@@ -460,6 +463,44 @@ class StorageService {
     await box.delete(id);
   }
 
+  // GLP-1 Logs
+  static Future<void> saveGlpLog(GlpLog log) async {
+    final box = Hive.box(glpLogsBox);
+    await box.put(log.id, {
+      'id': log.id,
+      'doseAmount': log.doseAmount,
+      'doseUnit': log.doseUnit,
+      'date': log.date.toIso8601String(),
+    });
+  }
+
+  static List<GlpLog> getGlpLogs() {
+    final box = Hive.box(glpLogsBox);
+    return box.values
+        .map((m) {
+          if (m is! Map) return null;
+          try {
+            return GlpLog(
+              id: m['id'] ?? '',
+              doseAmount: (m['doseAmount'] as num?)?.toDouble() ?? 0.0,
+              doseUnit: m['doseUnit'] ?? 'mg',
+              date: DateTime.parse(m['date']),
+            );
+          } catch (e) {
+            debugPrint('Error parsing GLP log: $e');
+            return null;
+          }
+        })
+        .whereType<GlpLog>()
+        .toList()
+      ..sort((a, b) => b.date.compareTo(a.date));
+  }
+
+  static Future<void> deleteGlpLog(String id) async {
+    final box = Hive.box(glpLogsBox);
+    await box.delete(id);
+  }
+
   // Settings
   static Future<void> saveSetting(String key, dynamic value) async {
     final box = Hive.box(settingsBox);
@@ -552,6 +593,7 @@ class StorageService {
     await Hive.box(foodLogsBox).clear();
     await Hive.box(weightLogsBox).clear();
     await Hive.box(waterLogsBox).clear();
+    await Hive.box(glpLogsBox).clear();
     await Hive.box(mealPlansBox).clear();
     // Keep food items database
   }

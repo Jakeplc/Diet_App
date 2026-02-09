@@ -5,6 +5,7 @@ import 'package:uuid/uuid.dart';
 import '../models/user_profile.dart';
 import '../models/food_log.dart';
 import '../models/water_log.dart';
+import '../models/glp_log.dart';
 import '../services/storage_service.dart';
 import '../services/calorie_calculator_service.dart';
 import '../services/premium_service.dart';
@@ -29,6 +30,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   UserProfile? _profile;
   List<FoodLog> _todayLogs = [];
   List<WaterLog> _todayWater = [];
+  List<GlpLog> _glpLogs = [];
   bool _isPremium = false;
 
   static const double _waterQuickAddFallbackMl = 250.0;
@@ -99,12 +101,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final profile = StorageService.getUserProfile();
     final logs = StorageService.getFoodLogsForDate(DateTime.now());
     final water = StorageService.getWaterLogsForDate(DateTime.now());
+    final glpLogs = StorageService.getGlpLogs();
     final premium = await PremiumService.isPremium();
 
     setState(() {
       _profile = profile;
       _todayLogs = logs;
       _todayWater = water;
+      _glpLogs = glpLogs;
       _isPremium = premium;
     });
   }
@@ -328,6 +332,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ),
                 const SizedBox(height: 30),
+
+                _buildGlpTrackerCard(),
+                const SizedBox(height: 20),
 
                 // Macros Card
                 _buildMacrosCard(
@@ -572,6 +579,184 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       ),
     );
+  }
+
+  Widget _buildGlpTrackerCard() {
+    final scheme = Theme.of(context).colorScheme;
+    final logs = _glpLogs.take(3).toList();
+
+    return Card(
+      color: Theme.of(context).cardColor,
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'GLP-1 Tracker',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: scheme.onSurface,
+                  ),
+                ),
+                TextButton.icon(
+                  onPressed: _showGlpLogDialog,
+                  icon: const Icon(Icons.add),
+                  label: const Text('Add'),
+                  style: TextButton.styleFrom(
+                    foregroundColor: scheme.primary,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            if (logs.isEmpty)
+              Text(
+                'No doses logged yet.',
+                style: TextStyle(
+                  color: scheme.onSurface.withOpacity(0.6),
+                ),
+              )
+            else
+              ...logs.map(
+                (log) => ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(
+                    '${log.doseAmount.toStringAsFixed(2)} ${log.doseUnit}',
+                  ),
+                  subtitle: Text(_formatGlpDate(log.date)),
+                  trailing: IconButton(
+                    icon: Icon(Icons.delete, color: scheme.error),
+                    onPressed: () => _deleteGlpLog(log),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _formatGlpDate(DateTime date) {
+    final local = DateTime(date.year, date.month, date.day);
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final diff = today.difference(local).inDays;
+
+    if (diff == 0) return 'Today';
+    if (diff == 1) return 'Yesterday';
+    return '${local.month}/${local.day}/${local.year}';
+  }
+
+  Future<void> _showGlpLogDialog() async {
+    const units = ['mg', 'mL', 'IU'];
+    final amountController = TextEditingController();
+    var selectedUnit = units.first;
+    var selectedDate = DateTime.now();
+
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: const Text('Add GLP-1 Dose'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: amountController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Dose amount',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 12),
+              DropdownButtonFormField<String>(
+                value: selectedUnit,
+                decoration: const InputDecoration(
+                  labelText: 'Unit',
+                  border: OutlineInputBorder(),
+                ),
+                items: units
+                    .map(
+                      (unit) => DropdownMenuItem(
+                        value: unit,
+                        child: Text(unit),
+                      ),
+                    )
+                    .toList(),
+                onChanged: (value) {
+                  if (value == null) return;
+                  setState(() => selectedUnit = value);
+                },
+              ),
+              const SizedBox(height: 12),
+              OutlinedButton.icon(
+                onPressed: () async {
+                  final picked = await showDatePicker(
+                    context: context,
+                    initialDate: selectedDate,
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime.now().add(const Duration(days: 365)),
+                  );
+                  if (picked != null) {
+                    setState(() => selectedDate = picked);
+                  }
+                },
+                icon: const Icon(Icons.calendar_today),
+                label: Text(_formatGlpDate(selectedDate)),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Save'),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (result == true) {
+      final amount = double.tryParse(amountController.text.trim());
+      if (amount == null || amount <= 0) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Enter a valid dose amount')),
+          );
+        }
+        return;
+      }
+
+      final log = GlpLog(
+        id: const Uuid().v4(),
+        doseAmount: amount,
+        doseUnit: selectedUnit,
+        date: DateTime(
+          selectedDate.year,
+          selectedDate.month,
+          selectedDate.day,
+        ),
+      );
+
+      await StorageService.saveGlpLog(log);
+      await _loadData();
+    }
+  }
+
+  Future<void> _deleteGlpLog(GlpLog log) async {
+    await StorageService.deleteGlpLog(log.id);
+    await _loadData();
   }
 
   Widget _buildMacroCircle(
