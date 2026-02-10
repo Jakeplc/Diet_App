@@ -1,3 +1,5 @@
+﻿// ignore_for_file: avoid_web_libraries_in_flutter, deprecated_member_use
+
 // Web / fallback implementation for ExportService.
 // On web we can't write to a local filesystem path, so we generate the CSV and
 // trigger a browser download.

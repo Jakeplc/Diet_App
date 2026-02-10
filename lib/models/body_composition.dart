@@ -1,4 +1,4 @@
-class BodyComposition {
+﻿class BodyComposition {
   String id;
   DateTime timestamp;
   double? bodyFatPercentage;

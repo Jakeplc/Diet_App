@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../models/food_recognition.dart';
 import '../services/food_recognition_service.dart';
 
@@ -26,6 +26,8 @@ class _FoodRecognitionScreenState extends State<FoodRecognitionScreen> {
         'simulated_photo.jpg',
       );
 
+      if (!mounted) return;
+
       setState(() {
         _recognitionResult = result;
         _selectedFood = result.suggestions.first;
@@ -33,6 +35,7 @@ class _FoodRecognitionScreenState extends State<FoodRecognitionScreen> {
         _isProcessing = false;
       });
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Recognition failed: $e')));
@@ -248,25 +251,25 @@ class _FoodRecognitionScreenState extends State<FoodRecognitionScreen> {
                             children: [
                               Expanded(
                                 child: _buildNutrientInfo(
-                                  '🔥',
+                                  'ðŸ”¥',
                                   '${food.caloriesPer100g}',
                                 ),
                               ),
                               Expanded(
                                 child: _buildNutrientInfo(
-                                  '💪',
+                                  'ðŸ’ª',
                                   '${food.protein}g',
                                 ),
                               ),
                               Expanded(
                                 child: _buildNutrientInfo(
-                                  '🌾',
+                                  'ðŸŒ¾',
                                   '${food.carbs}g',
                                 ),
                               ),
                               Expanded(
                                 child: _buildNutrientInfo(
-                                  '🥑',
+                                  'ðŸ¥‘',
                                   '${food.fats}g',
                                 ),
                               ),

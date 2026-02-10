@@ -1,3 +1,5 @@
+import com.android.build.gradle.BaseExtension
+
 allprojects {
     repositories {
         google()
@@ -17,6 +19,19 @@ subprojects {
 }
 subprojects {
     project.evaluationDependsOn(":app")
+}
+
+subprojects {
+    afterEvaluate {
+        if (
+            plugins.hasPlugin("com.android.application") ||
+                plugins.hasPlugin("com.android.library")
+        ) {
+            extensions.configure<BaseExtension>("android") {
+                buildToolsVersion = "34.0.0"
+            }
+        }
+    }
 }
 
 tasks.register<Delete>("clean") {

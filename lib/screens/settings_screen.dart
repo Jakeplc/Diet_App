@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+﻿import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show debugPrint, kIsWeb;
 
 import '../models/user_profile.dart';
 import '../services/storage_service.dart';
@@ -9,7 +9,6 @@ import '../services/notification_service.dart';
 import '../services/export_service.dart';
 import 'package:share_plus/share_plus.dart';
 import 'paywall_screen.dart';
-import '../theme/app_theme.dart';
 import 'recipe_builder_screen.dart';
 import 'shopping_list_screen.dart';
 import 'fasting_timer_screen.dart';
@@ -62,7 +61,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         });
       }
     } catch (e) {
-      print('Error loading settings data: $e');
+      debugPrint('Error loading settings data: $e');
       if (mounted) {
         setState(() {
           _profile = StorageService.getUserProfile();
@@ -178,9 +177,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ListTile(
               leading: const Icon(Icons.add_circle_outline, color: Colors.blue),
               title: Text(
-                _formatWater(
-                  _getWaterQuickAddAmount(_profile!.waterTarget),
-                ),
+                _formatWater(_getWaterQuickAddAmount(_profile!.waterTarget)),
               ),
               subtitle: const Text('Water add amount'),
               trailing: const Icon(Icons.edit),
@@ -595,10 +592,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
         decoration: BoxDecoration(
           color: scheme.surface,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: scheme.primary.withOpacity(0.3)),
+          border: Border.all(color: scheme.primary.withValues(alpha: 0.3)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.08),
+              color: Colors.black.withValues(alpha: 0.08),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -622,7 +619,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   Text(
                     'Unlock all features & remove ads',
-                    style: TextStyle(color: scheme.onSurface.withOpacity(0.6)),
+                    style: TextStyle(
+                      color: scheme.onSurface.withValues(alpha: 0.6),
+                    ),
                   ),
                 ],
               ),
@@ -646,7 +645,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
-              color: scheme.onSurface.withOpacity(0.6),
+              color: scheme.onSurface.withValues(alpha: 0.6),
             ),
           ),
         ),
@@ -946,8 +945,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ? (current / 29.5735).toStringAsFixed(0)
           : current.toStringAsFixed(0),
     );
-    final unitLabel =
-        _profile!.measurementSystem == 'imperial' ? 'oz' : 'ml';
+    final unitLabel = _profile!.measurementSystem == 'imperial' ? 'oz' : 'ml';
 
     final result = await showDialog<double>(
       context: context,
@@ -1184,7 +1182,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
 
     try {
-      late final exportFile; // File on IO platforms
+      late final Object exportFile; // File on IO, filename on web
 
       switch (type) {
         case 'food':
@@ -1207,30 +1205,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
       // Close loading dialog
       if (mounted) Navigator.pop(context);
 
+      final exportPath = exportFile is String
+          ? exportFile
+          : (exportFile as dynamic).path as String;
+
       if (kIsWeb) {
         // Web export triggers a browser download (no filesystem path, no share sheet)
-        final fileName = exportFile.toString();
+        final fileName = exportPath;
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Downloaded $fileName')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Downloaded $fileName')));
         }
         return;
       }
 
       // IO platforms: Share the file from its local path
-      await Share.shareXFiles([
-        XFile(exportFile.path),
-      ], text: 'My Diet App Export - $type');
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(exportPath)],
+          text: 'My Diet App Export - $type',
+        ),
+      );
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Exported to ${exportFile.path}'),
+            content: Text('Exported to $exportPath'),
             action: SnackBarAction(
               label: 'Share',
               onPressed: () {
-                Share.shareXFiles([XFile(exportFile.path)]);
+                SharePlus.instance.share(
+                  ShareParams(files: [XFile(exportPath)]),
+                );
               },
             ),
           ),
@@ -1254,42 +1261,42 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _showThemeDialog() {
     showDialog(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Select Theme'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            RadioListTile<ThemeMode>(
-              title: const Text('Light Mode'),
-              value: ThemeMode.light,
-              groupValue: Theme.of(context).brightness == Brightness.light
-                  ? ThemeMode.light
-                  : ThemeMode.dark,
-              onChanged: (value) {
-                widget.onThemeChange?.call(ThemeMode.light);
-                Navigator.pop(dialogContext);
-              },
+      builder: (dialogContext) {
+        final currentTheme = Theme.of(context).brightness == Brightness.light
+            ? ThemeMode.light
+            : ThemeMode.dark;
+
+        return AlertDialog(
+          title: const Text('Select Theme'),
+          content: RadioGroup<ThemeMode>(
+            groupValue: currentTheme,
+            onChanged: (value) {
+              if (value == null) return;
+              widget.onThemeChange?.call(value);
+              Navigator.pop(dialogContext);
+            },
+            child: const Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                RadioListTile<ThemeMode>(
+                  title: Text('Light Mode'),
+                  value: ThemeMode.light,
+                ),
+                RadioListTile<ThemeMode>(
+                  title: Text('Dark Mode'),
+                  value: ThemeMode.dark,
+                ),
+              ],
             ),
-            RadioListTile<ThemeMode>(
-              title: const Text('Dark Mode'),
-              value: ThemeMode.dark,
-              groupValue: Theme.of(context).brightness == Brightness.light
-                  ? ThemeMode.light
-                  : ThemeMode.dark,
-              onChanged: (value) {
-                widget.onThemeChange?.call(ThemeMode.dark);
-                Navigator.pop(dialogContext);
-              },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('Close'),
             ),
           ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Close'),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -1417,7 +1424,7 @@ class _MacroEditDialogState extends State<MacroEditDialog> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.orange.withOpacity(0.1),
+                color: Colors.orange.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: Colors.orange),
               ),
@@ -1518,7 +1525,7 @@ class _CalorieTargetDialogState extends State<CalorieTargetDialog> {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.orange.withOpacity(0.1),
+                color: Colors.orange.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: Colors.orange, width: 2),
               ),
@@ -1587,7 +1594,7 @@ class _CalorieTargetDialogState extends State<CalorieTargetDialog> {
                       });
                     }
                   },
-                  selectedColor: Colors.orange.withOpacity(0.3),
+                  selectedColor: Colors.orange.withValues(alpha: 0.3),
                 );
               }).toList(),
             ),
@@ -1684,7 +1691,7 @@ class _WaterTargetDialogState extends State<WaterTargetDialog> {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.1),
+                color: Colors.blue.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: Colors.blue, width: 2),
               ),
@@ -1745,7 +1752,7 @@ class _WaterTargetDialogState extends State<WaterTargetDialog> {
                       });
                     }
                   },
-                  selectedColor: Colors.blue.withOpacity(0.3),
+                  selectedColor: Colors.blue.withValues(alpha: 0.3),
                 );
               }).toList(),
             ),
@@ -1880,7 +1887,7 @@ class _WeightEditDialogState extends State<WeightEditDialog> {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Colors.green.withOpacity(0.1),
+              color: Colors.green.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: Colors.green, width: 2),
             ),
@@ -1986,7 +1993,7 @@ class _HeightEditDialogState extends State<HeightEditDialog> {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Colors.purple.withOpacity(0.1),
+              color: Colors.purple.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: Colors.purple, width: 2),
             ),
@@ -2139,11 +2146,11 @@ class _GoalSelectionDialogState extends State<GoalSelectionDialog> {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isSelected
-              ? color.withOpacity(0.2)
-              : Colors.grey.withOpacity(0.1),
+              ? color.withValues(alpha: 0.2)
+              : Colors.grey.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? color : Colors.grey.withOpacity(0.3),
+            color: isSelected ? color : Colors.grey.withValues(alpha: 0.3),
             width: isSelected ? 2 : 1,
           ),
         ),

@@ -1,4 +1,4 @@
-class FoodLog {
+﻿class FoodLog {
   String id;
   String foodItemId;
   String foodName;

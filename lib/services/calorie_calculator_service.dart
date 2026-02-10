@@ -1,4 +1,4 @@
-import '../models/user_profile.dart';
+﻿import '../models/user_profile.dart';
 
 class CalorieCalculatorService {
   // Calculate BMR using Mifflin-St Jeor Equation
@@ -152,7 +152,7 @@ class CalorieCalculatorService {
     } else if (waterProgress >= 1.0 &&
         caloriesDiff.abs() < 200 &&
         proteinProgress >= 0.9) {
-      return '🎉 Great day! You\'re on track with all your goals!';
+      return 'ðŸŽ‰ Great day! You\'re on track with all your goals!';
     }
 
     return 'Keep going! You\'re ${caloriesDiff.toInt()} calories from your target.';

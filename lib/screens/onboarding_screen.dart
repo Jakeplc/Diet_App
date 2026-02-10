@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../models/user_profile.dart';
 import '../services/storage_service.dart';
@@ -245,17 +245,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               setState(() => _gender = selected.first);
             },
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.resolveWith(
-                (states) => states.contains(MaterialState.selected)
+              backgroundColor: WidgetStateProperty.resolveWith(
+                (states) => states.contains(WidgetState.selected)
                     ? AppTheme.darkPrimary
                     : AppTheme.darkCard,
               ),
-              foregroundColor: MaterialStateProperty.resolveWith(
-                (states) => states.contains(MaterialState.selected)
+              foregroundColor: WidgetStateProperty.resolveWith(
+                (states) => states.contains(WidgetState.selected)
                     ? Colors.white
                     : AppTheme.darkText,
               ),
-              side: MaterialStateProperty.all(
+              side: WidgetStateProperty.all(
                 const BorderSide(color: AppTheme.darkOutline),
               ),
             ),
@@ -458,7 +458,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.2),
+                color: color.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(icon, color: color, size: 30),
@@ -555,7 +555,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           Container(
             padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
-              color: AppTheme.darkSecondary.withOpacity(0.2),
+              color: AppTheme.darkSecondary.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(12),
             ),
             child: const Row(

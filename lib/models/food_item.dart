@@ -1,4 +1,4 @@
-import 'micronutrient_data.dart';
+﻿import 'micronutrient_data.dart';
 
 class FoodItem {
   String id;

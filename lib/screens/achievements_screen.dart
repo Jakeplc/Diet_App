@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../models/achievement.dart';
 import '../services/achievement_service.dart';
 
@@ -96,7 +96,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
         gradient: LinearGradient(
           colors: [
             Theme.of(context).primaryColor,
-            Theme.of(context).primaryColor.withOpacity(0.7),
+            Theme.of(context).primaryColor.withValues(alpha: 0.7),
           ],
         ),
         borderRadius: BorderRadius.circular(16),

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../services/premium_service.dart';
 
 class PaywallScreen extends StatefulWidget {
@@ -126,10 +126,10 @@ class _PaywallScreenState extends State<PaywallScreen> {
 
                 // Fine Print
                 const Text(
-                  '• Cancel anytime\n'
-                  '• All prices in USD\n'
-                  '• Subscriptions auto-renew\n'
-                  '• Free trial for first-time subscribers',
+                  'â€¢ Cancel anytime\n'
+                  'â€¢ All prices in USD\n'
+                  'â€¢ Subscriptions auto-renew\n'
+                  'â€¢ Free trial for first-time subscribers',
                   style: TextStyle(color: Colors.grey, fontSize: 12),
                   textAlign: TextAlign.center,
                 ),
@@ -145,7 +145,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
             decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: [
-                BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10),
+                BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 10),
               ],
             ),
             child: Column(
@@ -290,7 +290,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
       if (success && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('🎉 Welcome to Premium! No Ads Forever'),
+            content: const Text('ðŸŽ‰ Welcome to Premium! No Ads Forever'),
             backgroundColor: Colors.green,
             duration: const Duration(seconds: 3),
           ),

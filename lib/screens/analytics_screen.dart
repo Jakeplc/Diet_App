@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../services/analytics_service.dart';
 
 class AnalyticsScreen extends StatefulWidget {
@@ -106,7 +106,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                             Container(
                               height: 8,
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.3),
+                                color: Colors.white.withValues(alpha: 0.3),
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: ClipRRect(
@@ -115,7 +115,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                                   value: 0.85,
                                   backgroundColor: Colors.transparent,
                                   valueColor: AlwaysStoppedAnimation<Color>(
-                                    Colors.white.withOpacity(0.8),
+                                    Colors.white.withValues(alpha: 0.8),
                                   ),
                                 ),
                               ),
@@ -178,7 +178,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text(
-                              '💡 Recommendations',
+                              'ðŸ’¡ Recommendations',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -253,7 +253,7 @@ class _SummaryCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.2),
+                color: color.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(icon, color: color, size: 24),

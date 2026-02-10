@@ -1,4 +1,4 @@
-class HeartRateLog {
+﻿class HeartRateLog {
   final String id;
   final DateTime timestamp;
   final int bpm; // beats per minute

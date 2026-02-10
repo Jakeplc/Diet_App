@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../models/body_composition.dart';
 import '../models/user_profile.dart';
@@ -232,7 +232,7 @@ class _BodyCompositionScreenState extends State<BodyCompositionScreen> {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -345,7 +345,7 @@ class _BodyCompositionScreenState extends State<BodyCompositionScreen> {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -458,9 +458,9 @@ class _BodyCompositionScreenState extends State<BodyCompositionScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -800,7 +800,7 @@ class _HistoryScreen extends StatelessWidget {
       items.add('Waist: ${entry.waist!.toStringAsFixed(1)} cm');
     }
 
-    return Text(items.isEmpty ? 'No measurements' : items.join(' • '));
+    return Text(items.isEmpty ? 'No measurements' : items.join(' â€¢ '));
   }
 
   void _deleteEntry(BuildContext context, BodyComposition entry) async {

@@ -1,4 +1,4 @@
-class CoachingTip {
+﻿class CoachingTip {
   final String id;
   final String
   category; // nutrition, hydration, exercise, macros, consistency, timing

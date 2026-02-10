@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../models/sleep_log.dart';
 import '../services/sleep_step_service.dart';
 
@@ -87,7 +87,9 @@ class _StepCounterScreenState extends State<StepCounterScreen> {
                               child: CircularProgressIndicator(
                                 value: progress / 100,
                                 strokeWidth: 8,
-                                backgroundColor: Colors.white.withOpacity(0.3),
+                                backgroundColor: Colors.white.withValues(
+                                  alpha: 0.3,
+                                ),
                                 valueColor: const AlwaysStoppedAnimation<Color>(
                                   Colors.white,
                                 ),
@@ -105,9 +107,9 @@ class _StepCounterScreenState extends State<StepCounterScreen> {
                                   ),
                                 ),
                                 Text(
-                                  'of ${StepCounterService.DAILY_GOAL}',
+                                  'of ${StepCounterService.dailyGoal}',
                                   style: TextStyle(
-                                    color: Colors.white.withOpacity(0.9),
+                                    color: Colors.white.withValues(alpha: 0.9),
                                     fontSize: 12,
                                   ),
                                 ),
@@ -181,13 +183,11 @@ class _StepCounterScreenState extends State<StepCounterScreen> {
                           itemBuilder: (context, index) {
                             final log = logs[index];
                             final percentage =
-                                (log.steps /
-                                        StepCounterService.DAILY_GOAL *
-                                        100)
+                                (log.steps / StepCounterService.dailyGoal * 100)
                                     .toInt()
                                     .clamp(0, 100);
                             final goalMet =
-                                log.steps >= StepCounterService.DAILY_GOAL;
+                                log.steps >= StepCounterService.dailyGoal;
 
                             return Card(
                               margin: const EdgeInsets.only(bottom: 12),
@@ -222,7 +222,7 @@ class _StepCounterScreenState extends State<StepCounterScreen> {
                                           ),
                                           child: Text(
                                             goalMet
-                                                ? '✓ Goal Met'
+                                                ? 'âœ“ Goal Met'
                                                 : '$percentage%',
                                             style: const TextStyle(
                                               color: Colors.white,
@@ -240,7 +240,7 @@ class _StepCounterScreenState extends State<StepCounterScreen> {
                                         value:
                                             (log.steps /
                                                     StepCounterService
-                                                        .DAILY_GOAL)
+                                                        .dailyGoal)
                                                 .clamp(0.0, 1.0),
                                         minHeight: 8,
                                         backgroundColor: Colors.grey.shade300,
@@ -374,7 +374,7 @@ class _StepCounterScreenState extends State<StepCounterScreen> {
               child: const Text('Cancel'),
             ),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 final log = StepLog(
                   id: DateTime.now().millisecondsSinceEpoch.toString(),
                   date: DateTime.now(),
@@ -385,10 +385,10 @@ class _StepCounterScreenState extends State<StepCounterScreen> {
                   createdAt: DateTime.now(),
                 );
 
-                StepCounterService.logSteps(log).then((_) {
-                  setState(() => _refreshData());
-                  Navigator.pop(context);
-                });
+                await StepCounterService.logSteps(log);
+                if (!context.mounted) return;
+                setState(() => _refreshData());
+                Navigator.pop(context);
               },
               child: const Text('Save'),
             ),
@@ -426,7 +426,10 @@ class _StatCard extends StatelessWidget {
         ),
         Text(
           title,
-          style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 11),
+          style: TextStyle(
+            color: Colors.white.withValues(alpha: 0.8),
+            fontSize: 11,
+          ),
         ),
       ],
     );

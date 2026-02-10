@@ -1,4 +1,4 @@
-class MealTiming {
+﻿class MealTiming {
   final String mealType; // breakfast, lunch, dinner, snack
   final String recommendedTime; // HH:MM format
   final String timeRange; // e.g., "6:00 AM - 8:00 AM"

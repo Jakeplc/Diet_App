@@ -1,5 +1,4 @@
-import 'dart:async';
-import 'dart:io';
+﻿import 'dart:io';
 import 'package:flutter/material.dart';
 
 // Conditional import for iOS only
@@ -17,8 +16,6 @@ class AppleIAPService {
   AppleIAPService._internal();
 
   // final InAppPurchase _inAppPurchase = InAppPurchase.instance;
-  // late StreamSubscription<List<PurchaseDetails>> _subscription;
-  late StreamSubscription _subscription;
 
   // Product IDs - Update these with your actual App Store product IDs
   static const String monthlyProductId = 'com.dietapp.monthly.199';
@@ -57,30 +54,8 @@ class AppleIAPService {
 
     // Restore previous purchases
     // await _restorePurchases();
-    
+
     debugPrint('Apple IAP initialized (mock mode for testing)');
-  }
-
-  /// Load available products from App Store
-  Future<void> _loadProducts() async {
-    final productIds = <String>{
-      monthlyProductId,
-      yearlyProductId,
-    };
-
-    try {
-      // final ProductDetailsResponse response =
-      //     await _inAppPurchase.queryProductDetails(productIds);
-
-      // if (response.notFoundIDs.isNotEmpty) {
-      //   debugPrint('Product IDs not found: ${response.notFoundIDs}');
-      // }
-
-      // _products = response.productDetails;
-      debugPrint('Loaded products from App Store (mock mode)');
-    } catch (e) {
-      debugPrint('Error loading products: $e');
-    }
   }
 
   dynamic getProduct(String productId) {

@@ -1,4 +1,4 @@
-import '../models/activity_log.dart';
+﻿import '../models/activity_log.dart';
 
 class HealthIntegrationService {
   // In production, this would use:
@@ -12,14 +12,14 @@ class HealthIntegrationService {
       name: 'Apple Health',
       platform: 'apple_health',
       isConnected: false,
-      icon: '🍎',
+      icon: 'ðŸŽ',
     ),
     WearableDevice(
       id: 'google_fit',
       name: 'Google Fit',
       platform: 'google_fit',
       isConnected: false,
-      icon: '🔴',
+      icon: 'ðŸ”´',
     ),
   ];
 

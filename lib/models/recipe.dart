@@ -1,4 +1,4 @@
-class RecipeIngredient {
+﻿class RecipeIngredient {
   final String foodItemId;
   final String foodName;
   final double servings;

@@ -1,4 +1,4 @@
-class SleepLog {
+﻿class SleepLog {
   final String id;
   final DateTime date;
   final int durationMinutes;

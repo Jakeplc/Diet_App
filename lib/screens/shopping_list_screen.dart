@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import '../models/shopping_item.dart';
 import '../services/shopping_list_service.dart';
@@ -109,7 +109,9 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
 
   void _shareList() {
     final text = ShoppingListService.formatAsText(_shoppingItems);
-    Share.share(text, subject: 'My Shopping List');
+    SharePlus.instance.share(
+      ShareParams(text: text, subject: 'My Shopping List'),
+    );
   }
 
   @override
@@ -127,7 +129,7 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
             const Text('Shopping List'),
             if (_shoppingItems.isNotEmpty)
               Text(
-                '$uncheckedCount items • $checkedCount checked',
+                '$uncheckedCount items â€¢ $checkedCount checked',
                 style: const TextStyle(fontSize: 12),
               ),
           ],
@@ -296,7 +298,7 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.orange.withOpacity(0.1),
+                  color: Colors.orange.withValues(alpha: 0.1),
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(12),
                   ),
@@ -429,9 +431,9 @@ class _DateRangeDialogState extends State<_DateRangeDialog> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.orange.withOpacity(0.1),
+              color: Colors.orange.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.orange.withOpacity(0.3)),
+              border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

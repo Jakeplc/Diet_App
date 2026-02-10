@@ -1,4 +1,4 @@
-class WeightLog {
+﻿class WeightLog {
   String id;
   double weight; // kg
   DateTime timestamp;

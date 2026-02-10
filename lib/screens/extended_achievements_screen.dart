@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../services/extended_achievement_service.dart';
 
 class ExtendedAchievementsScreen extends StatefulWidget {
@@ -77,7 +77,7 @@ class _ExtendedAchievementsScreenState
                                 child: LinearProgressIndicator(
                                   value: progress / 100,
                                   minHeight: 8,
-                                  backgroundColor: Colors.white.withOpacity(
+                                  backgroundColor: Colors.white.withValues(alpha: 
                                     0.3,
                                   ),
                                   valueColor:
@@ -88,9 +88,9 @@ class _ExtendedAchievementsScreenState
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                'Keep grinding! 💪',
+                                'Keep grinding! ðŸ’ª',
                                 style: TextStyle(
-                                  color: Colors.white.withOpacity(0.9),
+                                  color: Colors.white.withValues(alpha: 0.9),
                                   fontSize: 12,
                                 ),
                               ),
@@ -176,7 +176,7 @@ class _AchievementBadgeWidget extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: badge.isUnlocked
-              ? color.withOpacity(0.15)
+              ? color.withValues(alpha: 0.15)
               : Colors.grey.shade200,
           border: Border.all(color: color, width: 2),
           borderRadius: BorderRadius.circular(12),
@@ -216,7 +216,7 @@ class _AchievementBadgeWidget extends StatelessWidget {
               )
             else
               Text(
-                '🔒 Locked',
+                'ðŸ”’ Locked',
                 style: TextStyle(fontSize: 9, color: Colors.grey.shade700),
               ),
           ],
@@ -247,7 +247,7 @@ class _AchievementBadgeWidget extends StatelessWidget {
               _DetailRow('Rarity', badge.rarity.toUpperCase()),
               _DetailRow(
                 'Status',
-                badge.isUnlocked ? 'Unlocked ✓' : 'Locked 🔒',
+                badge.isUnlocked ? 'Unlocked âœ“' : 'Locked ðŸ”’',
               ),
               if (badge.isUnlocked && badge.unlockedDate != null)
                 _DetailRow(

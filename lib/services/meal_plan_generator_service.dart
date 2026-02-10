@@ -1,4 +1,4 @@
-import 'dart:math';
+﻿import 'dart:math';
 import '../models/meal_plan.dart';
 import '../models/food_item.dart';
 import '../models/recipe.dart';

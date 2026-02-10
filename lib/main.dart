@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'services/storage_service.dart';
 import 'services/notification_service.dart';
 import 'services/premium_service.dart';
@@ -68,13 +68,6 @@ class _DietAppState extends State<DietApp> {
             : EmberThemeMode.light;
       });
     }
-  }
-
-  void _setTheme(EmberThemeMode mode) {
-    setState(() {
-      _emberThemeMode = mode;
-    });
-    // Could save preference to storage here
   }
 
   // Legacy support for ThemeMode
@@ -253,7 +246,7 @@ class _SplashScreenState extends State<SplashScreen> {
               Container(
                 padding: const EdgeInsets.all(30),
                 decoration: BoxDecoration(
-                  color: AppTheme.primaryOrange.withOpacity(0.2),
+                  color: AppTheme.primaryOrange.withValues(alpha: 0.2),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(

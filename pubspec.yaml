@@ -45,25 +45,26 @@ dependencies:
   # google_mobile_ads: ^5.1.0
   
   # UI Components
-  fl_chart: ^0.69.0
+  fl_chart: ^1.1.1
   percent_indicator: ^4.2.3
-  smooth_page_indicator: ^1.2.0
-  hugeicons: ^0.0.7
+  smooth_page_indicator: ^2.0.1
+  hugeicons: ^1.1.5
   lucide_icons: ^0.257.0
   
   # Camera & Scanning
   camera: ^0.11.0
-  mobile_scanner: ^5.2.3
+  mobile_scanner: ^7.1.4
   image_picker: ^1.1.2
   
   # Utilities
-  intl: ^0.19.0
-  flutter_local_notifications: ^18.0.1
+  intl: ^0.20.2
+  flutter_local_notifications: ^20.0.0
   shared_preferences: ^2.3.2
   uuid: ^4.5.1
   http: ^1.2.0
   csv: ^6.0.0
-  share_plus: ^10.1.2
+  share_plus: ^12.0.1
+  timezone: ^0.10.1
 
 dev_dependencies:
   flutter_test:

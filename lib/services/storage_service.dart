@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+﻿import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../models/user_profile.dart';
 import '../models/food_item.dart';
@@ -471,6 +471,7 @@ class StorageService {
       'doseAmount': log.doseAmount,
       'doseUnit': log.doseUnit,
       'date': log.date.toIso8601String(),
+      'notes': log.notes,
     });
   }
 
@@ -485,6 +486,9 @@ class StorageService {
               doseAmount: (m['doseAmount'] as num?)?.toDouble() ?? 0.0,
               doseUnit: m['doseUnit'] ?? 'mg',
               date: DateTime.parse(m['date']),
+              notes: (m['notes'] as String?)?.trim().isEmpty == true
+                  ? null
+                  : m['notes'] as String?,
             );
           } catch (e) {
             debugPrint('Error parsing GLP log: $e');

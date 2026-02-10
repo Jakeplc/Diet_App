@@ -1,4 +1,4 @@
-class ActivityLog {
+﻿class ActivityLog {
   final String id;
   final String activityType; // running, walking, cycling, workout, etc.
   final DateTime date;

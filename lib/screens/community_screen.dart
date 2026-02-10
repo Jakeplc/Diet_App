@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../services/social_service.dart';
 
 class CommunityScreen extends StatefulWidget {
@@ -116,7 +116,7 @@ class _FriendsTabState extends State<_FriendsTab> {
                                   ),
                                 ),
                                 Text(
-                                  '${friend.streak} day streak • ${friend.totalAchievements} achievements',
+                                  '${friend.streak} day streak â€¢ ${friend.totalAchievements} achievements',
                                   style: TextStyle(
                                     color: Colors.grey.shade800,
                                     fontSize: 12,
@@ -135,17 +135,16 @@ class _FriendsTabState extends State<_FriendsTab> {
                           SizedBox(
                             width: 100,
                             child: ElevatedButton.icon(
-                              onPressed: () =>
-                                  SocialService.removeFriend(friend.id).then((
-                                    _,
-                                  ) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('Friend removed'),
-                                        duration: Duration(seconds: 1),
-                                      ),
-                                    );
-                                  }),
+                              onPressed: () async {
+                                await SocialService.removeFriend(friend.id);
+                                if (!context.mounted) return;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Friend removed'),
+                                    duration: Duration(seconds: 1),
+                                  ),
+                                );
+                              },
                               icon: const Icon(Icons.person_remove, size: 16),
                               label: const Text('Remove'),
                               style: ElevatedButton.styleFrom(
@@ -266,7 +265,7 @@ class _ChallengesTab extends StatelessWidget {
                                         vertical: 4,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: Colors.orange.withOpacity(0.2),
+                                        color: Colors.orange.withValues(alpha: 0.2),
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                       child: Text(
@@ -370,11 +369,11 @@ class _ChallengesTab extends StatelessWidget {
                                         vertical: 4,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: Colors.green.withOpacity(0.2),
+                                        color: Colors.green.withValues(alpha: 0.2),
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                       child: const Text(
-                                        '✓ Completed',
+                                        'âœ“ Completed',
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.green,
@@ -457,11 +456,11 @@ class _LeaderboardTabState extends State<_LeaderboardTab> {
                     itemBuilder: (context, index) {
                       final entry = entries[index];
                       final medal = entry.rank == 1
-                          ? '🥇'
+                          ? 'ðŸ¥‡'
                           : entry.rank == 2
-                          ? '🥈'
+                          ? 'ðŸ¥ˆ'
                           : entry.rank == 3
-                          ? '🥉'
+                          ? 'ðŸ¥‰'
                           : '';
 
                       return Card(

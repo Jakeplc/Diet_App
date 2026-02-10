@@ -1,4 +1,4 @@
-import 'package:uuid/uuid.dart';
+﻿import 'package:uuid/uuid.dart';
 import '../models/shopping_item.dart';
 import '../models/meal_plan.dart';
 import '../models/food_item.dart';
@@ -280,7 +280,7 @@ class ShoppingListService {
     }
 
     final buffer = StringBuffer();
-    buffer.writeln('🛒 Shopping List');
+    buffer.writeln('ðŸ›’ Shopping List');
     buffer.writeln('=' * 40);
     buffer.writeln();
 
@@ -292,14 +292,14 @@ class ShoppingListService {
           .toList();
 
       if (categoryItems.isNotEmpty) {
-        buffer.writeln('📌 $category');
+        buffer.writeln('ðŸ“Œ $category');
         buffer.writeln('-' * 40);
 
         for (final item in categoryItems) {
           final quantityStr = item.quantity == item.quantity.toInt()
               ? item.quantity.toInt().toString()
               : item.quantity.toStringAsFixed(1);
-          buffer.writeln('  ☐ ${item.name} - $quantityStr ${item.unit}');
+          buffer.writeln('  â˜ ${item.name} - $quantityStr ${item.unit}');
         }
         buffer.writeln();
       }
@@ -308,10 +308,10 @@ class ShoppingListService {
     // Show checked items separately
     final checkedItems = items.where((item) => item.isChecked).toList();
     if (checkedItems.isNotEmpty) {
-      buffer.writeln('✓ Checked Items (${checkedItems.length})');
+      buffer.writeln('âœ“ Checked Items (${checkedItems.length})');
       buffer.writeln('-' * 40);
       for (final item in checkedItems) {
-        buffer.writeln('  ☑ ${item.name}');
+        buffer.writeln('  â˜‘ ${item.name}');
       }
     }
 

@@ -1,4 +1,4 @@
-import '../models/food_item.dart';
+﻿import '../models/food_item.dart';
 import '../models/micronutrient_data.dart';
 
 /// Local barcode database with 50+ popular food items

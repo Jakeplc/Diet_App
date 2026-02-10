@@ -1,4 +1,4 @@
-/// Model for an intermittent fasting session
+﻿/// Model for an intermittent fasting session
 class FastingSession {
   final String id;
   final DateTime startTime;

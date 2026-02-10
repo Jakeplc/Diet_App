@@ -1,4 +1,4 @@
-import '../models/food_recognition.dart';
+﻿import '../models/food_recognition.dart';
 
 class FoodRecognitionService {
   // Simulated food database for recognition

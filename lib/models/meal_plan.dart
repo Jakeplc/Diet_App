@@ -1,4 +1,4 @@
-class MealPlan {
+﻿class MealPlan {
   String id;
   String name;
   DateTime date;

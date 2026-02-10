@@ -1,4 +1,5 @@
-import 'dart:io';
+﻿import 'dart:io';
+import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'apple_iap_service.dart';
 
@@ -56,7 +57,10 @@ class PremiumService {
         await prefs.setString(_purchasedProductKey, productId);
       }
       if (expiryDate != null) {
-        await prefs.setInt(_premiumExpiryKey, expiryDate.millisecondsSinceEpoch);
+        await prefs.setInt(
+          _premiumExpiryKey,
+          expiryDate.millisecondsSinceEpoch,
+        );
       }
     } else {
       await prefs.remove(_purchasedProductKey);
@@ -69,7 +73,7 @@ class PremiumService {
     if (Platform.isIOS || Platform.isMacOS) {
       try {
         final success = await _appleIAP.purchaseProduct(productId);
-        
+
         if (success) {
           // Set expiry based on product type
           DateTime? expiryDate;
@@ -80,11 +84,15 @@ class PremiumService {
           }
           // Lifetime product has no expiry
 
-          await setPremiumStatus(true, expiryDate: expiryDate, productId: productId);
+          await setPremiumStatus(
+            true,
+            expiryDate: expiryDate,
+            productId: productId,
+          );
           return true;
         }
       } catch (e) {
-        print('Error purchasing premium: $e');
+        debugPrint('Error purchasing premium: $e');
       }
     }
 
@@ -104,7 +112,7 @@ class PremiumService {
           return await isPremium();
         }
       } catch (e) {
-        print('Error restoring purchases: $e');
+        debugPrint('Error restoring purchases: $e');
       }
     }
 
@@ -115,10 +123,12 @@ class PremiumService {
   // Check premium status from Apple IAP
   static Future<void> _checkPremiumStatus() async {
     if (Platform.isIOS || Platform.isMacOS) {
-      final hasPremium = _appleIAP.purchases.any((purchase) =>
-          (purchase.status.name == 'purchased' ||
-              purchase.status.name == 'restored') &&
-          !purchase.pendingCompletePurchase);
+      final hasPremium = _appleIAP.purchases.any(
+        (purchase) =>
+            (purchase.status.name == 'purchased' ||
+                purchase.status.name == 'restored') &&
+            !purchase.pendingCompletePurchase,
+      );
 
       if (hasPremium) {
         await setPremiumStatus(true);
@@ -129,7 +139,6 @@ class PremiumService {
   // Check if product is auto-renewing (subscription)
   static bool _isAutoRenewingProduct() {
     // Monthly and yearly are auto-renewing, lifetime is not
-    final prefs = SharedPreferences.getInstance();
     // This would need async, simplified for now
     return true; // Assume auto-renewing by default
   }
@@ -137,18 +146,18 @@ class PremiumService {
   // Get premium benefits list
   static List<String> getPremiumBenefits() {
     return [
-      '🚫 Remove all ads',
-      '📊 Advanced analytics & detailed reports',
-      '🔬 Track micronutrients (vitamins & minerals)',
-      '🤖 AI-powered meal suggestions',
-      '📸 Unlimited food photo recognition',
-      '☁️ Cloud sync across devices',
-      '🍽️ Unlimited custom recipes',
-      '📈 Export data to CSV/PDF',
-      '⏰ Smart reminders & coaching tips',
-      '💪 Workout & activity tracking',
-      '👥 Share meal plans with friends',
-      '🎯 Custom macro ratio targets',
+      'ðŸš« Remove all ads',
+      'ðŸ“Š Advanced analytics & detailed reports',
+      'ðŸ”¬ Track micronutrients (vitamins & minerals)',
+      'ðŸ¤– AI-powered meal suggestions',
+      'ðŸ“¸ Unlimited food photo recognition',
+      'â˜ï¸ Cloud sync across devices',
+      'ðŸ½ï¸ Unlimited custom recipes',
+      'ðŸ“ˆ Export data to CSV/PDF',
+      'â° Smart reminders & coaching tips',
+      'ðŸ’ª Workout & activity tracking',
+      'ðŸ‘¥ Share meal plans with friends',
+      'ðŸŽ¯ Custom macro ratio targets',
     ];
   }
 

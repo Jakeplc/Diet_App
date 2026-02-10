@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import '../models/recipe.dart';
 import '../models/food_item.dart';
@@ -30,6 +30,7 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
 
   Future<void> _createRecipe() async {
     final isPremium = await PremiumService.isPremium();
+    if (!mounted) return;
     if (!isPremium && _recipes.length >= 3) {
       await Navigator.push(
         context,
@@ -56,6 +57,7 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
       ),
     );
 
+    if (!mounted) return;
     if (result == true) {
       _loadRecipes();
     }
@@ -127,7 +129,7 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
                     ),
                     title: Text(recipe.name),
                     subtitle: Text(
-                      '${recipe.ingredients.length} ingredients • ${recipe.totalCalories.toStringAsFixed(0)} cal',
+                      '${recipe.ingredients.length} ingredients â€¢ ${recipe.totalCalories.toStringAsFixed(0)} cal',
                     ),
                     trailing: PopupMenuButton(
                       itemBuilder: (context) => [
@@ -335,7 +337,7 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
                   child: ListTile(
                     title: Text(ingredient.foodName),
                     subtitle: Text(
-                      '${ingredient.servings.toStringAsFixed(1)} servings • ${ingredient.calories.toStringAsFixed(0)} cal',
+                      '${ingredient.servings.toStringAsFixed(1)} servings â€¢ ${ingredient.calories.toStringAsFixed(0)} cal',
                     ),
                     trailing: IconButton(
                       icon: const Icon(Icons.close, color: Colors.red),
@@ -347,7 +349,7 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
             if (_ingredients.isNotEmpty) ...[
               const SizedBox(height: 16),
               Card(
-                color: Colors.orange.withOpacity(0.1),
+                color: Colors.orange.withValues(alpha: 0.1),
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../models/user_profile.dart';
 import '../models/coaching_tip.dart';
 import '../services/coaching_service.dart';
@@ -91,7 +91,7 @@ class _CoachingTipsScreenState extends State<CoachingTipsScreen> {
                       children: [
                         Row(
                           children: [
-                            const Text('💡', style: TextStyle(fontSize: 40)),
+                            const Text('ðŸ’¡', style: TextStyle(fontSize: 40)),
                             const SizedBox(width: 15),
                             Expanded(
                               child: Column(
@@ -124,10 +124,10 @@ class _CoachingTipsScreenState extends State<CoachingTipsScreen> {
                             vertical: 12,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.blue.withOpacity(0.2),
+                            color: Colors.blue.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(
-                              color: Colors.blue.withOpacity(0.3),
+                              color: Colors.blue.withValues(alpha: 0.3),
                             ),
                           ),
                           child: Row(
@@ -180,12 +180,12 @@ class _CoachingTipsScreenState extends State<CoachingTipsScreen> {
                                 _selectedCategory = category;
                               });
                             },
-                            backgroundColor: Colors.grey.withOpacity(0.1),
-                            selectedColor: Colors.blue.withOpacity(0.7),
+                            backgroundColor: Colors.grey.withValues(alpha: 0.1),
+                            selectedColor: Colors.blue.withValues(alpha: 0.7),
                             side: BorderSide(
                               color: isSelected
                                   ? Colors.blue
-                                  : Colors.grey.withOpacity(0.3),
+                                  : Colors.grey.withValues(alpha: 0.3),
                             ),
                           ),
                         );
@@ -204,7 +204,7 @@ class _CoachingTipsScreenState extends State<CoachingTipsScreen> {
                               padding: const EdgeInsets.all(40),
                               child: Column(
                                 children: [
-                                  Text('😊', style: TextStyle(fontSize: 60)),
+                                  Text('ðŸ˜Š', style: TextStyle(fontSize: 60)),
                                   const SizedBox(height: 20),
                                   const Text(
                                     'No tips in this category',
@@ -238,7 +238,7 @@ class _CoachingTipsScreenState extends State<CoachingTipsScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text('🔒', style: TextStyle(fontSize: 80)),
+          const Text('ðŸ”’', style: TextStyle(fontSize: 80)),
           const SizedBox(height: 20),
           const Text(
             'Personalized Coaching Tips',
@@ -265,7 +265,7 @@ class _CoachingTipsScreenState extends State<CoachingTipsScreen> {
       decoration: BoxDecoration(
         color: AppTheme.cardDark,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.blue.withOpacity(0.2), width: 1),
+        border: Border.all(color: Colors.blue.withValues(alpha: 0.2), width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -298,7 +298,7 @@ class _CoachingTipsScreenState extends State<CoachingTipsScreen> {
                           decoration: BoxDecoration(
                             color: _getCategoryColor(
                               tip.category,
-                            ).withOpacity(0.2),
+                            ).withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
@@ -330,14 +330,14 @@ class _CoachingTipsScreenState extends State<CoachingTipsScreen> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.blue.withOpacity(0.1),
+              color: Colors.blue.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
               tip.tip,
               style: TextStyle(
                 fontSize: 13,
-                color: Colors.white.withOpacity(0.9),
+                color: Colors.white.withValues(alpha: 0.9),
                 height: 1.5,
               ),
             ),

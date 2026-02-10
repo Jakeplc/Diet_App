@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,7 +9,6 @@ import '../services/storage_service.dart';
 import '../services/premium_service.dart';
 import '../services/barcode_api_service.dart';
 import '../services/food_search_api_service.dart';
-import '../theme/app_theme.dart';
 import 'paywall_screen.dart';
 import 'food_recognition_screen.dart';
 
@@ -104,7 +103,7 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
     final scaffold = Theme.of(context).scaffoldBackgroundColor;
     final surface = scheme.surface;
     final outline = scheme.outline;
-    final muted = scheme.onSurface.withOpacity(0.6);
+    final muted = scheme.onSurface.withValues(alpha: 0.6);
 
     return Scaffold(
       backgroundColor: scaffold,
@@ -256,7 +255,7 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
     final scheme = Theme.of(context).colorScheme;
     final surface = scheme.surface;
     final outline = scheme.outline;
-    final muted = scheme.onSurface.withOpacity(0.6);
+    final muted = scheme.onSurface.withValues(alpha: 0.6);
     final isSelected = _selectedMealType == value;
     return GestureDetector(
       onTap: () => setState(() => _selectedMealType = value),
@@ -294,13 +293,13 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
     return ElevatedButton(
       onPressed: onTap,
       style: ElevatedButton.styleFrom(
-        backgroundColor: color.withOpacity(0.15),
+        backgroundColor: color.withValues(alpha: 0.15),
         foregroundColor: color,
         elevation: 0,
         padding: const EdgeInsets.symmetric(vertical: 15),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
-          side: BorderSide(color: color.withOpacity(0.3)),
+          side: BorderSide(color: color.withValues(alpha: 0.3)),
         ),
       ),
       child: Column(
@@ -320,7 +319,7 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
   Widget _buildSearchResults() {
     final scheme = Theme.of(context).colorScheme;
     final outline = scheme.outline;
-    final muted = scheme.onSurface.withOpacity(0.6);
+    final muted = scheme.onSurface.withValues(alpha: 0.6);
 
     if (_isSearching && _searchResults.isEmpty) {
       return Center(
@@ -370,7 +369,9 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
             color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: Theme.of(context).colorScheme.outline.withOpacity(0.6),
+              color: Theme.of(
+                context,
+              ).colorScheme.outline.withValues(alpha: 0.6),
               width: 1,
             ),
           ),
@@ -406,10 +407,12 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
               ],
             ),
             subtitle: Text(
-              '${food.calories.toInt()} cal • P: ${food.protein.toInt()}g • C: ${food.carbs.toInt()}g • F: ${food.fats.toInt()}g',
+              '${food.calories.toInt()} cal â€¢ P: ${food.protein.toInt()}g â€¢ C: ${food.carbs.toInt()}g â€¢ F: ${food.fats.toInt()}g',
               style: TextStyle(
                 fontSize: 12,
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.6),
               ),
             ),
             trailing: Icon(Icons.add_circle, color: scheme.primary),
@@ -448,7 +451,9 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
                 ),
               ),
               title: Text(food.name),
-              subtitle: Text('${food.calories.toInt()} cal • ${food.category}'),
+              subtitle: Text(
+                '${food.calories.toInt()} cal â€¢ ${food.category}',
+              ),
               trailing: const Icon(Icons.add_circle, color: Colors.green),
               onTap: () => _addFoodLog(food),
             ),
@@ -629,6 +634,8 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
       await StorageService.saveFoodItem(food);
     }
 
+    if (!mounted) return;
+
     // Show serving size dialog
     final servings = await showDialog<double>(
       context: context,
@@ -652,34 +659,34 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
 
     await StorageService.saveFoodLog(log);
 
+    if (!mounted) return;
+
     widget.onLogSaved?.call();
 
-    if (mounted) {
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('${food.name} logged successfully!'),
-          backgroundColor: Colors.green,
-          duration: const Duration(seconds: 1),
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.fromLTRB(16, 0, 16, 80),
-          action: SnackBarAction(
-            label: 'Undo',
-            textColor: Colors.white,
-            onPressed: () {
-              StorageService.deleteFoodLog(log.id);
-            },
-          ),
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('${food.name} logged successfully!'),
+        backgroundColor: Colors.green,
+        duration: const Duration(seconds: 1),
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.fromLTRB(16, 0, 16, 80),
+        action: SnackBarAction(
+          label: 'Undo',
+          textColor: Colors.white,
+          onPressed: () {
+            StorageService.deleteFoodLog(log.id);
+          },
         ),
-      );
+      ),
+    );
 
-      // Clear search and refresh to show updated Popular Foods
-      _searchController.clear();
-      setState(() {
-        _searchResults = [];
-        _isSearching = false;
-      });
-    }
+    // Clear search and refresh to show updated Popular Foods
+    _searchController.clear();
+    setState(() {
+      _searchResults = [];
+      _isSearching = false;
+    });
   }
 
   Future<void> _addFoodLogDirect(FoodItem food) async {
@@ -710,7 +717,7 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('${food.name} logged from AI recognition! ✨'),
+          content: Text('${food.name} logged from AI recognition! âœ¨'),
           backgroundColor: Colors.green,
           duration: const Duration(seconds: 1),
           behavior: SnackBarBehavior.floating,

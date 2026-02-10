@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../services/heart_rate_service.dart';
 import '../models/heart_rate_log.dart';
 
@@ -100,7 +100,7 @@ class _HeartRateScreenState extends State<HeartRateScreen> {
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
+                            color: Colors.white.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
@@ -201,7 +201,7 @@ class _HeartRateScreenState extends State<HeartRateScreen> {
                                             ),
                                           ),
                                           Text(
-                                            '${log.timestamp.hour}:${log.timestamp.minute.toString().padLeft(2, '0')} • ${log.source}',
+                                            '${log.timestamp.hour}:${log.timestamp.minute.toString().padLeft(2, '0')} â€¢ ${log.source}',
                                             style: TextStyle(
                                               color: Colors.grey.shade800,
                                               fontSize: 12,
@@ -218,7 +218,7 @@ class _HeartRateScreenState extends State<HeartRateScreen> {
                                       decoration: BoxDecoration(
                                         color: HeartRateService.getHRZoneColor(
                                           log.bpm,
-                                        ).withOpacity(0.2),
+                                        ).withValues(alpha: 0.2),
                                         borderRadius: BorderRadius.circular(6),
                                       ),
                                       child: Text(
@@ -307,7 +307,7 @@ class _HeartRateScreenState extends State<HeartRateScreen> {
               child: const Text('Cancel'),
             ),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 final log = HeartRateLog(
                   id: DateTime.now().millisecondsSinceEpoch.toString(),
                   timestamp: DateTime.now(),
@@ -320,10 +320,10 @@ class _HeartRateScreenState extends State<HeartRateScreen> {
                       : 'intense',
                 );
 
-                HeartRateService.logHeartRate(log).then((_) {
-                  setState(() => _refreshData());
-                  Navigator.pop(context);
-                });
+                await HeartRateService.logHeartRate(log);
+                if (!context.mounted) return;
+                setState(() => _refreshData());
+                Navigator.pop(context);
               },
               child: const Text('Save'),
             ),
@@ -351,7 +351,10 @@ class _StatCard extends StatelessWidget {
       children: [
         Text(
           title,
-          style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 11),
+          style: TextStyle(
+            color: Colors.white.withValues(alpha: 0.8),
+            fontSize: 11,
+          ),
         ),
         const SizedBox(height: 4),
         Text(
@@ -364,7 +367,10 @@ class _StatCard extends StatelessWidget {
         ),
         Text(
           subtitle,
-          style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 9),
+          style: TextStyle(
+            color: Colors.white.withValues(alpha: 0.8),
+            fontSize: 9,
+          ),
         ),
       ],
     );

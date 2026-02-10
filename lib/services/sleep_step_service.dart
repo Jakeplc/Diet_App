@@ -1,4 +1,4 @@
-import '../models/sleep_log.dart';
+﻿import '../models/sleep_log.dart';
 
 class SleepTrackingService {
   // Simulated sleep data
@@ -94,15 +94,15 @@ class SleepTrackingService {
   static String getQualityEmoji(String quality) {
     switch (quality) {
       case 'poor':
-        return '😴';
+        return 'ðŸ˜´';
       case 'fair':
-        return '😐';
+        return 'ðŸ˜';
       case 'good':
-        return '😊';
+        return 'ðŸ˜Š';
       case 'excellent':
-        return '😴✨';
+        return 'ðŸ˜´âœ¨';
       default:
-        return '😴';
+        return 'ðŸ˜´';
     }
   }
 
@@ -159,7 +159,7 @@ class StepCounterService {
     ),
   ];
 
-  static const int DAILY_GOAL = 10000;
+  static const int dailyGoal = 10000;
 
   static Future<void> logSteps(StepLog steps) async {
     _stepLogs.add(steps);
@@ -203,7 +203,7 @@ class StepCounterService {
       0,
       (max, log) => log.steps > max ? log.steps : max,
     );
-    final goalProgress = ((today?.steps ?? 0) / DAILY_GOAL * 100).toInt();
+    final goalProgress = ((today?.steps ?? 0) / dailyGoal * 100).toInt();
 
     return {
       'todaySteps': today?.steps ?? 0,
@@ -215,6 +215,6 @@ class StepCounterService {
   }
 
   static int getGoalPercentage(int steps) {
-    return ((steps / DAILY_GOAL) * 100).toInt().clamp(0, 100);
+    return ((steps / dailyGoal) * 100).toInt().clamp(0, 100);
   }
 }

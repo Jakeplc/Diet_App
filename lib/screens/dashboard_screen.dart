@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:uuid/uuid.dart';
@@ -136,23 +136,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
         type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(HugeIcons.strokeRoundedHome03),
+            icon: HugeIcon(icon: HugeIcons.strokeRoundedHome03),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(HugeIcons.strokeRoundedRestaurant01),
+            icon: HugeIcon(icon: HugeIcons.strokeRoundedRestaurant01),
             label: 'Log Food',
           ),
           BottomNavigationBarItem(
-            icon: Icon(HugeIcons.strokeRoundedCalendar03),
+            icon: HugeIcon(icon: HugeIcons.strokeRoundedCalendar03),
             label: 'Meal Plan',
           ),
           BottomNavigationBarItem(
-            icon: Icon(HugeIcons.strokeRoundedAnalytics02),
+            icon: HugeIcon(icon: HugeIcons.strokeRoundedAnalytics02),
             label: 'Progress',
           ),
           BottomNavigationBarItem(
-            icon: Icon(HugeIcons.strokeRoundedSettings02),
+            icon: HugeIcon(icon: HugeIcons.strokeRoundedSettings02),
             label: 'Settings',
           ),
         ],
@@ -233,10 +233,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: AppTheme.bannerIcon.withOpacity(0.2),
+                          color: AppTheme.bannerIcon.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: AppTheme.primaryOrange.withOpacity(0.3),
+                            color: AppTheme.primaryOrange.withValues(
+                              alpha: 0.3,
+                            ),
                             width: 2,
                           ),
                         ),
@@ -269,7 +271,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     border: Border.all(
                       color: Theme.of(
                         context,
-                      ).colorScheme.primary.withOpacity(0.3),
+                      ).colorScheme.primary.withValues(alpha: 0.3),
                       width: 1,
                     ),
                   ),
@@ -309,7 +311,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     border: Border.all(
                       color: Theme.of(
                         context,
-                      ).colorScheme.outline.withOpacity(0.6),
+                      ).colorScheme.outline.withValues(alpha: 0.6),
                     ),
                   ),
                   padding: const EdgeInsets.all(20),
@@ -400,8 +402,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       center: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
-            HugeIcons.strokeRoundedFire,
+          const HugeIcon(
+            icon: HugeIcons.strokeRoundedFire,
             color: AppTheme.caloriesRing,
             size: 32,
           ),
@@ -418,14 +420,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
             '/ ${target.toInt()}',
             style: TextStyle(
               fontSize: 13,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.6),
               fontWeight: FontWeight.w500,
             ),
           ),
         ],
       ),
       progressColor: AppTheme.caloriesRing,
-      backgroundColor: Theme.of(context).colorScheme.outline.withOpacity(0.4),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.outline.withValues(alpha: 0.4),
       circularStrokeCap: CircularStrokeCap.round,
       footer: Padding(
         padding: const EdgeInsets.only(top: 10),
@@ -467,8 +473,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              HugeIcons.strokeRoundedDroplet,
+            const HugeIcon(
+              icon: HugeIcons.strokeRoundedDroplet,
               color: Color.fromARGB(255, 60, 146, 237),
               size: 32,
             ),
@@ -485,7 +491,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               'glasses',
               style: TextStyle(
                 fontSize: 13,
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.6),
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -493,7 +501,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       ),
       progressColor: AppTheme.waterRing,
-      backgroundColor: Theme.of(context).colorScheme.outline.withOpacity(0.4),
+      backgroundColor: Theme.of(
+        context,
+      ).colorScheme.outline.withValues(alpha: 0.4),
       circularStrokeCap: CircularStrokeCap.round,
       footer: Padding(
         padding: const EdgeInsets.only(top: 10),
@@ -604,13 +614,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     color: scheme.onSurface,
                   ),
                 ),
-                TextButton.icon(
-                  onPressed: _showGlpLogDialog,
-                  icon: const Icon(Icons.add),
-                  label: const Text('Add'),
-                  style: TextButton.styleFrom(
-                    foregroundColor: scheme.primary,
-                  ),
+                Row(
+                  children: [
+                    TextButton.icon(
+                      onPressed: _showGlpLogDialog,
+                      icon: const Icon(Icons.add),
+                      label: const Text('Add'),
+                      style: TextButton.styleFrom(
+                        foregroundColor: scheme.primary,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    TextButton.icon(
+                      onPressed: _showGlpHistoryDialog,
+                      icon: const Icon(Icons.history),
+                      label: const Text('History'),
+                      style: TextButton.styleFrom(
+                        foregroundColor: scheme.primary,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -619,23 +642,41 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Text(
                 'No doses logged yet.',
                 style: TextStyle(
-                  color: scheme.onSurface.withOpacity(0.6),
+                  color: scheme.onSurface.withValues(alpha: 0.6),
                 ),
               )
             else
-              ...logs.map(
-                (log) => ListTile(
+              ...logs.asMap().entries.map((entry) {
+                final index = entry.key;
+                final log = entry.value;
+                final showNotes = index == 0 && log.notes != null;
+
+                return ListTile(
                   contentPadding: EdgeInsets.zero,
                   title: Text(
                     '${log.doseAmount.toStringAsFixed(2)} ${log.doseUnit}',
                   ),
-                  subtitle: Text(_formatGlpDate(log.date)),
+                  subtitle: showNotes
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(_formatGlpDate(log.date)),
+                            Text(
+                              log.notes!,
+                              style: TextStyle(
+                                color: scheme.onSurface.withValues(alpha: 0.6),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        )
+                      : Text(_formatGlpDate(log.date)),
                   trailing: IconButton(
                     icon: Icon(Icons.delete, color: scheme.error),
                     onPressed: () => _deleteGlpLog(log),
                   ),
-                ),
-              ),
+                );
+              }),
           ],
         ),
       ),
@@ -656,6 +697,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Future<void> _showGlpLogDialog() async {
     const units = ['mg', 'mL', 'IU'];
     final amountController = TextEditingController();
+    final notesController = TextEditingController();
     var selectedUnit = units.first;
     var selectedDate = DateTime.now();
 
@@ -677,23 +719,31 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               const SizedBox(height: 12),
               DropdownButtonFormField<String>(
-                value: selectedUnit,
+                initialValue: selectedUnit,
                 decoration: const InputDecoration(
                   labelText: 'Unit',
                   border: OutlineInputBorder(),
                 ),
                 items: units
                     .map(
-                      (unit) => DropdownMenuItem(
-                        value: unit,
-                        child: Text(unit),
-                      ),
+                      (unit) =>
+                          DropdownMenuItem(value: unit, child: Text(unit)),
                     )
                     .toList(),
                 onChanged: (value) {
                   if (value == null) return;
                   setState(() => selectedUnit = value);
                 },
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: notesController,
+                maxLines: 2,
+                textInputAction: TextInputAction.done,
+                decoration: const InputDecoration(
+                  labelText: 'Notes (optional)',
+                  border: OutlineInputBorder(),
+                ),
               ),
               const SizedBox(height: 12),
               OutlinedButton.icon(
@@ -742,16 +792,70 @@ class _DashboardScreenState extends State<DashboardScreen> {
         id: const Uuid().v4(),
         doseAmount: amount,
         doseUnit: selectedUnit,
-        date: DateTime(
-          selectedDate.year,
-          selectedDate.month,
-          selectedDate.day,
-        ),
+        date: DateTime(selectedDate.year, selectedDate.month, selectedDate.day),
+        notes: notesController.text.trim().isEmpty
+            ? null
+            : notesController.text.trim(),
       );
 
       await StorageService.saveGlpLog(log);
       await _loadData();
     }
+  }
+
+  void _showGlpHistoryDialog() {
+    final logs = List<GlpLog>.from(_glpLogs)
+      ..sort((a, b) => b.date.compareTo(a.date));
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('GLP-1 History'),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: logs.isEmpty
+              ? const Text('No doses logged yet.')
+              : ListView.separated(
+                  shrinkWrap: true,
+                  itemCount: logs.length,
+                  separatorBuilder: (context, index) =>
+                      const Divider(height: 1),
+                  itemBuilder: (context, index) {
+                    final log = logs[index];
+                    return ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(
+                        '${log.doseAmount.toStringAsFixed(2)} ${log.doseUnit}',
+                      ),
+                      subtitle: log.notes == null
+                          ? Text(_formatGlpDate(log.date))
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(_formatGlpDate(log.date)),
+                                Text(
+                                  log.notes!,
+                                  style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withValues(alpha: 0.6),
+                                  ),
+                                ),
+                              ],
+                            ),
+                    );
+                  },
+                ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> _deleteGlpLog(GlpLog log) async {
@@ -786,7 +890,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
             '/ ${target.toInt()}g',
             style: TextStyle(
               fontSize: 11,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.6),
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -846,7 +952,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             title: Text(log.foodName),
             subtitle: Text(
-              '${log.mealType.toUpperCase()} • ${log.calories.toInt()} cal',
+              '${log.mealType.toUpperCase()} â€¢ ${log.calories.toInt()} cal',
             ),
             trailing: Text(
               '${log.timestamp.hour.toString().padLeft(2, '0')}:${log.timestamp.minute.toString().padLeft(2, '0')}',

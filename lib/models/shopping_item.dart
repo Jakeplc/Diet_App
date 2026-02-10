@@ -1,4 +1,4 @@
-class ShoppingItem {
+﻿class ShoppingItem {
   String id;
   String name;
   String category;

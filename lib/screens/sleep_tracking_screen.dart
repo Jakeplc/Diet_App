@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../models/sleep_log.dart';
 import '../services/sleep_step_service.dart';
 
@@ -98,7 +98,7 @@ class _SleepTrackingScreenState extends State<SleepTrackingScreen> {
                             Text(
                               'Average per night',
                               style: TextStyle(
-                                color: Colors.white.withOpacity(0.9),
+                                color: Colors.white.withValues(alpha: 0.9),
                                 fontSize: 14,
                               ),
                             ),
@@ -357,7 +357,7 @@ class _SleepTrackingScreenState extends State<SleepTrackingScreen> {
               child: const Text('Cancel'),
             ),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 final qualityList = ['poor', 'fair', 'good', 'excellent'];
                 final log = SleepLog(
                   id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -375,10 +375,10 @@ class _SleepTrackingScreenState extends State<SleepTrackingScreen> {
                   createdAt: DateTime.now(),
                 );
 
-                SleepTrackingService.logSleep(log).then((_) {
-                  setState(() => _refreshData());
-                  Navigator.pop(context);
-                });
+                await SleepTrackingService.logSleep(log);
+                if (!context.mounted) return;
+                setState(() => _refreshData());
+                Navigator.pop(context);
               },
               child: const Text('Save'),
             ),
@@ -435,7 +435,10 @@ class _StatCard extends StatelessWidget {
         ),
         Text(
           title,
-          style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 12),
+          style: TextStyle(
+            color: Colors.white.withValues(alpha: 0.8),
+            fontSize: 12,
+          ),
         ),
       ],
     );

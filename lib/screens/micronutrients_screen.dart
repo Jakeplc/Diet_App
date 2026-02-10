@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../models/micronutrient_data.dart';
 import '../services/storage_service.dart';
 
@@ -236,7 +236,7 @@ class _MicronutrientsScreenState extends State<MicronutrientsScreen> {
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: progressColor.withOpacity(0.3)),
+        border: Border.all(color: progressColor.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -273,13 +273,13 @@ class _MicronutrientsScreenState extends State<MicronutrientsScreen> {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: progressColor.withOpacity(0.2),
+                  color: progressColor.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
                   status,
                   style: TextStyle(
-                    color: progressColor.withOpacity(1.0),
+                    color: progressColor.withValues(alpha: 1.0),
                     fontWeight: FontWeight.bold,
                     fontSize: 12,
                   ),

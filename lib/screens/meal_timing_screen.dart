@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../models/user_profile.dart';
 import '../models/meal_timing.dart';
 import '../services/meal_timing_service.dart';
@@ -103,7 +103,7 @@ class _MealTimingScreenState extends State<MealTimingScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text('⏰', style: TextStyle(fontSize: 48)),
+                      const Text('â°', style: TextStyle(fontSize: 48)),
                       const SizedBox(height: 8),
                       Text(
                         'Optimal Meal Schedule',
@@ -226,7 +226,7 @@ class _MealTimingScreenState extends State<MealTimingScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '${meal.recommendedTime} • ${meal.timeRange}',
+                        '${meal.recommendedTime} â€¢ ${meal.timeRange}',
                         style: TextStyle(color: Colors.grey[800], fontSize: 13),
                       ),
                     ],

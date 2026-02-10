@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 /// Achievement categories
 enum AchievementCategory { streak, weight, fasting, logging, goals, milestones }
@@ -70,7 +70,7 @@ class Achievement {
       'name': name,
       'description': description,
       'iconCodePoint': icon.codePoint,
-      'colorValue': color.value,
+      'colorValue': color.toARGB32(),
       'category': category.name,
       'requirement': requirement,
       'isUnlocked': isUnlocked,

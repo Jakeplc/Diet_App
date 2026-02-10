@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'dart:async';
 import '../models/fasting_session.dart';
 import '../services/fasting_service.dart';
@@ -62,7 +62,7 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Started ${preset.fastingHours}-hour fast! 🎯'),
+            content: Text('Started ${preset.fastingHours}-hour fast! ðŸŽ¯'),
             backgroundColor: Colors.green,
           ),
         );
@@ -79,7 +79,7 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
         title: const Text('End Fasting'),
         content: Text(
           _activeSession!.isComplete
-              ? 'Congratulations! You completed your fast! 🎉'
+              ? 'Congratulations! You completed your fast! ðŸŽ‰'
               : 'Are you sure you want to end this fast early?',
         ),
         actions: [
@@ -103,8 +103,8 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
           SnackBar(
             content: Text(
               _activeSession!.isComplete
-                  ? 'Fast completed! Great job! 💪'
-                  : 'Fast ended. Keep going! 👍',
+                  ? 'Fast completed! Great job! ðŸ’ª'
+                  : 'Fast ended. Keep going! ðŸ‘',
             ),
             backgroundColor: _activeSession!.isComplete
                 ? Colors.green
@@ -217,7 +217,7 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
         child: Column(
           children: [
             Text(
-              isComplete ? 'Fast Complete! 🎉' : 'Fasting in Progress',
+              isComplete ? 'Fast Complete! ðŸŽ‰' : 'Fasting in Progress',
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: isComplete ? Colors.green : null,
@@ -467,7 +467,7 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
             ),
             const SizedBox(height: 12),
             Text(
-              '💡 Tips for Success:',
+              'ðŸ’¡ Tips for Success:',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.grey[800],
@@ -490,7 +490,7 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('• ', style: TextStyle(color: Colors.grey[600])),
+          Text('â€¢ ', style: TextStyle(color: Colors.grey[600])),
           Expanded(
             child: Text(tip, style: TextStyle(color: Colors.grey[600])),
           ),
@@ -576,7 +576,7 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
                             ),
                             title: Text(session.fastingType),
                             subtitle: Text(
-                              '${session.elapsedDuration.inHours}h ${session.elapsedDuration.inMinutes.remainder(60)}m • ${_formatDate(session.startTime)}',
+                              '${session.elapsedDuration.inHours}h ${session.elapsedDuration.inMinutes.remainder(60)}m â€¢ ${_formatDate(session.startTime)}',
                             ),
                             trailing: session.wasCompleted
                                 ? const Icon(
@@ -694,7 +694,7 @@ class _FastingPresetDialog extends StatelessWidget {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: difficultyColor?.withOpacity(0.2),
+                      color: difficultyColor?.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(

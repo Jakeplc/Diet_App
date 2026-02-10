@@ -1,4 +1,4 @@
-class WaterLog {
+﻿class WaterLog {
   String id;
   double amount; // ml
   DateTime timestamp;

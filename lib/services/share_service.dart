@@ -1,4 +1,4 @@
-import 'package:share_plus/share_plus.dart';
+﻿import 'package:share_plus/share_plus.dart';
 
 class ShareService {
   static Future<void> shareWeightProgress({
@@ -9,19 +9,21 @@ class ShareService {
   }) async {
     final String message =
         '''
-🎯 Weight Loss Progress Update!
+ðŸŽ¯ Weight Loss Progress Update!
 
 Current Weight: ${currentWeight.toStringAsFixed(1)} kg
 Goal Weight: ${goalWeight.toStringAsFixed(1)} kg
 Lost So Far: ${weightLost.toStringAsFixed(1)} kg
 Days Tracking: $daysTracking days
 
-I'm crushing my fitness goals with Diet Tracker! 💪
+I'm crushing my fitness goals with Diet Tracker! ðŸ’ª
 Download now: [App Link]
 #FitnessJourney #HealthyLifestyle #DietTracker
     ''';
 
-    await Share.share(message, subject: 'My Weight Loss Progress');
+    await SharePlus.instance.share(
+      ShareParams(text: message, subject: 'My Weight Loss Progress'),
+    );
   }
 
   static Future<void> shareAchievements({
@@ -31,20 +33,22 @@ Download now: [App Link]
   }) async {
     final String message =
         '''
-🏆 Achievement Unlocked!
+ðŸ† Achievement Unlocked!
 
 $achievementTitle
 $description
 
 Unlocked on: ${unlockedDate.toString().split(' ')[0]}
 
-Join me on my fitness journey with Diet Tracker! 🚀
+Join me on my fitness journey with Diet Tracker! ðŸš€
 #Achievements #FitnessMilestone #DietTracker
     ''';
 
-    await Share.share(
-      message,
-      subject: 'Achievement Unlocked: $achievementTitle',
+    await SharePlus.instance.share(
+      ShareParams(
+        text: message,
+        subject: 'Achievement Unlocked: $achievementTitle',
+      ),
     );
   }
 
@@ -54,15 +58,17 @@ Join me on my fitness journey with Diet Tracker! 🚀
   }) async {
     final String message =
         '''
-🔥 $streakDays Day Streak!
+ðŸ”¥ $streakDays Day Streak!
 
 I've been consistently tracking my diet for $streakDays days while working towards my $goal goal!
 
-Stay consistent with Diet Tracker 💪
+Stay consistent with Diet Tracker ðŸ’ª
 #DailyHabits #ConsistencyPays #DietTracker
     ''';
 
-    await Share.share(message, subject: '$streakDays Day Streak!');
+    await SharePlus.instance.share(
+      ShareParams(text: message, subject: '$streakDays Day Streak!'),
+    );
   }
 
   static Future<void> shareMacros({
@@ -73,17 +79,19 @@ Stay consistent with Diet Tracker 💪
   }) async {
     final String message =
         '''
-📊 Today's Nutrition Summary
+ðŸ“Š Today's Nutrition Summary
 
 Total Calories: $totalCalories
 Protein: $protein g
 Carbs: $carbs g
 Fats: $fats g
 
-Tracking my nutrition with Diet Tracker! 🥗💪
+Tracking my nutrition with Diet Tracker! ðŸ¥—ðŸ’ª
 #MacroTracking #NutritionGoals #DietTracker
     ''';
 
-    await Share.share(message, subject: 'My Nutrition Summary');
+    await SharePlus.instance.share(
+      ShareParams(text: message, subject: 'My Nutrition Summary'),
+    );
   }
 }

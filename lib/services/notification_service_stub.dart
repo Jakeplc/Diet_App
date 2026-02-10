@@ -1,4 +1,4 @@
-// Web / fallback implementation for NotificationService.
+﻿// Web / fallback implementation for NotificationService.
 // flutter_local_notifications is not supported on web in the same way as mobile.
 
 class NotificationService {

@@ -7,7 +7,7 @@
   "dart.sdkPath": "/Users/jacobjohnson/flutter/bin/dart",
   "dart.enableCompletionCommitCharacters": false,
   "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "vscode.json-language-features"
   },
   "xcodeIntegration.projectPath": "/Users/jacobjohnson/Documents/diet_app"
 }

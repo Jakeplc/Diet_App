@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:uuid/uuid.dart';
 import '../models/weight_log.dart';
@@ -22,7 +22,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
   ColorScheme get _scheme => Theme.of(context).colorScheme;
   Color get _surface => _scheme.surface;
   Color get _outline => _scheme.outline;
-  Color get _muted => _scheme.onSurface.withOpacity(0.6);
+  Color get _muted => _scheme.onSurface.withValues(alpha: 0.6);
 
   @override
   void initState() {
@@ -177,7 +177,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                     horizontalInterval: 5,
                     getDrawingHorizontalLine: (value) {
                       return FlLine(
-                        color: _outline.withOpacity(0.5),
+                        color: _outline.withValues(alpha: 0.5),
                         strokeWidth: 1,
                       );
                     },
@@ -217,7 +217,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                       dotData: FlDotData(show: true),
                       belowBarData: BarAreaData(
                         show: true,
-                        color: _scheme.primary.withOpacity(0.1),
+                        color: _scheme.primary.withValues(alpha: 0.1),
                       ),
                     ),
                   ],
@@ -408,19 +408,19 @@ class _ProgressScreenState extends State<ProgressScreen> {
             ),
             const SizedBox(height: 15),
             Text(
-              '• Calorie deficit/surplus trends',
+              'â€¢ Calorie deficit/surplus trends',
               style: TextStyle(color: Colors.grey.shade800),
             ),
             Text(
-              '• Macro balance insights',
+              'â€¢ Macro balance insights',
               style: TextStyle(color: Colors.grey.shade800),
             ),
             Text(
-              '• Body composition estimates',
+              'â€¢ Body composition estimates',
               style: TextStyle(color: Colors.grey.shade800),
             ),
             Text(
-              '• Predicted goal achievement date',
+              'â€¢ Predicted goal achievement date',
               style: TextStyle(color: Colors.grey.shade800),
             ),
             const SizedBox(height: 10),

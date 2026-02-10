@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../models/heart_rate_log.dart';
 
 class HeartRateService {
@@ -89,11 +89,11 @@ class HeartRateService {
   }
 
   static String getHRZoneEmoji(int bpm) {
-    if (bpm < 100) return '😴';
-    if (bpm < 120) return '🚶';
-    if (bpm < 150) return '🏃';
-    if (bpm < 170) return '🏋️';
-    return '⚡';
+    if (bpm < 100) return 'ðŸ˜´';
+    if (bpm < 120) return 'ðŸš¶';
+    if (bpm < 150) return 'ðŸƒ';
+    if (bpm < 170) return 'ðŸ‹ï¸';
+    return 'âš¡';
   }
 
   static Color getHRZoneColor(int bpm) {

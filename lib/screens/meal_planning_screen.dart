@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import '../models/meal_plan.dart';
@@ -100,14 +100,10 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
                     margin: const EdgeInsets.all(8),
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     decoration: BoxDecoration(
-                      color: isSelected
-                          ? scheme.primary
-                          : Colors.transparent,
+                      color: isSelected ? scheme.primary : Colors.transparent,
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: isSelected
-                            ? scheme.primary
-                            : scheme.outline,
+                        color: isSelected ? scheme.primary : scheme.outline,
                       ),
                     ),
                     child: Center(
@@ -116,7 +112,7 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
                         style: TextStyle(
                           color: isSelected
                               ? scheme.onPrimary
-                              : scheme.onSurface.withOpacity(0.6),
+                              : scheme.onSurface.withValues(alpha: 0.6),
                           fontWeight: isSelected
                               ? FontWeight.bold
                               : FontWeight.normal,
@@ -158,14 +154,14 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
             Icon(
               Icons.restaurant_menu,
               size: 80,
-              color: scheme.onSurface.withOpacity(0.35),
+              color: scheme.onSurface.withValues(alpha: 0.35),
             ),
             const SizedBox(height: 20),
             Text(
               'No meals planned for this day',
               style: TextStyle(
                 fontSize: 16,
-                color: scheme.onSurface.withOpacity(0.6),
+                color: scheme.onSurface.withValues(alpha: 0.6),
               ),
             ),
             const SizedBox(height: 20),
@@ -222,17 +218,14 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
               child: Text(
                 'No $mealType planned',
                 style: TextStyle(
-                  color: scheme.onSurface.withOpacity(0.6),
+                  color: scheme.onSurface.withValues(alpha: 0.6),
                 ),
               ),
             )
           else
             ...plans.map((plan) => _buildMealPlanTile(plan)),
           ListTile(
-            leading: Icon(
-              Icons.add_circle_outline,
-              color: scheme.primary,
-            ),
+            leading: Icon(Icons.add_circle_outline, color: scheme.primary),
             title: const Text('Add meal'),
             onTap: () => _addMealPlan(mealType: mealType),
           ),
@@ -259,18 +252,15 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
 
     return ListTile(
       leading: CircleAvatar(
-        backgroundColor: scheme.primary.withOpacity(0.15),
+        backgroundColor: scheme.primary.withValues(alpha: 0.15),
         child: Text(
           foods.length.toString(),
-          style: TextStyle(
-            color: scheme.primary,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: scheme.primary, fontWeight: FontWeight.bold),
         ),
       ),
       title: Text(plan.name),
       subtitle: Text(
-        '${totalCalories.toInt()} cal • ${totalProtein.toInt()}g protein\n${foods.map((f) => f.name).join(", ")}',
+        '${totalCalories.toInt()} cal â€¢ ${totalProtein.toInt()}g protein\n${foods.map((f) => f.name).join(", ")}',
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
       ),
@@ -415,7 +405,10 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
         builder: (context, setState) => AlertDialog(
           title: Row(
             children: [
-              Icon(Icons.auto_awesome, color: Theme.of(context).colorScheme.primary),
+              Icon(
+                Icons.auto_awesome,
+                color: Theme.of(context).colorScheme.primary,
+              ),
               SizedBox(width: 10),
               Text('Generate Meal Plan'),
             ],
@@ -428,7 +421,9 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
                 Text(
                   'Automatically create a personalized meal plan based on your goals and preferences.',
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                 ),
                 SizedBox(height: 20),
@@ -479,10 +474,14 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
                 Container(
                   padding: EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
-                      color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.primary.withValues(alpha: 0.3),
                     ),
                   ),
                   child: Row(
@@ -555,7 +554,9 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
               'Analyzing your goals and preferences',
               style: TextStyle(
                 fontSize: 12,
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.6),
               ),
             ),
           ],
@@ -741,7 +742,7 @@ class _MealPlanDialogState extends State<MealPlanDialog> {
                 Text(
                   'No foods selected',
                   style: TextStyle(
-                    color: scheme.onSurface.withOpacity(0.6),
+                    color: scheme.onSurface.withValues(alpha: 0.6),
                   ),
                 )
               else
@@ -751,10 +752,7 @@ class _MealPlanDialogState extends State<MealPlanDialog> {
                     title: Text(food.name),
                     subtitle: Text('${food.calories.toInt()} cal'),
                     trailing: IconButton(
-                      icon: Icon(
-                        Icons.remove_circle,
-                        color: scheme.error,
-                      ),
+                      icon: Icon(Icons.remove_circle, color: scheme.error),
                       onPressed: () {
                         setState(() => _selectedFoods.remove(food));
                       },
@@ -774,7 +772,7 @@ class _MealPlanDialogState extends State<MealPlanDialog> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: scheme.primary.withOpacity(0.08),
+                  color: scheme.primary.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -916,11 +914,14 @@ class _FoodSelectionDialogState extends State<_FoodSelectionDialog> {
       try {
         final food = await BarcodeApiService.lookupBarcode(barcode);
 
+        if (!mounted) return;
+
         if (mounted) {
           Navigator.pop(context); // Close loading dialog
 
           if (food != null) {
             await StorageService.saveFoodItem(food);
+            if (!mounted) return;
             Navigator.pop(context, food);
           } else {
             showDialog(
@@ -965,7 +966,8 @@ class _FoodSelectionDialogState extends State<_FoodSelectionDialog> {
       builder: (context) => _QuickAddFoodDialog(),
     );
 
-    if (result != null && mounted) {
+    if (!mounted) return;
+    if (result != null) {
       Navigator.pop(context, result);
     }
   }
@@ -1040,14 +1042,15 @@ class _FoodSelectionDialogState extends State<_FoodSelectionDialog> {
                             ],
                           ),
                           subtitle: Text(
-                            '${food.calories.toInt()} cal • P: ${food.protein.toInt()}g • C: ${food.carbs.toInt()}g • F: ${food.fats.toInt()}g',
+                            '${food.calories.toInt()} cal â€¢ P: ${food.protein.toInt()}g â€¢ C: ${food.carbs.toInt()}g â€¢ F: ${food.fats.toInt()}g',
                           ),
                           onTap: () async {
                             // Save API food to local database
                             if (isFromApi) {
                               await StorageService.saveFoodItem(food);
                             }
-                            if (mounted) Navigator.pop(context, food);
+                            if (!context.mounted) return;
+                            Navigator.pop(context, food);
                           },
                         );
                       },

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../models/activity_log.dart';
 import '../services/health_integration_service.dart';
 import '../services/premium_service.dart';
@@ -29,6 +29,7 @@ class _WearableScreenState extends State<WearableScreen> {
     final activities = await HealthIntegrationService.getRecentActivities();
     final stats = await HealthIntegrationService.getActivityStats();
 
+    if (!mounted) return;
     setState(() {
       _isPremium = isPremium;
       _availableDevices = devices;
@@ -42,8 +43,11 @@ class _WearableScreenState extends State<WearableScreen> {
 
     final success = await HealthIntegrationService.connectDevice(device.id);
 
+    if (!mounted) return;
+
     if (success) {
       await _syncActivities();
+      if (!mounted) return;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Connected to ${device.name}')));
@@ -59,6 +63,7 @@ class _WearableScreenState extends State<WearableScreen> {
 
   Future<void> _disconnectDevice(WearableDevice device) async {
     await HealthIntegrationService.disconnectDevice(device.id);
+    if (!mounted) return;
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text('Disconnected from ${device.name}')));
@@ -70,8 +75,11 @@ class _WearableScreenState extends State<WearableScreen> {
 
     await HealthIntegrationService.syncActivities();
 
+    if (!mounted) return;
     setState(() => _isSyncing = false);
     await _loadData();
+
+    if (!mounted) return;
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Activities synced successfully')),
@@ -133,7 +141,7 @@ class _WearableScreenState extends State<WearableScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text('⌚', style: TextStyle(fontSize: 48)),
+                      const Text('âŒš', style: TextStyle(fontSize: 48)),
                       const SizedBox(height: 8),
                       Text(
                         'Connected Health Devices',
@@ -251,7 +259,7 @@ class _WearableScreenState extends State<WearableScreen> {
             children: [
               Expanded(
                 child: _buildStatItem(
-                  '🔥',
+                  'ðŸ”¥',
                   '${_activityStats['weeklyCalories']}',
                   'Calories',
                 ),
@@ -259,7 +267,7 @@ class _WearableScreenState extends State<WearableScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: _buildStatItem(
-                  '🚶',
+                  'ðŸš¶',
                   '${_activityStats['weeklySteps']}',
                   'Steps',
                 ),
@@ -267,7 +275,7 @@ class _WearableScreenState extends State<WearableScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: _buildStatItem(
-                  '💪',
+                  'ðŸ’ª',
                   '${_activityStats['weeklyActivities']}',
                   'Activities',
                 ),
@@ -379,7 +387,7 @@ class _WearableScreenState extends State<WearableScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '${activity.date.month}/${activity.date.day} • ${activity.durationMinutes} min',
+                        '${activity.date.month}/${activity.date.day} â€¢ ${activity.durationMinutes} min',
                         style: TextStyle(color: Colors.grey[800], fontSize: 12),
                       ),
                     ],
@@ -395,7 +403,7 @@ class _WearableScreenState extends State<WearableScreen> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    '🔥 ${activity.caloriesBurned}',
+                    'ðŸ”¥ ${activity.caloriesBurned}',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.purple[700],
@@ -409,12 +417,12 @@ class _WearableScreenState extends State<WearableScreen> {
               children: [
                 if (activity.steps > 0)
                   Expanded(
-                    child: _buildActivityStat('🚶 ${activity.steps} steps'),
+                    child: _buildActivityStat('ðŸš¶ ${activity.steps} steps'),
                   ),
                 if (activity.distance > 0)
                   Expanded(
                     child: _buildActivityStat(
-                      '📍 ${activity.distance.toStringAsFixed(1)} km',
+                      'ðŸ“ ${activity.distance.toStringAsFixed(1)} km',
                     ),
                   ),
                 Expanded(

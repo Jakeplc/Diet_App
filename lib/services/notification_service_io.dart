@@ -1,4 +1,4 @@
-import 'dart:io' show Platform;
+﻿import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart' show kIsWeb, kDebugMode;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -39,7 +39,7 @@ class NotificationService {
 
     // On platforms without notification support (e.g., desktop without perms)
     if (Platform.isMacOS || Platform.isAndroid || Platform.isIOS) {
-      await _notifications.initialize(initSettings);
+      await _notifications.initialize(settings: initSettings);
     }
   }
 
@@ -58,7 +58,7 @@ class NotificationService {
     if (breakfast) {
       await _scheduleNotification(
         id: 1,
-        title: '🍳 Time for Breakfast!',
+        title: 'ðŸ³ Time for Breakfast!',
         body: 'Log your morning meal to start the day right',
         hour: 8,
         minute: 0,
@@ -68,7 +68,7 @@ class NotificationService {
     if (lunch) {
       await _scheduleNotification(
         id: 2,
-        title: '🥗 Lunch Time!',
+        title: 'ðŸ¥— Lunch Time!',
         body: 'Don\'t forget to log your lunch',
         hour: 12,
         minute: 30,
@@ -78,7 +78,7 @@ class NotificationService {
     if (dinner) {
       await _scheduleNotification(
         id: 3,
-        title: '🍽️ Dinner Reminder',
+        title: 'ðŸ½ï¸ Dinner Reminder',
         body: 'Log your dinner to complete the day',
         hour: 19,
         minute: 0,
@@ -90,7 +90,7 @@ class NotificationService {
       for (int i = 0; i < 8; i++) {
         await _scheduleNotification(
           id: 10 + i,
-          title: '💧 Hydration Check',
+          title: 'ðŸ’§ Hydration Check',
           body: 'Time to drink some water!',
           hour: 8 + (i * 2),
           minute: 0,
@@ -108,11 +108,11 @@ class NotificationService {
   }) async {
     try {
       await _notifications.zonedSchedule(
-        id,
-        title,
-        body,
-        _nextInstanceOfTime(hour, minute),
-        const NotificationDetails(
+        id: id,
+        title: title,
+        body: body,
+        scheduledDate: _nextInstanceOfTime(hour, minute),
+        notificationDetails: const NotificationDetails(
           android: AndroidNotificationDetails(
             'meal_reminders',
             'Meal Reminders',
@@ -123,8 +123,6 @@ class NotificationService {
           iOS: DarwinNotificationDetails(),
         ),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
       );
     } catch (e) {
       // Silently fail if exact alarms not permitted
@@ -162,10 +160,10 @@ class NotificationService {
     if (kIsWeb) return;
 
     await _notifications.show(
-      DateTime.now().millisecond,
-      title,
-      body,
-      const NotificationDetails(
+      id: DateTime.now().millisecond,
+      title: title,
+      body: body,
+      notificationDetails: const NotificationDetails(
         android: AndroidNotificationDetails(
           'general',
           'General Notifications',

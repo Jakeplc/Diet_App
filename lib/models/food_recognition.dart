@@ -1,4 +1,4 @@
-class RecognizedFood {
+﻿class RecognizedFood {
   final String id;
   final String name;
   final double confidence; // 0.0 to 1.0

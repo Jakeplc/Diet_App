@@ -1,4 +1,4 @@
-import 'package:hive/hive.dart';
+﻿import 'package:hive/hive.dart';
 import '../models/body_composition.dart';
 
 class BodyCompositionService {
