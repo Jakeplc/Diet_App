@@ -33,19 +33,19 @@ class AnalyticsService {
       waterIntake: 8,
       healthScore: '8.5/10',
       recommendations: '''
-âœ… Great consistency this week! You logged meals 6 out of 7 days.
+✅ Great consistency this week! You logged meals 6 out of 7 days.
 
-ðŸ’§ Water Intake: Aim for 9-10 glasses daily. You're at 8 average.
+💧 Water Intake: Aim for 9-10 glasses daily. You're at 8 average.
 
-ðŸƒ Activity: 4 workouts is excellent! Keep up the momentum.
+🏃 Activity: 4 workouts is excellent! Keep up the momentum.
 
-ðŸ½ï¸ Calories: On average, 1850 cal/day. Slightly under your 1900 target.
+🍽️ Calories: On average, 1850 cal/day. Slightly under your 1900 target.
 
-ðŸ“ˆ Recommendations:
-  â€¢ Increase water intake slightly
-  â€¢ Add 1 more workout next week
-  â€¢ Maintain current calorie tracking consistency
-  â€¢ Focus on protein intake in meals
+📈 Recommendations:
+  • Increase water intake slightly
+  • Add 1 more workout next week
+  • Maintain current calorie tracking consistency
+  • Focus on protein intake in meals
       ''',
     );
   }
@@ -62,27 +62,27 @@ class AnalyticsService {
       waterIntake: 8,
       healthScore: '8.8/10',
       recommendations: '''
-ðŸŽ‰ Outstanding progress this month!
+🎉 Outstanding progress this month!
 
-ðŸ“Š Monthly Summary:
-  â€¢ Consistent logging: 28/30 days (93%)
-  â€¢ Average daily calories: 1,875
-  â€¢ Total workouts: 16
-  â€¢ Weight change: -1.3 kg
-  â€¢ Water intake: 8 glasses/day
+📊 Monthly Summary:
+  • Consistent logging: 28/30 days (93%)
+  • Average daily calories: 1,875
+  • Total workouts: 16
+  • Weight change: -1.3 kg
+  • Water intake: 8 glasses/day
 
-â­ Key Achievements:
-  â€¢ 7-day logging streak
-  â€¢ 4 workouts week consistency
-  â€¢ Met macros target 18/30 days
+⭐ Key Achievements:
+  • 7-day logging streak
+  • 4 workouts week consistency
+  • Met macros target 18/30 days
 
-ðŸŽ¯ Next Month Goals:
-  â€¢ Increase workout frequency to 5/week
-  â€¢ Improve water intake to 10 glasses/day
-  â€¢ Maintain 95%+ logging consistency
-  â€¢ Focus on protein: 35% of daily calories
+🎯 Next Month Goals:
+  • Increase workout frequency to 5/week
+  • Improve water intake to 10 glasses/day
+  • Maintain 95%+ logging consistency
+  • Focus on protein: 35% of daily calories
 
-ðŸ’ª Keep up the excellent work!
+💪 Keep up the excellent work!
       ''',
     );
   }

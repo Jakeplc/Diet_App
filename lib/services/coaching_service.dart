@@ -10,9 +10,9 @@ class CoachingService {
       category: 'nutrition',
       title: 'Protein at Every Meal',
       description: 'Distribute protein evenly across meals',
-      tip:
-          'ðŸ¥š Aim for 25-35g protein per meal. Add eggs, chicken, Greek yogurt, or legumes to breakfast, lunch, and dinner.',
-      icon: 'ðŸ¥š',
+        tip:
+          '🥚 Aim for 25-35g protein per meal. Add eggs, chicken, Greek yogurt, or legumes to breakfast, lunch, and dinner.',
+        icon: '🥚',
       priority: 5,
       applicableGoals: ['lose_weight', 'body_recomp', 'gain_weight'],
     ),
@@ -21,9 +21,9 @@ class CoachingService {
       category: 'nutrition',
       title: 'Whole Grains Over Refined',
       description: 'Switch to complex carbs for sustained energy',
-      tip:
-          'ðŸŒ¾ Replace white bread/rice with oats, brown rice, whole wheat pasta, and quinoa. They keep you fuller longer!',
-      icon: 'ðŸŒ¾',
+        tip:
+          '🌾 Replace white bread/rice with oats, brown rice, whole wheat pasta, and quinoa. They keep you fuller longer!',
+        icon: '🌾',
       priority: 4,
       applicableGoals: ['lose_weight', 'maintain', 'body_recomp'],
     ),
@@ -32,9 +32,9 @@ class CoachingService {
       category: 'nutrition',
       title: 'Vegetables First Strategy',
       description: 'Prioritize nutrient-dense vegetables',
-      tip:
-          'ðŸ¥¦ Eat vegetables first at each meal. They fill you up with fewer calories and provide essential micronutrients.',
-      icon: 'ðŸ¥¦',
+        tip:
+          '🥦 Eat vegetables first at each meal. They fill you up with fewer calories and provide essential micronutrients.',
+        icon: '🥦',
       priority: 4,
       applicableGoals: ['lose_weight', 'maintain'],
     ),
@@ -43,9 +43,9 @@ class CoachingService {
       category: 'nutrition',
       title: 'Healthy Fats Matter',
       description: 'Include omega-3s and unsaturated fats',
-      tip:
-          'ðŸ¥‘ Add avocado, olive oil, nuts, and fatty fish. Healthy fats support hormone production and satiety.',
-      icon: 'ðŸ¥‘',
+        tip:
+          '🥑 Add avocado, olive oil, nuts, and fatty fish. Healthy fats support hormone production and satiety.',
+        icon: '🥑',
       priority: 3,
       applicableGoals: [
         'lose_weight',
@@ -61,9 +61,9 @@ class CoachingService {
       category: 'hydration',
       title: 'Water Before Meals',
       description: 'Drink water 15 mins before eating',
-      tip:
-          'ðŸ’§ Drinking water before meals reduces appetite and improves digestion. Aim for a glass 15 minutes before eating.',
-      icon: 'ðŸ’§',
+        tip:
+          '💧 Drinking water before meals reduces appetite and improves digestion. Aim for a glass 15 minutes before eating.',
+        icon: '💧',
       priority: 4,
       applicableGoals: ['lose_weight'],
     ),
@@ -72,9 +72,9 @@ class CoachingService {
       category: 'hydration',
       title: 'Hydration & Performance',
       description: 'Optimal water intake boosts workouts',
-      tip:
-          'ðŸƒ Even mild dehydration reduces workout performance. Drink water throughout the day, especially during exercise.',
-      icon: 'ðŸƒ',
+        tip:
+          '🏃 Even mild dehydration reduces workout performance. Drink water throughout the day, especially during exercise.',
+        icon: '🏃',
       priority: 4,
       applicableGoals: ['gain_weight', 'body_recomp'],
     ),
@@ -83,9 +83,9 @@ class CoachingService {
       category: 'hydration',
       title: 'Track Your Hydration',
       description: 'Monitor water intake consistently',
-      tip:
-          'ðŸ“Š Use the water logging feature daily. Your urine color should be pale yellow - a sign of good hydration.',
-      icon: 'ðŸ“Š',
+        tip:
+          '📊 Use the water logging feature daily. Your urine color should be pale yellow - a sign of good hydration.',
+        icon: '📊',
       priority: 3,
       applicableGoals: [
         'lose_weight',
@@ -101,9 +101,9 @@ class CoachingService {
       category: 'macros',
       title: 'Carbs Post-Workout',
       description: 'Refuel with carbs after training',
-      tip:
-          'ðŸ‹ï¸ Eat carbs and protein within 1-2 hours after workouts. This replenishes glycogen and aids muscle recovery.',
-      icon: 'ðŸ‹ï¸',
+        tip:
+          '🏋️ Eat carbs and protein within 1-2 hours after workouts. This replenishes glycogen and aids muscle recovery.',
+        icon: '🏋️',
       priority: 4,
       applicableGoals: ['body_recomp', 'gain_weight'],
     ),
@@ -112,9 +112,9 @@ class CoachingService {
       category: 'macros',
       title: 'Protein for Satiety',
       description: 'Protein keeps you full longer',
-      tip:
-          'ðŸ— High-protein meals increase satiety hormones. This naturally helps you eat less without feeling deprived.',
-      icon: 'ðŸ—',
+        tip:
+          '🍗 High-protein meals increase satiety hormones. This naturally helps you eat less without feeling deprived.',
+        icon: '🍗',
       priority: 5,
       applicableGoals: ['lose_weight', 'body_recomp'],
     ),
@@ -123,9 +123,9 @@ class CoachingService {
       category: 'macros',
       title: 'Don\'t Fear Fats',
       description: 'Fats are essential for hormone health',
-      tip:
-          'ðŸ§ˆ Healthy fats (20-30% of calories) support testosterone, vitamin absorption, and brain function.',
-      icon: 'ðŸ§ˆ',
+        tip:
+          '🧈 Healthy fats (20-30% of calories) support testosterone, vitamin absorption, and brain function.',
+        icon: '🧈',
       priority: 3,
       applicableGoals: ['gain_weight', 'body_recomp', 'maintain'],
     ),
@@ -136,9 +136,9 @@ class CoachingService {
       category: 'consistency',
       title: 'Log Daily, Even Weekends',
       description: 'Consistency beats perfection',
-      tip:
-          'ðŸ“ Track your food every single day, including weekends. This awareness alone improves results by 30%+',
-      icon: 'ðŸ“',
+        tip:
+          '📝 Track your food every single day, including weekends. This awareness alone improves results by 30%+',
+        icon: '📝',
       priority: 5,
       applicableGoals: [
         'lose_weight',
@@ -152,9 +152,9 @@ class CoachingService {
       category: 'consistency',
       title: 'Build Your Streak',
       description: 'Form habits through streaks',
-      tip:
-          'ðŸ”¥ Your streak matters! Even small daily actions compound. Missing one day resets progress - keep it going!',
-      icon: 'ðŸ”¥',
+        tip:
+          '🔥 Your streak matters! Even small daily actions compound. Missing one day resets progress - keep it going!',
+        icon: '🔥',
       priority: 5,
       applicableGoals: [
         'lose_weight',
@@ -168,9 +168,9 @@ class CoachingService {
       category: 'consistency',
       title: 'Plan Ahead',
       description: 'Meal prep reduces temptation',
-      tip:
-          'ðŸ± Spend 1 hour Sunday prepping meals. Having healthy food ready prevents impulse bad decisions.',
-      icon: 'ðŸ±',
+        tip:
+          '🍱 Spend 1 hour Sunday prepping meals. Having healthy food ready prevents impulse bad decisions.',
+        icon: '🍱',
       priority: 4,
       applicableGoals: ['lose_weight', 'body_recomp'],
     ),
@@ -181,9 +181,9 @@ class CoachingService {
       category: 'timing',
       title: 'Breakfast Boosts Metabolism',
       description: 'Start your day with a meal',
-      tip:
-          'ðŸŒ… Eating breakfast jump-starts your metabolism and provides energy for the day. Don\'t skip it!',
-      icon: 'ðŸŒ…',
+        tip:
+          '🌄 Eating breakfast jump-starts your metabolism and provides energy for the day. Don\'t skip it!',
+        icon: '🌄',
       priority: 4,
       applicableGoals: ['lose_weight', 'maintain'],
     ),
@@ -192,9 +192,9 @@ class CoachingService {
       category: 'timing',
       title: 'No Food Before Bed',
       description: 'Stop eating 3 hours before sleep',
-      tip:
-          'ðŸ˜´ Eating close to bedtime disrupts sleep quality. Aim for your last meal 3 hours before bed.',
-      icon: 'ðŸ˜´',
+        tip:
+          '😴 Eating close to bedtime disrupts sleep quality. Aim for your last meal 3 hours before bed.',
+        icon: '😴',
       priority: 3,
       applicableGoals: ['lose_weight', 'maintain'],
     ),
@@ -205,9 +205,9 @@ class CoachingService {
       category: 'general',
       title: 'Progressive Overload',
       description: 'Gradually increase workout intensity',
-      tip:
-          'ðŸ’ª Each week, add 1-2 more reps, slightly more weight, or longer duration. Small improvements compound!',
-      icon: 'ðŸ’ª',
+        tip:
+          '💪 Each week, add 1-2 more reps, slightly more weight, or longer duration. Small improvements compound!',
+        icon: '💪',
       priority: 4,
       applicableGoals: ['body_recomp', 'gain_weight'],
     ),
@@ -216,9 +216,9 @@ class CoachingService {
       category: 'general',
       title: 'Sleep Matters',
       description: 'Get 7-9 hours of quality sleep',
-      tip:
-          'ðŸ˜´ Poor sleep increases hunger hormones and decreases fat loss. Make sleep a priority for results.',
-      icon: 'ðŸ˜´',
+        tip:
+          '😴 Poor sleep increases hunger hormones and decreases fat loss. Make sleep a priority for results.',
+        icon: '😴',
       priority: 4,
       applicableGoals: ['lose_weight', 'body_recomp', 'gain_weight'],
     ),
@@ -227,9 +227,9 @@ class CoachingService {
       category: 'general',
       title: 'Track Weight Trends',
       description: 'Focus on weekly averages, not daily',
-      tip:
-          'ðŸ“ˆ Daily weight fluctuates 2-3 lbs. Track weekly averages to see true progress. Don\'t get discouraged!',
-      icon: 'ðŸ“ˆ',
+        tip:
+          '📈 Daily weight fluctuates 2-3 lbs. Track weekly averages to see true progress. Don\'t get discouraged!',
+        icon: '📈',
       priority: 4,
       applicableGoals: ['lose_weight', 'body_recomp'],
     ),
@@ -238,9 +238,9 @@ class CoachingService {
       category: 'general',
       title: 'Calorie Awareness',
       description: 'Understanding your calorie goal',
-      tip:
-          'ðŸŽ¯ Your daily calorie target is personalized to YOUR goal. Stick to it consistently for best results.',
-      icon: 'ðŸŽ¯',
+        tip:
+          '🎯 Your daily calorie target is personalized to YOUR goal. Stick to it consistently for best results.',
+        icon: '🎯',
       priority: 5,
       applicableGoals: [
         'lose_weight',
@@ -254,9 +254,9 @@ class CoachingService {
       category: 'general',
       title: 'Read Food Labels',
       description: 'Know what you\'re eating',
-      tip:
-          'ðŸ·ï¸ Check nutrition labels for hidden sugars, sodium, and calories. Knowledge is power!',
-      icon: 'ðŸ·ï¸',
+        tip:
+          '🏷️ Check nutrition labels for hidden sugars, sodium, and calories. Knowledge is power!',
+        icon: '🏷️',
       priority: 3,
       applicableGoals: ['lose_weight', 'maintain'],
     ),

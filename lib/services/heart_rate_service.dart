@@ -89,11 +89,11 @@ class HeartRateService {
   }
 
   static String getHRZoneEmoji(int bpm) {
-    if (bpm < 100) return 'ðŸ˜´';
-    if (bpm < 120) return 'ðŸš¶';
-    if (bpm < 150) return 'ðŸƒ';
-    if (bpm < 170) return 'ðŸ‹ï¸';
-    return 'âš¡';
+    if (bpm < 100) return '😴';
+    if (bpm < 120) return '🚶';
+    if (bpm < 150) return '🏃';
+    if (bpm < 170) return '🏋️';
+    return '⚡';
   }
 
   static Color getHRZoneColor(int bpm) {

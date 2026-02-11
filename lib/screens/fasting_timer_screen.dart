@@ -62,7 +62,7 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Started ${preset.fastingHours}-hour fast! ðŸŽ¯'),
+            content: Text('Started ${preset.fastingHours}-hour fast! 🎯'),
             backgroundColor: Colors.green,
           ),
         );
@@ -79,7 +79,7 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
         title: const Text('End Fasting'),
         content: Text(
           _activeSession!.isComplete
-              ? 'Congratulations! You completed your fast! ðŸŽ‰'
+              ? 'Congratulations! You completed your fast! 🎉'
               : 'Are you sure you want to end this fast early?',
         ),
         actions: [
@@ -103,8 +103,8 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
           SnackBar(
             content: Text(
               _activeSession!.isComplete
-                  ? 'Fast completed! Great job! ðŸ’ª'
-                  : 'Fast ended. Keep going! ðŸ‘',
+                  ? 'Fast completed! Great job! 💪'
+                  : 'Fast ended. Keep going! 👍',
             ),
             backgroundColor: _activeSession!.isComplete
                 ? Colors.green
@@ -217,7 +217,7 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
         child: Column(
           children: [
             Text(
-              isComplete ? 'Fast Complete! ðŸŽ‰' : 'Fasting in Progress',
+              isComplete ? 'Fast Complete! 🎉' : 'Fasting in Progress',
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: isComplete ? Colors.green : null,
@@ -467,7 +467,7 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
             ),
             const SizedBox(height: 12),
             Text(
-              'ðŸ’¡ Tips for Success:',
+              '💡 Tips for Success:',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.grey[800],
@@ -490,7 +490,7 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('â€¢ ', style: TextStyle(color: Colors.grey[600])),
+          Text('• ', style: TextStyle(color: Colors.grey[600])),
           Expanded(
             child: Text(tip, style: TextStyle(color: Colors.grey[600])),
           ),
@@ -576,7 +576,7 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
                             ),
                             title: Text(session.fastingType),
                             subtitle: Text(
-                              '${session.elapsedDuration.inHours}h ${session.elapsedDuration.inMinutes.remainder(60)}m â€¢ ${_formatDate(session.startTime)}',
+                              '${session.elapsedDuration.inHours}h ${session.elapsedDuration.inMinutes.remainder(60)}m • ${_formatDate(session.startTime)}',
                             ),
                             trailing: session.wasCompleted
                                 ? const Icon(

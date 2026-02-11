@@ -408,19 +408,19 @@ class _ProgressScreenState extends State<ProgressScreen> {
             ),
             const SizedBox(height: 15),
             Text(
-              'â€¢ Calorie deficit/surplus trends',
+              '• Calorie deficit/surplus trends',
               style: TextStyle(color: Colors.grey.shade800),
             ),
             Text(
-              'â€¢ Macro balance insights',
+              '• Macro balance insights',
               style: TextStyle(color: Colors.grey.shade800),
             ),
             Text(
-              'â€¢ Body composition estimates',
+              '• Body composition estimates',
               style: TextStyle(color: Colors.grey.shade800),
             ),
             Text(
-              'â€¢ Predicted goal achievement date',
+              '• Predicted goal achievement date',
               style: TextStyle(color: Colors.grey.shade800),
             ),
             const SizedBox(height: 10),

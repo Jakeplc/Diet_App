@@ -260,7 +260,7 @@ class _MealPlanningScreenState extends State<MealPlanningScreen> {
       ),
       title: Text(plan.name),
       subtitle: Text(
-        '${totalCalories.toInt()} cal â€¢ ${totalProtein.toInt()}g protein\n${foods.map((f) => f.name).join(", ")}',
+        '${totalCalories.toInt()} cal • ${totalProtein.toInt()}g protein\n${foods.map((f) => f.name).join(", ")}',
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
       ),
@@ -1042,7 +1042,7 @@ class _FoodSelectionDialogState extends State<_FoodSelectionDialog> {
                             ],
                           ),
                           subtitle: Text(
-                            '${food.calories.toInt()} cal â€¢ P: ${food.protein.toInt()}g â€¢ C: ${food.carbs.toInt()}g â€¢ F: ${food.fats.toInt()}g',
+                            '${food.calories.toInt()} cal • P: ${food.protein.toInt()}g • C: ${food.carbs.toInt()}g • F: ${food.fats.toInt()}g',
                           ),
                           onTap: () async {
                             // Save API food to local database

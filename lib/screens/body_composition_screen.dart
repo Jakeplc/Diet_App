@@ -800,7 +800,7 @@ class _HistoryScreen extends StatelessWidget {
       items.add('Waist: ${entry.waist!.toStringAsFixed(1)} cm');
     }
 
-    return Text(items.isEmpty ? 'No measurements' : items.join(' â€¢ '));
+    return Text(items.isEmpty ? 'No measurements' : items.join(' • '));
   }
 
   void _deleteEntry(BuildContext context, BodyComposition entry) async {

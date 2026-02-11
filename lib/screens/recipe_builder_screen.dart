@@ -129,7 +129,7 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
                     ),
                     title: Text(recipe.name),
                     subtitle: Text(
-                      '${recipe.ingredients.length} ingredients â€¢ ${recipe.totalCalories.toStringAsFixed(0)} cal',
+                      '${recipe.ingredients.length} ingredients • ${recipe.totalCalories.toStringAsFixed(0)} cal',
                     ),
                     trailing: PopupMenuButton(
                       itemBuilder: (context) => [
@@ -337,7 +337,7 @@ class _RecipeEditorScreenState extends State<_RecipeEditorScreen> {
                   child: ListTile(
                     title: Text(ingredient.foodName),
                     subtitle: Text(
-                      '${ingredient.servings.toStringAsFixed(1)} servings â€¢ ${ingredient.calories.toStringAsFixed(0)} cal',
+                      '${ingredient.servings.toStringAsFixed(1)} servings • ${ingredient.calories.toStringAsFixed(0)} cal',
                     ),
                     trailing: IconButton(
                       icon: const Icon(Icons.close, color: Colors.red),

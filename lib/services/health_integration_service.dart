@@ -12,14 +12,14 @@ class HealthIntegrationService {
       name: 'Apple Health',
       platform: 'apple_health',
       isConnected: false,
-      icon: 'ðŸŽ',
+      icon: '🍎',
     ),
     WearableDevice(
       id: 'google_fit',
       name: 'Google Fit',
       platform: 'google_fit',
       isConnected: false,
-      icon: 'ðŸ”´',
+      icon: '🔴',
     ),
   ];
 

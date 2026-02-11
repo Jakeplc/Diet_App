@@ -88,7 +88,7 @@ class _ExtendedAchievementsScreenState
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                'Keep grinding! ðŸ’ª',
+                                'Keep grinding! 💪',
                                 style: TextStyle(
                                   color: Colors.white.withValues(alpha: 0.9),
                                   fontSize: 12,
@@ -216,7 +216,7 @@ class _AchievementBadgeWidget extends StatelessWidget {
               )
             else
               Text(
-                'ðŸ”’ Locked',
+                '🔒 Locked',
                 style: TextStyle(fontSize: 9, color: Colors.grey.shade700),
               ),
           ],
@@ -247,7 +247,7 @@ class _AchievementBadgeWidget extends StatelessWidget {
               _DetailRow('Rarity', badge.rarity.toUpperCase()),
               _DetailRow(
                 'Status',
-                badge.isUnlocked ? 'Unlocked âœ“' : 'Locked ðŸ”’',
+                badge.isUnlocked ? 'Unlocked ✓' : 'Locked 🔒',
               ),
               if (badge.isUnlocked && badge.unlockedDate != null)
                 _DetailRow(

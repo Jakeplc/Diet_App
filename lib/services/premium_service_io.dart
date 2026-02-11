@@ -146,18 +146,18 @@ class PremiumService {
   // Get premium benefits list
   static List<String> getPremiumBenefits() {
     return [
-      'ðŸš« Remove all ads',
-      'ðŸ“Š Advanced analytics & detailed reports',
-      'ðŸ”¬ Track micronutrients (vitamins & minerals)',
-      'ðŸ¤– AI-powered meal suggestions',
-      'ðŸ“¸ Unlimited food photo recognition',
-      'â˜ï¸ Cloud sync across devices',
-      'ðŸ½ï¸ Unlimited custom recipes',
-      'ðŸ“ˆ Export data to CSV/PDF',
-      'â° Smart reminders & coaching tips',
-      'ðŸ’ª Workout & activity tracking',
-      'ðŸ‘¥ Share meal plans with friends',
-      'ðŸŽ¯ Custom macro ratio targets',
+      '🚫 Remove all ads',
+      '📊 Advanced analytics & detailed reports',
+      '🔬 Track micronutrients (vitamins & minerals)',
+      '🤖 AI-powered meal suggestions',
+      '📸 Unlimited food photo recognition',
+      '☁️ Cloud sync across devices',
+      '🍽️ Unlimited custom recipes',
+      '📈 Export data to CSV/PDF',
+      '⏰ Smart reminders & coaching tips',
+      '💪 Workout & activity tracking',
+      '👥 Share meal plans with friends',
+      '🎯 Custom macro ratio targets',
     ];
   }
 

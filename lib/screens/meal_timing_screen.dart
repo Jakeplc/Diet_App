@@ -103,7 +103,7 @@ class _MealTimingScreenState extends State<MealTimingScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text('â°', style: TextStyle(fontSize: 48)),
+                      const Text('⏰', style: TextStyle(fontSize: 48)),
                       const SizedBox(height: 8),
                       Text(
                         'Optimal Meal Schedule',
@@ -226,7 +226,7 @@ class _MealTimingScreenState extends State<MealTimingScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '${meal.recommendedTime} â€¢ ${meal.timeRange}',
+                        '${meal.recommendedTime} • ${meal.timeRange}',
                         style: TextStyle(color: Colors.grey[800], fontSize: 13),
                       ),
                     ],

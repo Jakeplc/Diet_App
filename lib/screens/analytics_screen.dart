@@ -178,7 +178,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text(
-                              'ðŸ’¡ Recommendations',
+                              '💡 Recommendations',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,

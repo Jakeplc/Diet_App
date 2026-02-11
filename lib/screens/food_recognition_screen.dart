@@ -251,25 +251,25 @@ class _FoodRecognitionScreenState extends State<FoodRecognitionScreen> {
                             children: [
                               Expanded(
                                 child: _buildNutrientInfo(
-                                  'ðŸ”¥',
+                                  '🔥',
                                   '${food.caloriesPer100g}',
                                 ),
                               ),
                               Expanded(
                                 child: _buildNutrientInfo(
-                                  'ðŸ’ª',
+                                  '💪',
                                   '${food.protein}g',
                                 ),
                               ),
                               Expanded(
                                 child: _buildNutrientInfo(
-                                  'ðŸŒ¾',
+                                  '🌾',
                                   '${food.carbs}g',
                                 ),
                               ),
                               Expanded(
                                 child: _buildNutrientInfo(
-                                  'ðŸ¥‘',
+                                  '🥑',
                                   '${food.fats}g',
                                 ),
                               ),

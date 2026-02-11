@@ -58,7 +58,7 @@ class NotificationService {
     if (breakfast) {
       await _scheduleNotification(
         id: 1,
-        title: 'ðŸ³ Time for Breakfast!',
+        title: '🍳 Time for Breakfast!',
         body: 'Log your morning meal to start the day right',
         hour: 8,
         minute: 0,
@@ -68,7 +68,7 @@ class NotificationService {
     if (lunch) {
       await _scheduleNotification(
         id: 2,
-        title: 'ðŸ¥— Lunch Time!',
+        title: '🥗 Lunch Time!',
         body: 'Don\'t forget to log your lunch',
         hour: 12,
         minute: 30,
@@ -78,7 +78,7 @@ class NotificationService {
     if (dinner) {
       await _scheduleNotification(
         id: 3,
-        title: 'ðŸ½ï¸ Dinner Reminder',
+        title: '🍽️ Dinner Reminder',
         body: 'Log your dinner to complete the day',
         hour: 19,
         minute: 0,
@@ -90,7 +90,7 @@ class NotificationService {
       for (int i = 0; i < 8; i++) {
         await _scheduleNotification(
           id: 10 + i,
-          title: 'ðŸ’§ Hydration Check',
+          title: '💧 Hydration Check',
           body: 'Time to drink some water!',
           hour: 8 + (i * 2),
           minute: 0,

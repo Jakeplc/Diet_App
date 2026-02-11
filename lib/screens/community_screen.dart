@@ -116,7 +116,7 @@ class _FriendsTabState extends State<_FriendsTab> {
                                   ),
                                 ),
                                 Text(
-                                  '${friend.streak} day streak â€¢ ${friend.totalAchievements} achievements',
+                                  '${friend.streak} day streak • ${friend.totalAchievements} achievements',
                                   style: TextStyle(
                                     color: Colors.grey.shade800,
                                     fontSize: 12,
@@ -373,7 +373,7 @@ class _ChallengesTab extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                       child: const Text(
-                                        'âœ“ Completed',
+                                        '✓ Completed',
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.green,
@@ -455,12 +455,12 @@ class _LeaderboardTabState extends State<_LeaderboardTab> {
                     itemCount: entries.length,
                     itemBuilder: (context, index) {
                       final entry = entries[index];
-                      final medal = entry.rank == 1
-                          ? 'ðŸ¥‡'
+                        final medal = entry.rank == 1
+                          ? '🥇'
                           : entry.rank == 2
-                          ? 'ðŸ¥ˆ'
+                          ? '🥈'
                           : entry.rank == 3
-                          ? 'ðŸ¥‰'
+                          ? '🥉'
                           : '';
 
                       return Card(

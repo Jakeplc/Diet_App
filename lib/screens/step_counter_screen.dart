@@ -222,7 +222,7 @@ class _StepCounterScreenState extends State<StepCounterScreen> {
                                           ),
                                           child: Text(
                                             goalMet
-                                                ? 'âœ“ Goal Met'
+                                              ? '✓ Goal Met'
                                                 : '$percentage%',
                                             style: const TextStyle(
                                               color: Colors.white,

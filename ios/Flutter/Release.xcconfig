@@ -1,2 +1,6 @@
 #include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"
 #include "Generated.xcconfig"
+
+SDKROOT=iphoneos
+SDKROOT[sdk=iphonesimulator*]=iphonesimulator
+DART_DEFINES=$(inherited),U2RrUm9vdD0kKFNES1JPT1Qp

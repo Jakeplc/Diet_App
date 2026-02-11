@@ -141,7 +141,7 @@ class _WearableScreenState extends State<WearableScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text('âŒš', style: TextStyle(fontSize: 48)),
+                      const Text('⌚', style: TextStyle(fontSize: 48)),
                       const SizedBox(height: 8),
                       Text(
                         'Connected Health Devices',
@@ -259,7 +259,7 @@ class _WearableScreenState extends State<WearableScreen> {
             children: [
               Expanded(
                 child: _buildStatItem(
-                  'ðŸ”¥',
+                  '🔥',
                   '${_activityStats['weeklyCalories']}',
                   'Calories',
                 ),
@@ -267,7 +267,7 @@ class _WearableScreenState extends State<WearableScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: _buildStatItem(
-                  'ðŸš¶',
+                  '🚶',
                   '${_activityStats['weeklySteps']}',
                   'Steps',
                 ),
@@ -275,7 +275,7 @@ class _WearableScreenState extends State<WearableScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: _buildStatItem(
-                  'ðŸ’ª',
+                  '💪',
                   '${_activityStats['weeklyActivities']}',
                   'Activities',
                 ),
@@ -387,7 +387,7 @@ class _WearableScreenState extends State<WearableScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '${activity.date.month}/${activity.date.day} â€¢ ${activity.durationMinutes} min',
+                        '${activity.date.month}/${activity.date.day} • ${activity.durationMinutes} min',
                         style: TextStyle(color: Colors.grey[800], fontSize: 12),
                       ),
                     ],
@@ -403,7 +403,7 @@ class _WearableScreenState extends State<WearableScreen> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    'ðŸ”¥ ${activity.caloriesBurned}',
+                    '🔥 ${activity.caloriesBurned}',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.purple[700],
@@ -417,12 +417,12 @@ class _WearableScreenState extends State<WearableScreen> {
               children: [
                 if (activity.steps > 0)
                   Expanded(
-                    child: _buildActivityStat('ðŸš¶ ${activity.steps} steps'),
+                    child: _buildActivityStat('🚶 ${activity.steps} steps'),
                   ),
                 if (activity.distance > 0)
                   Expanded(
                     child: _buildActivityStat(
-                      'ðŸ“ ${activity.distance.toStringAsFixed(1)} km',
+                      '📍 ${activity.distance.toStringAsFixed(1)} km',
                     ),
                   ),
                 Expanded(

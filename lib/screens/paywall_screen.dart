@@ -126,10 +126,10 @@ class _PaywallScreenState extends State<PaywallScreen> {
 
                 // Fine Print
                 const Text(
-                  'â€¢ Cancel anytime\n'
-                  'â€¢ All prices in USD\n'
-                  'â€¢ Subscriptions auto-renew\n'
-                  'â€¢ Free trial for first-time subscribers',
+                  '• Cancel anytime\n'
+                  '• All prices in USD\n'
+                  '• Subscriptions auto-renew\n'
+                  '• Free trial for first-time subscribers',
                   style: TextStyle(color: Colors.grey, fontSize: 12),
                   textAlign: TextAlign.center,
                 ),
@@ -290,7 +290,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
       if (success && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('ðŸŽ‰ Welcome to Premium! No Ads Forever'),
+            content: const Text('🎉 Welcome to Premium! No Ads Forever'),
             backgroundColor: Colors.green,
             duration: const Duration(seconds: 3),
           ),

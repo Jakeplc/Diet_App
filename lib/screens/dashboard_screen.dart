@@ -603,18 +603,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final isNarrow = constraints.maxWidth < 360;
+                final title = Text(
                   'GLP-1 Tracker',
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: scheme.onSurface,
                   ),
-                ),
-                Row(
+                );
+                final actions = Wrap(
+                  alignment: WrapAlignment.end,
+                  spacing: 8,
+                  runSpacing: 8,
                   children: [
                     TextButton.icon(
                       onPressed: _showGlpLogDialog,
@@ -624,7 +628,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         foregroundColor: scheme.primary,
                       ),
                     ),
-                    const SizedBox(width: 8),
                     TextButton.icon(
                       onPressed: _showGlpHistoryDialog,
                       icon: const Icon(Icons.history),
@@ -634,8 +637,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                     ),
                   ],
-                ),
-              ],
+                );
+
+                if (isNarrow) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      title,
+                      const SizedBox(height: 8),
+                      actions,
+                    ],
+                  );
+                }
+
+                return Row(
+                  children: [
+                    Expanded(child: title),
+                    const SizedBox(width: 12),
+                    actions,
+                  ],
+                );
+              },
             ),
             const SizedBox(height: 10),
             if (logs.isEmpty)
@@ -952,7 +974,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             title: Text(log.foodName),
             subtitle: Text(
-              '${log.mealType.toUpperCase()} â€¢ ${log.calories.toInt()} cal',
+              '${log.mealType.toUpperCase()} • ${log.calories.toInt()} cal',
             ),
             trailing: Text(
               '${log.timestamp.hour.toString().padLeft(2, '0')}:${log.timestamp.minute.toString().padLeft(2, '0')}',

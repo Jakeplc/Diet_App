@@ -9,14 +9,14 @@ class ShareService {
   }) async {
     final String message =
         '''
-ðŸŽ¯ Weight Loss Progress Update!
+🎯 Weight Loss Progress Update!
 
 Current Weight: ${currentWeight.toStringAsFixed(1)} kg
 Goal Weight: ${goalWeight.toStringAsFixed(1)} kg
 Lost So Far: ${weightLost.toStringAsFixed(1)} kg
 Days Tracking: $daysTracking days
 
-I'm crushing my fitness goals with Diet Tracker! ðŸ’ª
+I'm crushing my fitness goals with Diet Tracker! 💪
 Download now: [App Link]
 #FitnessJourney #HealthyLifestyle #DietTracker
     ''';
@@ -33,14 +33,14 @@ Download now: [App Link]
   }) async {
     final String message =
         '''
-ðŸ† Achievement Unlocked!
+🏆 Achievement Unlocked!
 
 $achievementTitle
 $description
 
 Unlocked on: ${unlockedDate.toString().split(' ')[0]}
 
-Join me on my fitness journey with Diet Tracker! ðŸš€
+Join me on my fitness journey with Diet Tracker! 🚀
 #Achievements #FitnessMilestone #DietTracker
     ''';
 
@@ -58,11 +58,11 @@ Join me on my fitness journey with Diet Tracker! ðŸš€
   }) async {
     final String message =
         '''
-ðŸ”¥ $streakDays Day Streak!
+🔥 $streakDays Day Streak!
 
 I've been consistently tracking my diet for $streakDays days while working towards my $goal goal!
 
-Stay consistent with Diet Tracker ðŸ’ª
+Stay consistent with Diet Tracker 💪
 #DailyHabits #ConsistencyPays #DietTracker
     ''';
 
@@ -79,14 +79,14 @@ Stay consistent with Diet Tracker ðŸ’ª
   }) async {
     final String message =
         '''
-ðŸ“Š Today's Nutrition Summary
+📊 Today's Nutrition Summary
 
 Total Calories: $totalCalories
 Protein: $protein g
 Carbs: $carbs g
 Fats: $fats g
 
-Tracking my nutrition with Diet Tracker! ðŸ¥—ðŸ’ª
+Tracking my nutrition with Diet Tracker! 🥗💪
 #MacroTracking #NutritionGoals #DietTracker
     ''';
 

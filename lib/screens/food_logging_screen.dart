@@ -407,7 +407,7 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
               ],
             ),
             subtitle: Text(
-              '${food.calories.toInt()} cal â€¢ P: ${food.protein.toInt()}g â€¢ C: ${food.carbs.toInt()}g â€¢ F: ${food.fats.toInt()}g',
+              '${food.calories.toInt()} cal • P: ${food.protein.toInt()}g • C: ${food.carbs.toInt()}g • F: ${food.fats.toInt()}g',
               style: TextStyle(
                 fontSize: 12,
                 color: Theme.of(
@@ -452,7 +452,7 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
               ),
               title: Text(food.name),
               subtitle: Text(
-                '${food.calories.toInt()} cal â€¢ ${food.category}',
+                '${food.calories.toInt()} cal • ${food.category}',
               ),
               trailing: const Icon(Icons.add_circle, color: Colors.green),
               onTap: () => _addFoodLog(food),
@@ -717,7 +717,7 @@ class _FoodLoggingScreenState extends State<FoodLoggingScreen> {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('${food.name} logged from AI recognition! âœ¨'),
+          content: Text('${food.name} logged from AI recognition! ✨'),
           backgroundColor: Colors.green,
           duration: const Duration(seconds: 1),
           behavior: SnackBarBehavior.floating,

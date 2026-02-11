@@ -152,7 +152,7 @@ class CalorieCalculatorService {
     } else if (waterProgress >= 1.0 &&
         caloriesDiff.abs() < 200 &&
         proteinProgress >= 0.9) {
-      return 'ðŸŽ‰ Great day! You\'re on track with all your goals!';
+      return '🎉 Great day! You\'re on track with all your goals!';
     }
 
     return 'Keep going! You\'re ${caloriesDiff.toInt()} calories from your target.';

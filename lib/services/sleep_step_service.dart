@@ -94,15 +94,15 @@ class SleepTrackingService {
   static String getQualityEmoji(String quality) {
     switch (quality) {
       case 'poor':
-        return 'ðŸ˜´';
+        return '😴';
       case 'fair':
-        return 'ðŸ˜';
+        return '😐';
       case 'good':
-        return 'ðŸ˜Š';
+        return '😊';
       case 'excellent':
-        return 'ðŸ˜´âœ¨';
+        return '😴✨';
       default:
-        return 'ðŸ˜´';
+        return '😴';
     }
   }
 

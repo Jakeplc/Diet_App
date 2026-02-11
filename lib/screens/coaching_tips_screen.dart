@@ -91,7 +91,7 @@ class _CoachingTipsScreenState extends State<CoachingTipsScreen> {
                       children: [
                         Row(
                           children: [
-                            const Text('ðŸ’¡', style: TextStyle(fontSize: 40)),
+                            const Text('💡', style: TextStyle(fontSize: 40)),
                             const SizedBox(width: 15),
                             Expanded(
                               child: Column(
@@ -204,7 +204,7 @@ class _CoachingTipsScreenState extends State<CoachingTipsScreen> {
                               padding: const EdgeInsets.all(40),
                               child: Column(
                                 children: [
-                                  Text('ðŸ˜Š', style: TextStyle(fontSize: 60)),
+                                  Text('😊', style: TextStyle(fontSize: 60)),
                                   const SizedBox(height: 20),
                                   const Text(
                                     'No tips in this category',
@@ -238,7 +238,7 @@ class _CoachingTipsScreenState extends State<CoachingTipsScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text('ðŸ”’', style: TextStyle(fontSize: 80)),
+          const Text('🔒', style: TextStyle(fontSize: 80)),
           const SizedBox(height: 20),
           const Text(
             'Personalized Coaching Tips',

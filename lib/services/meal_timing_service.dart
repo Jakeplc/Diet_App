@@ -27,7 +27,7 @@ class MealTimingService {
           reason: 'Kickstart metabolism and break overnight fast',
           tip:
               'Eat 30-35% of daily calories with protein to start your day strong',
-          icon: 'ðŸ¥',
+          icon: '🥐',
           caloriePercentage: 35,
         ),
         MealTiming(
@@ -38,7 +38,7 @@ class MealTimingService {
               'Maintain stable blood sugar and prevent afternoon energy crash',
           tip:
               'Keep it light: Greek yogurt, apple, or protein bar (150-200 cal)',
-          icon: 'ðŸŽ',
+          icon: '🍎',
           caloriePercentage: 15,
         ),
         MealTiming(
@@ -47,7 +47,7 @@ class MealTimingService {
           timeRange: '12:00 PM - 2:00 PM',
           reason: 'Second largest meal fuels afternoon productivity',
           tip: 'Eat 30-35% of daily calories with lean protein and vegetables',
-          icon: 'ðŸ¥—',
+          icon: '🥗',
           caloriePercentage: 35,
         ),
         MealTiming(
@@ -56,17 +56,17 @@ class MealTimingService {
           timeRange: '6:00 PM - 8:00 PM',
           reason: 'Lighter meal allows better digestion and sleep',
           tip: 'Eat 15% of daily calories, focus on protein and veggies',
-          icon: 'ðŸ–',
+          icon: '🍖',
           caloriePercentage: 15,
         ),
       ],
       summary:
           'Weight Loss Timing: Front-load calories early, space meals evenly to manage hunger',
       tips: [
-        'ðŸ’§ Drink water 20-30 min before meals to enhance satiety',
-        'â° Stay consistent - eat at same times daily for appetite regulation',
-        'ðŸš« Avoid eating 2-3 hours before bed to prevent sleep disruption',
-        'ðŸ”” Set phone reminders for consistent meal timing',
+        '💧 Drink water 20-30 min before meals to enhance satiety',
+        '⏰ Stay consistent - eat at same times daily for appetite regulation',
+        '🚫 Avoid eating 2-3 hours before bed to prevent sleep disruption',
+        '🔔 Set phone reminders for consistent meal timing',
       ],
     );
   }
@@ -82,7 +82,7 @@ class MealTimingService {
           timeRange: '6:30 AM - 8:00 AM',
           reason: 'Break overnight fast and fuel morning activity',
           tip: 'Eat 25-30% of daily calories with carbs for sustained energy',
-          icon: 'ðŸ¥ž',
+          icon: '🥞',
           caloriePercentage: 28,
         ),
         MealTiming(
@@ -91,7 +91,7 @@ class MealTimingService {
           timeRange: '9:30 AM - 10:30 AM',
           reason: 'Increase total daily caloric intake throughout day',
           tip: 'Eat 200-300 calories: protein + carbs (shake, trail mix)',
-          icon: 'ðŸ¥¤',
+          icon: '🥤',
           caloriePercentage: 15,
         ),
         MealTiming(
@@ -100,7 +100,7 @@ class MealTimingService {
           timeRange: '12:00 PM - 1:00 PM',
           reason: 'Fuel workout with carbs and moderate protein',
           tip: 'Eat 25-30 min before: banana + protein for sustained energy',
-          icon: 'âš¡',
+          icon: '⚡',
           caloriePercentage: 12,
         ),
         MealTiming(
@@ -109,7 +109,7 @@ class MealTimingService {
           timeRange: '1:30 PM - 2:30 PM',
           reason: 'Replenish glycogen and support muscle protein synthesis',
           tip: 'Eat within 2 hours: carbs + 25g protein (rice + chicken)',
-          icon: 'ðŸ—',
+          icon: '🍗',
           caloriePercentage: 18,
         ),
         MealTiming(
@@ -118,17 +118,17 @@ class MealTimingService {
           timeRange: '6:00 PM - 7:30 PM',
           reason: 'Final large meal to meet daily caloric and protein targets',
           tip: 'Eat 25-30% of daily calories with complex carbs + lean protein',
-          icon: 'ðŸ²',
+          icon: '🍲',
           caloriePercentage: 17,
         ),
       ],
       summary:
           'Muscle Gain Timing: Frequent meals with carbs around workouts for maximum gains',
       tips: [
-        'ðŸ’ª Post-workout meals most important - prioritize this timing',
-        'ðŸŽ¯ Eat 0.7-1g protein per lb bodyweight spread across all meals',
-        'â° Consistent meal timing helps establish eating patterns for surplus',
-        'ðŸŒ Pre-workout carbs give energy for heavier lifts',
+        '💪 Post-workout meals most important - prioritize this timing',
+        '🎯 Eat 0.7-1g protein per lb bodyweight spread across all meals',
+        '⏰ Consistent meal timing helps establish eating patterns for surplus',
+        '🍌 Pre-workout carbs give energy for heavier lifts',
       ],
     );
   }
@@ -144,7 +144,7 @@ class MealTimingService {
           timeRange: '6:30 AM - 8:00 AM',
           reason: 'Kickstart metabolism with high-protein meal',
           tip: 'Eat 30% of daily calories: eggs + oats (40g protein)',
-          icon: 'ðŸ³',
+          icon: '🍳',
           caloriePercentage: 30,
         ),
         MealTiming(
@@ -153,7 +153,7 @@ class MealTimingService {
           timeRange: '11:30 AM - 12:30 PM',
           reason: 'Fuel workout with strategic carbs for performance',
           tip: 'Eat 25 min before: rice cakes + protein (200 cal, 30g carbs)',
-          icon: 'âš¡',
+          icon: '⚡',
           caloriePercentage: 15,
         ),
         MealTiming(
@@ -162,7 +162,7 @@ class MealTimingService {
           timeRange: '1:30 PM - 2:30 PM',
           reason: 'Critical window for muscle protein synthesis in deficit',
           tip: 'Eat immediately: protein shake + carbs (300 cal, 40g protein)',
-          icon: 'ðŸ—',
+          icon: '🍗',
           caloriePercentage: 20,
         ),
         MealTiming(
@@ -172,17 +172,17 @@ class MealTimingService {
           reason: 'High-protein dinner supports muscle during deficit',
           tip:
               'Eat 35% of daily calories: lean protein + veggies (40g protein)',
-          icon: 'ðŸ¥©',
+          icon: '🥩',
           caloriePercentage: 35,
         ),
       ],
       summary:
           'Body Recomp Timing: High protein spread across day with strategic pre/post-workout nutrition',
       tips: [
-        'ðŸŽ¯ Prioritize post-workout window - this preserves muscle in deficit',
-        'ðŸ’ª Eat 1g protein per lb bodyweight across 4 meals',
-        'â° Consistent timing supports both fat loss and muscle gain',
-        'ðŸš« Avoid eating 2-3 hours before bed despite smaller deficit',
+        '🎯 Prioritize post-workout window - this preserves muscle in deficit',
+        '💪 Eat 1g protein per lb bodyweight across 4 meals',
+        '⏰ Consistent timing supports both fat loss and muscle gain',
+        '🚫 Avoid eating 2-3 hours before bed despite smaller deficit',
       ],
     );
   }
@@ -198,7 +198,7 @@ class MealTimingService {
           timeRange: '7:00 AM - 8:30 AM',
           reason: 'Start day with balanced nutrition',
           tip: 'Eat 25-30% of daily calories: balanced macros',
-          icon: 'ðŸ¥£',
+          icon: '🥣',
           caloriePercentage: 28,
         ),
         MealTiming(
@@ -207,7 +207,7 @@ class MealTimingService {
           timeRange: '12:00 PM - 1:30 PM',
           reason: 'Midday fuel for sustained energy',
           tip: 'Eat 30-35% of daily calories: protein + veggies',
-          icon: 'ðŸ¥™',
+          icon: '🥙',
           caloriePercentage: 33,
         ),
         MealTiming(
@@ -216,7 +216,7 @@ class MealTimingService {
           timeRange: '3:30 PM - 4:30 PM',
           reason: 'Bridge the gap between lunch and dinner',
           tip: 'Eat 10% of daily calories: light snack (fruit, nuts)',
-          icon: 'ðŸª',
+          icon: '🍪',
           caloriePercentage: 10,
         ),
         MealTiming(
@@ -225,17 +225,17 @@ class MealTimingService {
           timeRange: '6:30 PM - 8:00 PM',
           reason: 'Complete daily nutrition and prepare for rest',
           tip: 'Eat 25-30% of daily calories: balanced, satisfying meal',
-          icon: 'ðŸ½ï¸',
+          icon: '🍽️',
           caloriePercentage: 29,
         ),
       ],
       summary:
           'Maintenance Timing: Balanced meals spread throughout day with flexibility',
       tips: [
-        'â° Eat at similar times daily for consistency',
-        'ðŸ’§ Hydrate throughout the day, especially between meals',
-        'ðŸŽ¯ No strict meal timing needed - focus on total daily intake',
-        'âœ¨ Allow 2-3 hours between meals for digestion',
+        '⏰ Eat at similar times daily for consistency',
+        '💧 Hydrate throughout the day, especially between meals',
+        '🎯 No strict meal timing needed - focus on total daily intake',
+        '✨ Allow 2-3 hours between meals for digestion',
       ],
     );
   }

@@ -201,7 +201,7 @@ class _HeartRateScreenState extends State<HeartRateScreen> {
                                             ),
                                           ),
                                           Text(
-                                            '${log.timestamp.hour}:${log.timestamp.minute.toString().padLeft(2, '0')} â€¢ ${log.source}',
+                                            '${log.timestamp.hour}:${log.timestamp.minute.toString().padLeft(2, '0')} • ${log.source}',
                                             style: TextStyle(
                                               color: Colors.grey.shade800,
                                               fontSize: 12,

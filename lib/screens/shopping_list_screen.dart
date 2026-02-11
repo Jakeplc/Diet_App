@@ -129,7 +129,7 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
             const Text('Shopping List'),
             if (_shoppingItems.isNotEmpty)
               Text(
-                '$uncheckedCount items â€¢ $checkedCount checked',
+                '$uncheckedCount items • $checkedCount checked',
                 style: const TextStyle(fontSize: 12),
               ),
           ],

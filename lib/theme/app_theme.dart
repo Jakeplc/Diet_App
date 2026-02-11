@@ -34,7 +34,7 @@ class AppTheme {
   static const Color feminineTextMuted = Color(0xFF6B7280);
   static const Color feminineOutline = Color(0xFFFBCACA);
 
-  // Backwards compatibility aliases (default to dark mode) âœ… FIXED
+  // Backwards compatibility aliases (default to dark mode)
   static const Color primaryOrange = darkPrimary;
   static const Color accentOrange = darkSecondary;
   static const Color backgroundDark = darkBackground;
@@ -52,7 +52,7 @@ class AppTheme {
   static const Color textMutedLight = lightTextMuted;
   static const Color outlineLight = lightOutline;
 
-  // Macro Colors (simple set â€” adjust later if you want)
+  // Macro Colors (simple set - adjust later if you want)
   static const Color proteinBlue = Color(0xFF3B82F6);
   static const Color carbsAmber = Color(0xFFF59E0B);
   static const Color fatsRed = Color(0xFFEF4444);
@@ -86,7 +86,7 @@ class AppTheme {
     }
   }
 
-  // Backwards compatibility âœ… FIXED
+  // Backwards compatibility
   static ThemeData get darkTheme => _buildDarkTheme();
   static ThemeData get lightTheme => _buildLightTheme();
 
@@ -124,7 +124,7 @@ class AppTheme {
         ),
       ),
 
-      // Helpful defaults for â€œsettings/profileâ€ screens
+      // Helpful defaults for settings/profile screens
       listTileTheme: const ListTileThemeData(
         iconColor: lightTextMuted,
         textColor: lightText,
@@ -199,7 +199,7 @@ class AppTheme {
       cardTheme: CardThemeData(
         color: lightCard,
         elevation: 2,
-        surfaceTintColor: Colors.transparent, // âœ… keep cards crisp
+        surfaceTintColor: Colors.transparent, // keep cards crisp
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
           side: const BorderSide(color: lightOutline, width: 1),
@@ -229,7 +229,7 @@ class AppTheme {
         outline: darkOutline,
       ),
 
-      // âœ… key change: donâ€™t paint every icon orange
+      // Key change: don't paint every icon orange
       iconTheme: const IconThemeData(color: darkTextMuted, size: 24),
 
       appBarTheme: const AppBarTheme(
@@ -244,7 +244,7 @@ class AppTheme {
         ),
       ),
 
-      // âœ… makes settings/profile sections look premium
+      // Makes settings/profile sections look premium
       listTileTheme: const ListTileThemeData(
         iconColor: darkTextMuted,
         textColor: darkText,
@@ -315,8 +315,8 @@ class AppTheme {
 
       cardTheme: CardThemeData(
         color: darkCard,
-        elevation: 0, // âœ… iOS-ish
-        surfaceTintColor: Colors.transparent, // âœ… keep cards crisp
+        elevation: 0, // iOS-ish
+        surfaceTintColor: Colors.transparent, // keep cards crisp
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
           side: const BorderSide(color: darkOutline, width: 1),
